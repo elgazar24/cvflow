@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MGZ CV Creator | Turn JSON into Beautiful LaTeX CVs</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="/static/js/script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="theme-switch-wrapper">
+    <label class="theme-switch" for="theme-toggle">
+      <input type="checkbox" id="theme-toggle" />
+      <div class="slider round">
+        <i class="fa-solid fa-sun"></i>
+        <i class="fa-solid fa-moon"></i>
+      </div>
+    </label>
+  </div>
+
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo-container">
+        <div class="logo">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-img">
+      </div>
+        <!-- <div class="logo">
+          <svg viewBox="0 0 50 50" class="logo-svg">
+            <path d="M10,25 Q25,5 40,25 Q25,45 10,25" fill="none" stroke="currentColor" stroke-width="3"/>
+            <text x="25" y="29" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">MGZ</text>
+          </svg>
+        </div> -->
+        <h1>CVFlow</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#templates" class="nav-link">Templates</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-content">
+        <h2 class="hero-title">Create Professional CVs in Seconds</h2>
+        <p class="hero-subtitle">Upload your JSON data and generate beautiful LaTeX-powered CVs instantly</p>
+        <a href="#upload-section" class="cta-button">Get Started</a>
+        <a href="" id="sample-json" class="cta-button">Sample JSON</a>
+      </div>
+      <div class="hero-image">
+        <div class="cv-preview-placeholder">
+          <div class="cv-line"></div>
+          <div class="cv-line"></div>
+          <div class="cv-line small"></div>
+          <div class="cv-block"></div>
+          <div class="cv-line"></div>
+          <div class="cv-line small"></div>
+          <div class="cv-block"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="upload-section" class="upload-section">
+      <h2>Create Your CV</h2>
+      <div class="template-selector">
+        <h3>Choose a Template</h3>
+        <div class="templates-grid">
+          <div class="template-card" data-template="professional">
+            <div class="template-preview professional">
+              <div class="template-preview-inner"></div>
+            </div>
+            <h4>Professional</h4>
+            <p>Clean and formal style</p>
+          </div>
+          <div class="template-card" data-template="modern">
+            <div class="template-preview modern">
+              <div class="template-preview-inner"></div>
+            </div>
+            <h4>Modern</h4>
+            <p>Stylish and colorful design</p>
+          </div>
+          <div class="template-card" data-template="minimalist">
+            <div class="template-preview minimalist">
+              <div class="template-preview-inner"></div>
+            </div>
+            <h4>Minimalist</h4>
+            <p>Simple and elegant</p>
+          </div>
+        </div>
+        <input type="hidden" name="template" id="selected-template" value="professional">
+      </div>
+
+      <div class="upload-container">
+        <form method="POST" enctype="multipart/form-data" id="upload-form">
+          <div class="drag-drop-area" id="drag-drop-area">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <p>Drag & Drop your JSON file here</p>
+            <p class="small">or</p>
+            <label for="file-input" class="file-input-label">Browse Files</label>
+            <input type="file" id="file-input" name="file" accept=".txt,.json" required>
+            <p class="file-selected-name"></p>
+          </div>
+          <div class="upload-actions">
+            <button type="submit" class="generate-button">
+              <span>Generate CV</span>
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </button>
+          </div>
+        </form>
+
+        <div class="messages">
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="alert">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+
+      {% if download_link %}
+      <div class="download-section">
+        <a href="{{ url_for('download_file', filename=download_link) }}" class="download-button">
+          <i class="fa-solid fa-download"></i>
+          <span>Download PDF</span>
+        </a>
+      </div>
+      {% endif %}
+
+      <div id="live-preview" class="live-preview">
+        <h3>Live Preview</h3>
+        <div class="preview-container">
+          <div class="loading-animation">
+            <div class="spinner"></div>
+            <p>Generating preview...</p>
+          </div>
+          <iframe id="pdf-preview" width="100%" height="600px"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="templates" class="templates-section">
+      <h2>CV Templates</h2>
+      <div class="templates-showcase">
+        <div class="template-showcase-item">
+          <div class="template-image professional">
+            <div class="template-layers"></div>
+          </div>
+          <div class="template-info">
+            <h3>Professional</h3>
+            <p>Clean, formal style perfect for traditional industries. Emphasizes experience and achievements with a structured layout.</p>
+            <ul class="template-features">
+              <li><i class="fa-solid fa-check"></i> Classic typography</li>
+              <li><i class="fa-solid fa-check"></i> Formal structure</li>
+              <li><i class="fa-solid fa-check"></i> Emphasis on experience</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="template-showcase-item reverse">
+          <div class="template-image modern">
+            <div class="template-layers"></div>
+          </div>
+          <div class="template-info">
+            <h3>Modern</h3>
+            <p>Contemporary design with accent colors and creative layout. Ideal for creative industries and tech roles.</p>
+            <ul class="template-features">
+              <li><i class="fa-solid fa-check"></i> Color accents</li>
+              <li><i class="fa-solid fa-check"></i> Modern typography</li>
+              <li><i class="fa-solid fa-check"></i> Creative layout</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="template-showcase-item">
+          <div class="template-image minimalist">
+            <div class="template-layers"></div>
+          </div>
+          <div class="template-info">
+            <h3>Minimalist</h3>
+            <p>Clean, spacious design that lets your content breathe. Perfect for those who appreciate simplicity and elegance.</p>
+            <ul class="template-features">
+              <li><i class="fa-solid fa-check"></i> Ample white space</li>
+              <li><i class="fa-solid fa-check"></i> Elegant typography</li>
+              <li><i class="fa-solid fa-check"></i> Focus on content</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about-section">
+      <div class="about-content">
+        <h2>About Me</h2>
+        <div class="about-inner">
+          <div class="about-image">
+            <div class="avatar-placeholder">
+              <!-- add image -->
+              <img src="{{ url_for('static', filename='images/myphoto.png') }}" alt="mohamed_elgazar_photo" class="avatar-placeholder">
+              <!-- <i class="fa-solid fa-user"></i> -->
+            </div>
+          </div>
+          <div class="about-text">
+            <p>I'm a Mechatronics Engineer & Flutter Developer building intelligent tools using LaTeX, Python, and AI. This project blends automation and aesthetics to help people create beautiful CVs.</p>
+            <p>My passion lies in creating tools that simplify complex processes while maintaining high quality output. This CV generator is just one example of how I combine technical expertise with practical applications.</p>
+            <div class="about-skills">
+              <span class="skill-tag">LaTeX</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Flutter</span>
+              <span class="skill-tag">AI</span>
+              <span class="skill-tag">Web Dev</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+      <h2>Contact / Suggestions</h2>
+      <form id="contact-form" class="contact-form">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Your Name" required>
+          <div class="form-line"></div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Your Email" required>
+          <div class="form-line"></div>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Your Message or Suggestion" required></textarea>
+          <div class="form-line"></div>
+        </div>
+        <button type="submit" class="submit-button">
+          <span>Send Message</span>
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <div class="logo">
+          <svg viewBox="0 0 50 50" class="logo-svg small">
+            <path d="M10,25 Q25,5 40,25 Q25,45 10,25" fill="none" stroke="currentColor" stroke-width="3"/>
+            <text x="25" y="29" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">MGZ</text>
+          </svg>
+        </div>
+        <p>CVFlow</p>
+        <p>&copy; 2025 CVFlow. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-links-column">
+          <h3>Navigation</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#templates">Templates</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-column">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#" id="sample-json">Sample JSON</a></li>
+            <li><a href="#" id="template-guide">Template Guide</a></li>
+            <li><a href="#" id="faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-column">
+          <h3>Connect</h3>
+          <div class="social-links">
+            <a href="https://github.com/elgazar24" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/melgazar24/" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+            <a href="mailto:melgazar725@example.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 MGZ | Made with <i class="fa-solid fa-laptop-code"></i> + <i class="fa-solid fa-mug-hot"></i> | <a href="mailto:melgazar725@example.com">melgazar725@example.com</a></p>
+    </div>
+  </footer>
+
+  <!-- Modal for sample JSON -->
+  <div id="sample-json-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Sample JSON Format</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <pre class="json-display">
+          {    
+            "personal_info": {
+                "name": "Mohamed Elgazar",
+                "email": "melgazar725@gmail.com",
+                "phone": "+971 56 335 0700",
+                "linkedin": "https://www.linkedin.com/in/melgazar24/",
+                "github": "https://github.com/elgazar24",
+                "location": "Dubai, UAE"
+            },
+            "content": {
+                "objective": "Mechatronics engineer with a focus on embedded software engineering and a strong technical background inprogramming languages such as C, C++, and Python. I am experienced in working with various microcontrollersand know how to interface with them effectively and I am also familiar with mobile development and web development.",
+                "education": [
+                    {
+                        "degree": "Bachelor of Mechatronics Engineering",
+                        "university": "Mansoura University",
+                        "startDate": "Sept 2020",
+                        "endDate": "Sept 2024",
+                        "gpa": "3.4/4.0",
+                        "certificate": "N\\A",
+                        "coursework": "Mechanics, Classic control, Embedded systems , Robotics , Linear algebra , Statistics , Artificial intelligence"
+                    },
+                    {
+                        "degree": "Associate Data Scientist in Python - Career track",
+                        "university": "DataCamp",
+                        "startDate": "Dec 2024",
+                        "endDate": "Apr 2025",
+                        "gpa": "Completed",
+                        "certificate": "N\\A",
+                        "coursework": "Python , SQL , Data Manipulation , Machine Learning , Statistics , Data Visualization"
+                    },
+                    {
+                        "degree": "Associate Data Analyst in SQL - Career track",
+                        "university": "DataCamp",
+                        "startDate": "Dec 2024",
+                        "endDate": "Apr 2025",
+                        "gpa": "Completed",
+                        "certificate": "N\\A",
+                        "coursework": "Python , SQL , Data Manipulation , Data Analysis , Data Visualization , Data Communication"
+                    },
+                    {
+                        "degree": "Advanced Learning Algorithms",
+                        "university": "DeepLearning.AI and Stanford University",
+                        "startDate": "Jan 2025",
+                        "endDate": "Mar 2025",
+                        "gpa": "Completed",
+                        "certificate": "https://coursera.org/verify/OMHULMAU912D",
+                        "coursework": "Neural Networks, TensorFlow, Machine learning  , Decision trees  , Linear algebra , Statistics , Artificial intelligence"
+                    },
+                    {
+                        "degree": "Supervised Machine Learning: Regression and Classification",
+                        "university": "DeepLearning.AI and Stanford University",
+                        "startDate": "Jan 2025",
+                        "endDate": "Mar 2025",
+                        "gpa": "Completed",
+                        "certificate": "https://coursera.org/verify/968W8PWXYICQ",
+                        "coursework": "Python ,Supervised Learning, NumPy , scikit-learn, Machine learning  , Gradient Descent"
+                    },
+                    {
+                        "degree": "Embedded Systems Professional Nanodegree",
+                        "university": "Udacity - Egypt FWD",
+                        "gpa": "Completed",
+                        "startDate": "Sept 2022",
+                        "endDate": "Dec 2022",
+                        "certificate": "https://drive.google.com/file/d/1qg4IM_zmd8Wyk5V9Xo05Ln9YCU90FEMU/view?usp=share_link",
+                        "coursework": "Embedded Systems, AUTOSAR , Automotive , Automotive Communication protocols , Agaile , AVR and ARM microcontrollers"
+                    }
+                ],
+                "short_education": [
+                    {
+                        "issuer": "Udemy",
+                        "certificates": [
+                            "Mastering RTOS and Embedded Linux",
+                            "Mobile App Development with Flutter"
+                        ]
+                    }
+                ],
+                "experience": [
+                    {
+                        "role": "Computer Science Instructor",
+                        "company": "Roboto Academy",
+                        "location": "Egypt",
+                        "startDate": "Oct 2024",
+                        "endDate": "Present",
+                        "responsibilities": [
+                            "Designed and delivered robotics and computer science curricula.",
+                            "Taught advanced programming and AI concepts to students.",
+                            "Fostered a hands-on learning environment with robotics kits and software tools."
+                        ]
+                    },
+                    {
+                        "role": "Embedded Software Engineer Intern",
+                        "company": "Siemens - Eitesal",
+                        "location": "Egypt",
+                        "startDate": "June 2023",
+                        "endDate": "Jan 2024",
+                        "responsibilities": [
+                            "Gained practical experience in microcontroller interfacing and automotive communication protocols.",
+                            "Learned AUTOSAR software architecture and MISRA-C standards.",
+                            "Developed real-time firmware for ARM and AVR microcontrollers.",
+                            "Worked with a team of developers to develop an embedded system project.",
+                            "Gained hands-on experience with microcontroller-based systems and Real-Time Operating Systems."
+                        ]
+                    }
+                ],
+                "projects": [
+                    {
+                        "title": "Advanced Exploration Robot",
+                        "github_link": "https://github.com/melgazar24/",
+                        "responsibilities": [
+                            "Developed a pipe exploration robot using the Raspberry Pi.",
+                            "Using Python to program the Raspberry Pi to collect data from sensors ( Camera, Ultrasonic, etc.).",
+                            "Tools used: C++ , Python, Raspberry Pi , NodeJs , STM32 MCU , Linux."
+                        ]
+                    },
+                    {
+                        "title": "AVR and ARM Drivers",
+                        "github_link": "https://github.com/melgazar24/",
+                        "responsibilities": [
+                            "Write drivers code for peripherals such as GPIO, GPT , SPI, I2C, and ADC.",
+                            "Developed projects using ARM Cortex-M3 based STM32 microcontrollers.",
+                            "Tools Used: C, .C++, STM32CubeMX , XC8 , Segger debugger"
+                        ]
+                    }
+                ],
+                "languages": ["C++", "C", "Python", "Dart", "HTML", "CSS", "JavaScript", "C#"],
+                "technologies": [
+                    "Linux",
+                    "RTOS",
+                    "VS code",
+                    "XCode",
+                    "ARM",
+                    "AVR",
+                    "STM32Cube",
+                    "Flutter",
+                    "AUTOSAR",
+                    "Git",
+                    "Github"
+                ]
+            }
+        }
+        </pre>
+        <button id="copy-json" class="copy-button">
+          <i class="fa-regular fa-copy"></i>
+          <span>Copy to Clipboard</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
