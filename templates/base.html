@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CVFlow</title>
+  <!-- add website logo -->
+  <link rel="icon" type="image/png" href="/static/images/logo.png">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="/static/js/script.js" defer></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/errors.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="theme-switch-wrapper">
+    <label class="theme-switch" for="theme-toggle">
+      <input type="checkbox" id="theme-toggle" />
+      <div class="slider round">
+        <i class="fa-solid fa-sun"></i>
+        <i class="fa-solid fa-moon"></i>
+      </div>
+    </label>
+  </div>
+
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo-container">
+        <!-- <div class="logo">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-img">
+      </div> -->
+        <!-- <div class="logo">
+          <svg viewBox="0 0 50 50" class="logo-svg">
+            <path d="M10,25 Q25,5 40,25 Q25,45 10,25" fill="none" stroke="currentColor" stroke-width="3"/>
+            <text x="25" y="29" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">MGZ</text>
+          </svg>
+        </div> -->
+        <h1>CVFlow</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+          <li><a href="#templates" class="nav-link">Templates</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+          {% if current_user.is_authenticated %}
+          <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+          <li><a href="/logout" class="nav-link">Logout</a></li>
+          {% else %}
+          <li><a href="/signin" class="nav-link">Sign In</a></li>
+          <li><a href="/signup" class="nav-link">Sign Up</a></li>
+          {% endif %}
+        </ul>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <div class="logo">
+          <!-- <svg viewBox="0 0 50 50" class="logo-svg small">
+            <path d="M10,25 Q25,5 40,25 Q25,45 10,25" fill="none" stroke="currentColor" stroke-width="3"/>
+            <text x="25" y="29" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">MGZ</text>
+          </svg> -->
+        </div>
+        <p>CVFlow</p>
+        <p>&copy; 2025 CVFlow. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-links-column">
+          <h3>Navigation</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#templates">Templates</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-column">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#" id="sample-json">Sample JSON</a></li>
+            <li><a href="#" id="template-guide">Template Guide</a></li>
+            <li><a href="#" id="faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-column">
+          <h3>Connect</h3>
+          <div class="social-links">
+            <a href="https://github.com/elgazar24" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/melgazar24/" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+            <a href="mailto:melgazar725@example.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Mohamed Elgazar | Made with <i class="fa-solid fa-laptop-code"></i> + <i class="fa-solid fa-mug-hot"></i> | <a href="mailto:melgazar725@example.com">melgazar725@example.com</a></p>
+    </div>
+  </footer>
+
+  <!-- Modal for sample JSON -->
+  <div id="sample-json-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Sample JSON Format</h3>
+        <span class="close-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <pre class="json-display">
+          {    
+            "personal_info": {
+                "name": "Mohamed Elgazar",
+                "email": "melgazar725@gmail.com",
+                "phone": "+971 56 335 0700",
+                "linkedin": "https://www.linkedin.com/in/melgazar24/",
+                "github": "https://github.com/elgazar24",
+                "location": "Dubai, UAE"
+            },
+            "content": {
+                "objective": "Mechatronics engineer with a focus on embedded software engineering and a strong technical background inprogramming languages such as C, C++, and Python. I am experienced in working with various microcontrollersand know how to interface with them effectively and I am also familiar with mobile development and web development.",
+                "education": [
+                    {
+                        "degree": "Bachelor of Mechatronics Engineering",
+                        "university": "Mansoura University",
+                        "startDate": "Sept 2020",
+                        "endDate": "Sept 2024",
+                        "gpa": "3.4/4.0",
+                        "certificate": "N\\A",
+                        "coursework": "Mechanics, Classic control, Embedded systems , Robotics , Linear algebra , Statistics , Artificial intelligence"
+                    },
+                    {
+                        "degree": "Associate Data Scientist in Python - Career track",
+                        "university": "DataCamp",
+                        "startDate": "Dec 2024",
+                        "endDate": "Apr 2025",
+                        "gpa": "Completed",
+                        "certificate": "N\\A",
+                        "coursework": "Python , SQL , Data Manipulation , Machine Learning , Statistics , Data Visualization"
+                    },
+                    {
+                        "degree": "Associate Data Analyst in SQL - Career track",
+                        "university": "DataCamp",
+                        "startDate": "Dec 2024",
+                        "endDate": "Apr 2025",
+                        "gpa": "Completed",
+                        "certificate": "N\\A",
+                        "coursework": "Python , SQL , Data Manipulation , Data Analysis , Data Visualization , Data Communication"
+                    },
+                    {
+                        "degree": "Advanced Learning Algorithms",
+                        "university": "DeepLearning.AI and Stanford University",
+                        "startDate": "Jan 2025",
+                        "endDate": "Mar 2025",
+                        "gpa": "Completed",
+                        "certificate": "https://coursera.org/verify/OMHULMAU912D",
+                        "coursework": "Neural Networks, TensorFlow, Machine learning  , Decision trees  , Linear algebra , Statistics , Artificial intelligence"
+                    },
+                    {
+                        "degree": "Supervised Machine Learning: Regression and Classification",
+                        "university": "DeepLearning.AI and Stanford University",
+                        "startDate": "Jan 2025",
+                        "endDate": "Mar 2025",
+                        "gpa": "Completed",
+                        "certificate": "https://coursera.org/verify/968W8PWXYICQ",
+                        "coursework": "Python ,Supervised Learning, NumPy , scikit-learn, Machine learning  , Gradient Descent"
+                    },
+                    {
+                        "degree": "Embedded Systems Professional Nanodegree",
+                        "university": "Udacity - Egypt FWD",
+                        "gpa": "Completed",
+                        "startDate": "Sept 2022",
+                        "endDate": "Dec 2022",
+                        "certificate": "https://drive.google.com/file/d/1qg4IM_zmd8Wyk5V9Xo05Ln9YCU90FEMU/view?usp=share_link",
+                        "coursework": "Embedded Systems, AUTOSAR , Automotive , Automotive Communication protocols , Agaile , AVR and ARM microcontrollers"
+                    }
+                ],
+                "short_education": [
+                    {
+                        "issuer": "Udemy",
+                        "certificates": [
+                            "Mastering RTOS and Embedded Linux",
+                            "Mobile App Development with Flutter"
+                        ]
+                    }
+                ],
+                "experience": [
+                    {
+                        "role": "Computer Science Instructor",
+                        "company": "Roboto Academy",
+                        "location": "Egypt",
+                        "startDate": "Oct 2024",
+                        "endDate": "Present",
+                        "responsibilities": [
+                            "Designed and delivered robotics and computer science curricula.",
+                            "Taught advanced programming and AI concepts to students.",
+                            "Fostered a hands-on learning environment with robotics kits and software tools."
+                        ]
+                    },
+                    {
+                        "role": "Embedded Software Engineer Intern",
+                        "company": "Siemens - Eitesal",
+                        "location": "Egypt",
+                        "startDate": "June 2023",
+                        "endDate": "Jan 2024",
+                        "responsibilities": [
+                            "Gained practical experience in microcontroller interfacing and automotive communication protocols.",
+                            "Learned AUTOSAR software architecture and MISRA-C standards.",
+                            "Developed real-time firmware for ARM and AVR microcontrollers.",
+                            "Worked with a team of developers to develop an embedded system project.",
+                            "Gained hands-on experience with microcontroller-based systems and Real-Time Operating Systems."
+                        ]
+                    }
+                ],
+                "projects": [
+                    {
+                        "title": "Advanced Exploration Robot",
+                        "github_link": "https://github.com/melgazar24/",
+                        "responsibilities": [
+                            "Developed a pipe exploration robot using the Raspberry Pi.",
+                            "Using Python to program the Raspberry Pi to collect data from sensors ( Camera, Ultrasonic, etc.).",
+                            "Tools used: C++ , Python, Raspberry Pi , NodeJs , STM32 MCU , Linux."
+                        ]
+                    },
+                    {
+                        "title": "AVR and ARM Drivers",
+                        "github_link": "https://github.com/melgazar24/",
+                        "responsibilities": [
+                            "Write drivers code for peripherals such as GPIO, GPT , SPI, I2C, and ADC.",
+                            "Developed projects using ARM Cortex-M3 based STM32 microcontrollers.",
+                            "Tools Used: C, .C++, STM32CubeMX , XC8 , Segger debugger"
+                        ]
+                    }
+                ],
+                "languages": ["C++", "C", "Python", "Dart", "HTML", "CSS", "JavaScript", "C#"],
+                "technologies": [
+                    "Linux",
+                    "RTOS",
+                    "VS code",
+                    "XCode",
+                    "ARM",
+                    "AVR",
+                    "STM32Cube",
+                    "Flutter",
+                    "AUTOSAR",
+                    "Git",
+                    "Github"
+                ]
+            }
+        }
+        </pre>
+        <button id="copy-json" class="copy-button">
+          <i class="fa-regular fa-copy"></i>
+          <span>Copy to Clipboard</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -28,9 +28,9 @@
   <header class="main-header">
     <div class="header-container">
       <div class="logo-container">
-        <div class="logo">
+        <!-- <div class="logo">
           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-img">
-      </div>
+      </div> -->
         <!-- <div class="logo">
           <svg viewBox="0 0 50 50" class="logo-svg">
             <path d="M10,25 Q25,5 40,25 Q25,45 10,25" fill="none" stroke="currentColor" stroke-width="3"/>
@@ -82,7 +82,6 @@
         </div>
       </div>
     </section>
-
     <section id="upload-section" class="upload-section">
       <h2>Create Your CV</h2>
       <div class="template-selector">
@@ -114,7 +113,7 @@
       </div>
 
       <div class="upload-container">
-        <form method="POST" enctype="multipart/form-data" id="upload-form">
+        <form method="POST" enctype="multipart/form-data" id="upload-form" action="/upload">
           <div class="drag-drop-area" id="drag-drop-area">
             <i class="fa-solid fa-file-arrow-up"></i>
             <p>Drag & Drop your JSON file here</p>
@@ -124,7 +123,7 @@
             <p class="file-selected-name"></p>
           </div>
           <div class="upload-actions">
-            <button type="submit" class="generate-button">
+            <button  type="submit" class="generate-button">
               <span>Generate CV</span>
               <i class="fa-solid fa-wand-magic-sparkles"></i>
             </button>
@@ -227,11 +226,16 @@
             </div>
           </div>
           <div class="about-text">
-            <p>I'm a Mechatronics Engineer & Flutter Developer building intelligent tools using LaTeX, Python, and AI. This project blends automation and aesthetics to help people create beautiful CVs.</p>
+            <p>Mechatronics Engineer with a strong focus on AI and data science, bringing hands-on experience in Python, C++, 
+              SQL,  and  machine  learning.  Passionate  about  transforming  complex  data  into  meaningful  insights  through 
+              statistical modeling, predictive algorithms, and data visualization. Adept at tackling real-world challenges with AIdriven  solutions,  collaborating  effectively  in  team  environments,  and  managing  projects  with  a  proactive  and 
+              analytical mindset. Committed to continuous learning and staying at the forefront of technological advancements</p>
             <p>My passion lies in creating tools that simplify complex processes while maintaining high quality output. This CV generator is just one example of how I combine technical expertise with practical applications.</p>
             <div class="about-skills">
-              <span class="skill-tag">LaTeX</span>
               <span class="skill-tag">Python</span>
+              <span class="skill-tag">Machine Learning</span>
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">C++</span>
               <span class="skill-tag">Flutter</span>
               <span class="skill-tag">AI</span>
               <span class="skill-tag">Web Dev</span>
@@ -271,10 +275,10 @@
     <div class="footer-container">
       <div class="footer-logo">
         <div class="logo">
-          <svg viewBox="0 0 50 50" class="logo-svg small">
+          <!-- <svg viewBox="0 0 50 50" class="logo-svg small">
             <path d="M10,25 Q25,5 40,25 Q25,45 10,25" fill="none" stroke="currentColor" stroke-width="3"/>
             <text x="25" y="29" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold">MGZ</text>
-          </svg>
+          </svg> -->
         </div>
         <p>CVFlow</p>
         <p>&copy; 2025 CVFlow. All rights reserved.</p>

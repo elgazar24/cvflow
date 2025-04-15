@@ -1,0 +1,195 @@
+/* Error Page Container */
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120vh;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    background-image: radial-gradient(circle at 10% 20%, rgba(248, 249, 250, 0.9) 0%, rgba(248, 249, 250, 0.8) 90%);
+}
+
+.error-container {
+    max-width: 600px;
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Error Illustration */
+.error-illustration {
+    margin-bottom: 2rem;
+}
+
+.error-circle {
+    stroke: #ff6b6b;
+    stroke-width: 1.8;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 2s ease-out forwards;
+}
+
+.error-line {
+    stroke: #ff6b6b;
+    stroke-width: 2;
+    opacity: 0;
+    animation: fadeInLine 0.5s ease-out 1.5s forwards;
+}
+
+/* Text Styles */
+.error-code {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #343a40;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #ff6b6b, #f06595);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.error-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Buttons */
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.error-btn {
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.error-btn i {
+    font-size: 0.9rem;
+}
+
+.error-btn-primary {
+    background: linear-gradient(135deg, #4dabf7, #339af0);
+    color: white;
+    box-shadow: 0 4px 15px rgba(77, 171, 247, 0.3);
+}
+
+.error-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(77, 171, 247, 0.4);
+}
+
+.error-btn-secondary {
+    border: 2px solid #adb5bd;
+    color: #495057;
+}
+
+.error-btn-secondary:hover {
+    background-color: #f1f3f5;
+    transform: translateY(-2px);
+}
+
+/* Search Form */
+.error-search {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.search-group {
+    position: relative;
+    display: flex;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid #dee2e6;
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    padding-right: 3rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4dabf7;
+    box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+}
+
+.search-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 3rem;
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+    color: #4dabf7;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dash {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeInLine {
+    to { opacity: 1; }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .error-container {
+        padding: 2rem 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 4rem;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .error-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

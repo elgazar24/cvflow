@@ -1,0 +1,110 @@
+{
+  "personal_info": {
+    "name": "Ahmed Mostafa",
+    "email": "amostafa0057@gmail.com",
+    "phone": "+201021006494",
+    "linkedin": "https://www.linkedin.com/in/ahmed-mostafa1/",
+    "github": "https://github.com/ahmedmostafa021",
+    "location": "6th of October, Egypt"
+  },
+    "sections": {
+        "objective": true,
+        "experience": true,
+        "education": true,
+        "short_education": true,
+        "projects": true,
+        "languages": true,
+        "technologies": true
+    },
+    "content": {
+        "objective": "Second-year Information Technology student at Misr University for Science and Technology with a strong passion for artificial intelligence",
+        "education": [
+            {
+                "degree": "Bachelor of Information Technology",
+                "university": "Misr University for Science and Technology",
+                "startDate": "Sept 2023",
+                "endDate": "Sept 2027",
+                "gpa": "3.47/4.0",
+                "certificate": "N\\A",
+                "coursework": "Data Structures, Algorithms, Logic Design, Discrete Mathematics "
+            }
+        ],
+        "short_education": [
+            {
+                "issuer": "Udemy",
+                "certificates": [
+                    "The Complete Python Developer"
+                ]
+            },
+            {
+                "issuer": "British University in Egypt",
+                "certificates": [
+                    "Cybersecurity Training"
+                ]
+            }
+        ],
+        "experience": [
+          {
+
+            "role": "Business-to-Consumer Member",
+            "company": "AIESEC in MUST",
+            "location": "Egypt",
+            "startDate": "Feb 2025",
+            "endDate": "Present",
+            "responsibilities": [
+              "Promoted AIESEC exchange programs to university students through online and offline channels.",
+              "Organized and participated in marketing campaigns, info sessions, and booths to increase brand visibility.",
+              "Collected feedback from applicants to improve outreach strategies and customer experience."
+            ]
+          },   
+          {
+                "role": "Computer Science Instructor",
+                "company": "Roboto Academy",
+                "location": "Egypt",
+                "startDate": "Nov 2024",
+                "endDate": "Mar 2025",
+                "responsibilities": [
+                    "Designed and delivered robotics and computer science curricula.",
+                    "Taught programming and AI concepts to students.",
+                    "Fostered a hands-on learning environment with robotics kits and software tools."
+                ]
+            },
+            {
+                "role": "Internship",
+                "company": "Rashpet Co.",
+                "location": "Egypt",
+                "startDate": "Sep 2024",
+                "endDate": "Sep 2024",
+                "responsibilities": [
+                    "Gained hands-on experience in software development, network security and networking , strengthening my technical skills and enhancing my understanding of IT operations."
+                ]
+            }
+        ],
+      "projects": [
+        {
+          "title": "Temperature-Controlled Fan System",
+          "github_link": "",
+          "responsibilities": [
+            "Programmed the system to adjust fan speed based on temperature.",
+            "Integrated the LM35 sensor for accurate temperature measurement, with a logic that automatically turns the fan on/off or adjusts speed when temperature exceeds a set value.",
+            "Built the project using Arduino IDE and connected components such as an Arduino UNO, LM35 sensor, and DC fan to achieve a working prototype."
+          ]
+        },
+        {
+          "title": "RC Car",
+          "github_link": "",
+          "responsibilities": [
+            "Designed and implemented a RC car using Arduino and C++.",
+            "Programmed the car to move forward, backward, turn left, and turn right.",
+            "Used ultrasonic sensors to detect obstacles and avoid collisions."
+          ]
+        }
+      ],
+        "languages": ["C++", "Python"],
+        "technologies": [
+            "Linux",
+          "VS code",
+          "Arduino"
+        ]
+    }
+}

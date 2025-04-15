@@ -37,3 +37,11 @@ class CVForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Save Changes')
+
+
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[
+        DataRequired("Please enter your email address"),
+        Email("Please enter a valid email address")
+    ])

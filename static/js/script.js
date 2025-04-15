@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append('template', selectedTemplateInput.value);
         
         // Send form data to server
-        fetch('/', {
+        fetch('/upload', {
             method: 'POST',
             body: formData
         })
