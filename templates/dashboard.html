@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - CVFlow</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Dashboard-specific styles */
+    .dashboard-main {
+      padding: 2rem;
+      padding-top: 140px;
+      background-color: var(--bg-light);
+      min-height: calc(100vh - 80px);
+    }
+    
+    .dashboard-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    .cv-editor, .cv-preview {
+      background-color: var(--bg-color);
+      border-radius: var(--border-radius-md);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+    }
+    
+    .form-section {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .education-item {
+      position: relative;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: var(--bg-light);
+      border-radius: var(--border-radius-sm);
+    }
+    
+    .remove-education {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      color: var(--danger-color);
+      cursor: pointer;
+    }
+    
+    .add-section-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    
+    .preview-iframe {
+      width: 100%;
+      height: 700px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      margin: 1rem 0;
+    }
+    
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background-color: var(--success-color);
+      color: white;
+      border-radius: var(--border-radius-md);
+      text-decoration: none;
+    }
+    
+    @media (max-width: 992px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo-container">
+        <div class="logo">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-img">
+        </div>
+        <h1>CVFlow</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <!-- <li><span class="nav-welcome">Hi, {{ current_user.username }}!</span></li> -->
+          <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+          <li><a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a></li>
+        </ul>
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="dashboard-container">
+      <div class="cv-editor">
+        <h2>Edit Your CV</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert">
+              {% for message in messages %}
+                <p>{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        
+        <form id="cv-form" method="POST" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+          
+          <div class="form-section">
+            <h3><i class="fas fa-user"></i> Personal Information</h3>
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" value="{{ cv_data.personal_info.name if cv_data and cv_data.personal_info }}">
+              <div class="form-line"></div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" value="{{ cv_data.personal_info.email if cv_data and cv_data.personal_info }}">
+              <div class="form-line"></div>
+            </div>
+            <!-- Add more personal info fields -->
+          </div>
+          
+          <div class="form-section">
+            <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+            <div id="education-fields">
+              {% if cv_data and cv_data.content and cv_data.content.education %}
+                {% for edu in cv_data.content.education %}
+                <div class="education-item">
+                  <div class="form-group">
+                    <label>Degree</label>
+                    <input type="text" name="education-degree[]" value="{{ edu.degree }}">
+                  </div>
+                  <div class="form-group">
+                    <label>University</label>
+                    <input type="text" name="education-university[]" value="{{ edu.university }}">
+                  </div>
+                  <button type="button" class="remove-education">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+            <button type="button" id="add-education" class="add-section-button">
+              <i class="fas fa-plus"></i> Add Education
+            </button>
+          </div>
+          
+          <div class="form-section">
+            <h3><i class="fas fa-briefcase"></i> Experience</h3>
+            <!-- Experience fields would go here -->
+          </div>
+          
+          <button type="submit" class="generate-button">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </form>
+      </div>
+      
+      <div class="cv-preview">
+        <div class="preview-header">
+          <h3><i class="fas fa-eye"></i> Live Preview</h3>
+          <a href="{{ url_for('download_pdf_dashboard') }}" class="download-button">
+            <i class="fas fa-download"></i> Download PDF
+          </a>
+        </div>
+        {% if cv_data %}
+          <iframe src="{{ url_for('preview_pdf_dashboard') }}" class="preview-iframe"></iframe>
+        {% else %}
+          <div class="preview-placeholder">
+            <i class="fas fa-file-pdf"></i>
+            <p>Your CV preview will appear here after saving</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // JavaScript for dynamic form fields
+    document.getElementById('add-education').addEventListener('click', function() {
+      const newEdu = document.createElement('div');
+      newEdu.className = 'education-item';
+      newEdu.innerHTML = `
+        <div class="form-group">
+          <label>Degree</label>
+          <input type="text" name="education-degree[]" required>
+        </div>
+        <div class="form-group">
+          <label>University</label>
+          <input type="text" name="education-university[]" required>
+        </div>
+        <button type="button" class="remove-education">
+          <i class="fas fa-trash"></i>
+        </button>
+      `;
+      document.getElementById('education-fields').appendChild(newEdu);
+    });
+
+    // Event delegation for remove buttons
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.remove-education')) {
+        e.target.closest('.education-item').remove();
+      }
+    });
+
+    // Mobile menu toggle
+    document.querySelector('.hamburger').addEventListener('click', function() {
+      this.classList.toggle('active');
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
+  </script>
+</body>
+</html>
