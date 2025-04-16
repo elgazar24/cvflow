@@ -27,7 +27,7 @@ def get_messages():
     try:
         messages = session.query(ContactMessage).all()
         for message in messages:
-            print(f"ID: {message.id}, Name: {message.name}, Email: {message.email}, Message: {message.message}" )
+            print(f"ID: {message.id}, Name: {message.name}, Email: {message.email}, Message: {message.message} , Date: {message.created_at}" )
     finally:
         session.close()
 
@@ -48,6 +48,8 @@ if __name__ == '__main__':
     print("1. List all users")
     print("2. Get user CV data")   
     print("3. Get messages") 
+    print("4. Get all Database Tables")
+    print("5. Get CV data table")
     while 1 :
         choice = input("Select option: ")
         if choice == "1":
@@ -57,5 +59,29 @@ if __name__ == '__main__':
             get_user_cv(int(user_id))
         elif choice == "3":
             get_messages()
+        elif choice == "4":
+            session = get_db_session()
+            metadata = MetaData()
+            metadata.reflect(bind=session.get_bind())
+            for table in metadata.sorted_tables:
+                print(table.name)
+            session.close()
+        elif choice == "5":
+            session = get_db_session()
+            metadata = MetaData()
+            metadata.reflect(bind=session.get_bind())
+            for table in metadata.sorted_tables:
+                if table.name == "cv_data":
+                    for column in table.columns:
+                        print(column.name)
+                    
+                    # print contents of the table
+                    for row in session.query(table).all():
+                        print(row)
+
+            
+            
+            session.close()
+            
         else:
             break

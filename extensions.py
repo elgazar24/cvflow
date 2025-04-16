@@ -8,7 +8,6 @@ db = SQLAlchemy()
 
 # Authentication
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'  # Specify your login route
 
 # Email
 mail = Mail()
@@ -21,5 +20,6 @@ def make_serializer(app):
 def init_app(app):
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'auth.login' 
     mail.init_app(app)
     # No initialization needed for the serializer

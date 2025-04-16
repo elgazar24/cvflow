@@ -3,40 +3,71 @@ import uuid
 import json
 import subprocess
 from datetime import datetime, timedelta
-from flask import Flask, request, render_template, Blueprint, redirect, url_for, send_from_directory, flash, jsonify
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, flash, jsonify
 from werkzeug.utils import secure_filename
 import cv_gen.generator as generator
-from flask_login import LoginManager
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import login_required, current_user
 from models import User, CVData, ContactMessage
 from auth import auth as auth_blueprint
 from extensions import db, login_manager
 from forms import CVForm
 from functools import wraps
+import os
+from flask import Flask
+from dotenv import load_dotenv
 
 def create_app():
+
+    
+    # Load environment variables
+    load_dotenv()
+    
     # Initialize Flask app
     app = Flask(__name__)
-
-    # Configuration
+    
+    # Base configuration from .env with defaults
     app.config.from_mapping(
-        SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URL', 'postgresql://cvflow_user:me2737050@localhost/cvflow'),
+        # Flask Security
+        SECRET_KEY=os.getenv('SECRET_KEY'),
+        
+        # Database Configuration
+        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SECRET_KEY=os.environ.get('SECRET_KEY', 'supersecretkey'),
-        UPLOAD_FOLDER='uploads',
-        LATEX_OUTPUT_FOLDER='latex_outputs',
-        PDF_OUTPUT_FOLDER='pdf_outputs',
+        
+        # File Uploads
+        UPLOAD_FOLDER=os.path.join('instance', 'uploads'),
+        LATEX_OUTPUT_FOLDER=os.path.join('instance', 'latex_outputs'),
+        PDF_OUTPUT_FOLDER=os.path.join('instance', 'pdf_outputs'),
         ALLOWED_EXTENSIONS={'json', 'txt'},
-        MAX_CONTENT_LENGTH=16 * 1024 * 1024,
-        RATE_LIMIT="200 per day, 50 per hour"
+        MAX_CONTENT_LENGTH= eval(os.getenv('MAX_CONTENT_LENGTH')),
+        
+        # Email Configuration
+        MAIL_SERVER=os.getenv('MAIL_SERVER', 'smtp.gmail.com'),
+        MAIL_PORT=os.getenv('MAIL_PORT', 587),
+        MAIL_USE_TLS=os.getenv('MAIL_USE_TLS', True),
+        MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
+        MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
+        
+        # Rate Limiting
+        RATE_LIMIT=os.getenv('RATE_LIMIT', "200 per day, 50 per hour")
     )
 
     # Initialize extensions
-    db.init_app(app)
-    login_manager.init_app(app)
-    login_manager.login_view = 'auth.login'
+    from extensions import db, login_manager, mail, init_app
+    init_app(app)
 
+
+    # Configure Celery if available
+    celery = None
+    if os.getenv('CELERY_BROKER_URL'):
+        try:
+            from celery import Celery
+            celery = Celery(__name__, broker=os.getenv('CELERY_BROKER_URL'))
+            celery.conf.update(app.config)
+        except ImportError:
+            app.logger.warning("Celery not installed. Celery integration disabled.")
+            pass
+    
     # Initialize Flask-Limiter if available
     try:
         from flask_limiter import Limiter
@@ -44,23 +75,21 @@ def create_app():
         limiter = Limiter(key_func=get_remote_address)
         limiter.init_app(app)
     except ImportError:
+        app.logger.warning("Flask-Limiter not installed. Rate limiting disabled.")
         limiter = None
 
-    # Initialize Celery if available
-    try:
-        from celery import Celery
-        celery = Celery(__name__, broker='redis://localhost:6379/0')
-    except ImportError:
-        celery = None
+    # Create required directories
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    os.makedirs(app.config['LATEX_OUTPUT_FOLDER'], exist_ok=True)
+    os.makedirs(app.config['PDF_OUTPUT_FOLDER'], exist_ok=True)
+
+    # Register blueprints
+    app.register_blueprint(auth_blueprint)
 
     # Create database tables
     with app.app_context():
         db.create_all()
-
-    # Register blueprints
-    app.register_blueprint(auth_blueprint)
-    app.register_blueprint(main)
-
+    
     # Helper functions
     def allowed_file(filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -113,7 +142,6 @@ def create_app():
                             form=form)
 
     @app.route('/upload', methods=['POST'])
-    @login_required
     def upload_file():
         # Check if the post request has the file part
         if 'file' not in request.files:
@@ -277,7 +305,7 @@ def create_app():
         return jsonify(sample)
 
     @app.route('/contact', methods=['POST'])
-    @limiter.limit("5 per minute") if limiter else lambda f: f
+    @limiter.limit("5 per minute") 
     @json_response
     def contact():
         """Handle contact form submissions"""
