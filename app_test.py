@@ -186,10 +186,10 @@ def create_app():
                             f"PDF Output: {pdf_output_path}")
                 
                 # Verify file content before saving
-                #if file.content_length == 0:
-                #   app.logger.error("Uploaded file is empty")
-                #    flash("Uploaded file is empty")
-                #    return render_template('index.html')
+                if file.content_length == 0:
+                    app.logger.error("Uploaded file is empty")
+                    flash("Uploaded file is empty")
+                    return render_template('index.html')
                 
                 file.save(input_path)
                 app.logger.info(f"Successfully saved uploaded file to {input_path}")
@@ -254,6 +254,11 @@ def create_app():
                     app.logger.debug(f"pdflatex stdout: {result.stdout}")
                     app.logger.debug(f"pdflatex stderr: {result.stderr}")
                     
+                    if result.returncode != 0:
+                        app.logger.error(f"pdflatex failed with return code {result.returncode}")
+                        app.logger.error(f"Error output: {result.stderr}")
+                        flash("PDF generation failed")
+                        return render_template('index.html')
                     
                     # Verify PDF was created
                     if not os.path.exists(pdf_output_path):
