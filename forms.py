@@ -32,6 +32,7 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email already registered. Please use a different email.')
+    
 
 class CVForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])

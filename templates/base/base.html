@@ -6,15 +6,15 @@
   <title>CVFlow</title>
   <!-- add website logo -->
   <!-- <link rel="icon" type="image/png" href="/static/images/logo.png"> -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/static/images/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon/favicon-16x16.png">
-  <link rel="manifest" href="/static/images/favicon/site.webmanifest">
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename= RoutePath.apple_touch_icon)}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{url_for( 'static' , filename =  RoutePath.favicon_32x32 )}}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{url_for( 'static' , filename =  RoutePath.favicon_16x16 )}}">
+  <link rel="manifest" href="{{url_for( 'static' , filename =  RoutePath.site_webmanifest ) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.home_style)}}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="/static/js/script.js" defer></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/errors.css') }}">
+  <script src="{{ url_for('static', filename= RoutePath.home_script)}}" defer></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.errors_404_style) }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

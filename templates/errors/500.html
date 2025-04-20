@@ -1,0 +1,46 @@
+{% extends RoutePath.base_index  %}
+
+{% block title %}Internal Server Error - CVFlow{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.errors_500_style)}}">
+
+{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="error-container">
+        <div class="error-illustration">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="120" height="120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" class="error-circle"></circle>
+                <line x1="12" y1="8" x2="12" y2="12" class="error-line"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16" class="error-line"></line>
+            </svg>
+        </div>
+        <h1 class="error-code">500</h1>
+        <h2 class="error-title">Oops! Server Error</h2>
+        <p class="error-message">
+            Something went wrong on our end. Please try again later.
+        </p>
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="error-btn error-btn-primary">
+                <i class="fas fa-home"></i> Return Home
+            </a>
+            <a href="{{ url_for('contact') }}" class="error-btn error-btn-secondary">
+                <i class="fas fa-envelope"></i> Report Problem
+            </a>
+        </div>
+        <div class="error-search">
+            <form action="{{ url_for('index') }}" method="get">
+                <div class="search-group">
+                    <input type="text" class="search-input" placeholder="Search our site...">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

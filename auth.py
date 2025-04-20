@@ -7,33 +7,62 @@ import secrets
 from datetime import datetime, timedelta
 from flask_mail import Message
 from extensions import mail
-from flask_login import login_user ,logout_user
-from flask_login import login_required, current_user
+from flask_login import login_user ,logout_user ,current_user ,login_required
 from forms import RegistrationForm, LoginForm
+from routes.route_path import RoutePath
 
 
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/signup', methods=['GET', 'POST'])
+@auth.route('/signup')
 def signup():
+    return register()
+
+@auth.route('/signup', methods=['GET', 'POST'])
+def register():
+
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('index'))
     
     form = RegistrationForm()
     if form.validate_on_submit():
+
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash('Email address already exists', 'error')
+            return render_template( RoutePath.register_index, form=form)
+        
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            flash('Username already exists', 'error')
+            return render_template( RoutePath.register_index, form=form)
+        
+
         hashed_password = generate_password_hash(form.password.data)
         user = User(
             username=form.username.data,
             email=form.email.data,
             password_hash=hashed_password
         )
+
         db.session.add(user)
         db.session.commit()
         flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('auth.signin'))
     
-    return render_template('signup.html', form=form)
+    elif form.errors:
+        # Flush First Error
+        if form.errors.popitem()[1][0] == 'Field must be between 4 and 20 characters long.':
+            flash('Username must be between 4 and 20 characters long', 'error')
+        else :
+            flash(form.errors.popitem()[1][0], 'error')
+        
+        return render_template( RoutePath.register_index, form=form)
+
+    else:
+        return render_template( RoutePath.register_index, form=form)
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -52,7 +81,7 @@ def signin():
             return redirect(url_for('index'))
         flash('Invalid email or password', 'error')
     
-    return render_template('signin.html', form=form)
+    return render_template( RoutePath.login_index, form=form)
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -95,11 +124,11 @@ def forgot_password():
         
         return redirect(url_for('auth.forgot_password'))
     
-    return render_template('forgot_password.html', form=form)
+    return render_template( RoutePath.forgot_password , form=form)
 
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('You have been logged out.', 'info')
-    return redirect(url_for('index'))  # Changed from 'main.index' to 'index'
+    return redirect(url_for('index')) 

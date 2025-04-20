@@ -15,10 +15,17 @@ from functools import wraps
 import os
 from flask import Flask
 from dotenv import load_dotenv
+from celery import Celery
+from routes.route_path import RoutePath , routes as routes_blueprint
+from extensions import db, init_app
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 def create_app():
 
-    
+    print("=== Starting Flask App ===")
+
     # Load environment variables
     load_dotenv()
     
@@ -53,7 +60,6 @@ def create_app():
     )
 
     # Initialize extensions
-    from extensions import db, login_manager, mail, init_app
     init_app(app)
 
 
@@ -61,7 +67,6 @@ def create_app():
     celery = None
     if os.getenv('CELERY_BROKER_URL'):
         try:
-            from celery import Celery
             celery = Celery(__name__, broker=os.getenv('CELERY_BROKER_URL'))
             celery.conf.update(app.config)
         except ImportError:
@@ -70,9 +75,11 @@ def create_app():
     
     # Initialize Flask-Limiter if available
     try:
-        from flask_limiter import Limiter
-        from flask_limiter.util import get_remote_address
-        limiter = Limiter(key_func=get_remote_address)
+        limiter = Limiter(
+            key_func=get_remote_address,
+            storage_uri="memory://",
+            strategy="fixed-window" 
+            )
         limiter.init_app(app)
     except ImportError:
         app.logger.warning("Flask-Limiter not installed. Rate limiting disabled.")
@@ -85,10 +92,13 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(auth_blueprint)
+    app.register_blueprint(routes_blueprint)
 
-    # Create database tables
-    with app.app_context():
-        db.create_all()
+
+    # # Create database tables
+    # with app.app_context():
+        
+
     
     # Helper functions
     def allowed_file(filename):
@@ -118,7 +128,7 @@ def create_app():
     # Routes
     @app.route('/')
     def index():
-        return render_template('index.html')
+        return render_template( RoutePath.home_index )
 
     @app.route('/health')
     @json_response
@@ -133,11 +143,11 @@ def create_app():
     @login_required
     def dashboard():
         if not current_user.is_authenticated:
-            return redirect(url_for('auth.signin'))
+            return redirect( url_for('auth.signin') )
         
         cv_data = CVData.query.filter_by(user_id=current_user.id).first()
         form = CVForm()
-        return render_template('dashboard.html', 
+        return render_template( RoutePath.dashboard_index, 
                             cv_data=cv_data.data if cv_data else None,
                             form=form)
 
@@ -147,14 +157,14 @@ def create_app():
         if 'file' not in request.files:
             flash("No file part")
             app.logger.warning("No file part in request")
-            return render_template('index.html')
+            return render_template( RoutePath.home_index )
         
         file = request.files['file']
         # If user does not select file, browser also submits an empty part without filename
         if file.filename == '':
             flash("No selected file")
             app.logger.warning("Empty filename in file upload")
-            return render_template('index.html')
+            return render_template( RoutePath.home_index )
         
         if file and allowed_file(file.filename):
             unique_id = uuid.uuid4()
@@ -189,7 +199,7 @@ def create_app():
                 #if file.content_length == 0:
                 #   app.logger.error("Uploaded file is empty")
                 #    flash("Uploaded file is empty")
-                #    return render_template('index.html')
+                #    return render_template( RoutePath.home_index )
                 
                 file.save(input_path)
                 app.logger.info(f"Successfully saved uploaded file to {input_path}")
@@ -198,18 +208,18 @@ def create_app():
                 if not os.path.exists(input_path):
                     app.logger.error(f"File save verification failed - {input_path} doesn't exist")
                     flash("Failed to save uploaded file")
-                    return render_template('index.html')
+                    return render_template( RoutePath.home_index )
                 else:
                     app.logger.info(f"File save verified - size: {os.path.getsize(input_path)} bytes")
                 
             except IOError as e:
                 app.logger.error(f"File operation failed: {str(e)}", exc_info=True)
                 flash("File system error occurred")
-                return render_template('index.html')
+                return render_template( RoutePath.home_index )
             except Exception as e:
                 app.logger.error(f"Unexpected error during file setup: {str(e)}", exc_info=True)
                 flash("Unexpected error occurred")
-                return render_template('index.html')
+                return render_template( RoutePath.home_index )
             
             try:
                 # Generate LaTeX from input with selected template
@@ -228,18 +238,18 @@ def create_app():
                     if not os.path.exists(latex_output_path):
                         app.logger.error(f"LaTeX file write verification failed - {latex_output_path} doesn't exist")
                         flash("Failed to generate LaTeX output")
-                        return render_template('index.html')
+                        return render_template( RoutePath.home_index )
                     else:
                         app.logger.info(f"LaTeX file verified - size: {os.path.getsize(latex_output_path)} bytes")
                         
                 except IOError as e:
                     app.logger.error(f"Failed to write to {latex_output_path}: {str(e)}", exc_info=True)
                     flash("Failed to generate LaTeX output")
-                    return render_template('index.html')
+                    return render_template( RoutePath.home_index )
                 except Exception as e:
                     app.logger.error(f"Unexpected error while writing to {latex_output_path}: {str(e)}", exc_info=True)
                     flash("Unexpected error during LaTeX generation")
-                    return render_template('index.html')
+                    return render_template( RoutePath.home_index )
                 
                 # Convert LaTeX to PDF
                 app.logger.info("Starting PDF generation with pdflatex")
@@ -259,7 +269,7 @@ def create_app():
                     if not os.path.exists(pdf_output_path):
                         app.logger.error(f"PDF output verification failed - {pdf_output_path} doesn't exist")
                         flash("PDF generation failed")
-                        return render_template('index.html')
+                        return render_template( RoutePath.home_index )
                     else:
                         app.logger.info(f"PDF generated successfully - size: {os.path.getsize(pdf_output_path)} bytes")
                     
@@ -278,11 +288,11 @@ def create_app():
                 except subprocess.TimeoutExpired:
                     app.logger.error("pdflatex timed out")
                     flash("PDF generation timed out")
-                    return render_template('index.html')
+                    return render_template( RoutePath.home_index )
                 except Exception as e:
                     app.logger.error(f"PDF generation failed: {str(e)}", exc_info=True)
                     flash("PDF generation failed")
-                    return render_template('index.html')
+                    return render_template( RoutePath.home_index )
                 
                 # Check if request wants JSON response (for AJAX)
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -296,18 +306,18 @@ def create_app():
                 # Regular form response
                 app.logger.info("File processing completed successfully")
                 flash("File uploaded and converted successfully!")
-                return render_template('index.html',
+                return render_template( RoutePath.home_index ,
                                     download_link=pdf_filename,
                                     preview_link=url_for('preview_pdf', filename=pdf_filename))
                 
             except Exception as e:
                 app.logger.error(f"Processing error: {str(e)}", exc_info=True)
                 flash(f"An error occurred: {str(e)}")
-                return render_template('index.html')
+                return render_template( RoutePath.home_index )
         else:
             app.logger.warning(f"Invalid file type attempted: {file.filename}")
             flash("Only .txt and .json files are allowed.")
-            return render_template('index.html')
+            return render_template( RoutePath.home_index )
 
     def generate_pdf(input_path, unique_id):
         """Helper function to generate PDF from input file"""
@@ -515,7 +525,18 @@ def create_app():
 
     @app.errorhandler(404)
     def page_not_found(e):
-        return render_template('404.html'), 404
+
+        app.logger.warning(f"Page not found: {request.url} , {request.method}")
+
+        return render_template( RoutePath.errors_404_index ), 404
+    
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template( RoutePath.errors_500_index ), 500
+    
+    @app.context_processor
+    def inject_route_path():
+        return {'RoutePath': RoutePath}
 
     # Scheduled cleanup
     @app.before_request
@@ -527,8 +548,8 @@ def create_app():
     return app
 
 # Create application instance
-app = create_app()
+# app = create_app()
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')
+# if __name__ == '__main__':
+#     port = int(os.environ.get('PORT', 8000))
+#     app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')

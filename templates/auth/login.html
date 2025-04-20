@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up - CVFlow</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+  <title>Sign In - CVFlow</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.home_style) }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,15 +13,15 @@
   <header class="main-header">
     <div class="header-container">
       <div class="logo-container">
-        <div class="logo">
+        <!-- <div class="logo">
           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-img">
-        </div>
+        </div> -->
         <h1>CVFlow</h1>
       </div>
       <nav>
         <ul class="nav-links">
           <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
-          <li><a href="{{ url_for('auth.signin') }}" class="nav-link">Sign In</a></li>
+          <li><a href="{{ url_for('auth.signup') }}" class="nav-link">Sign Up</a></li>
         </ul>
       </nav>
     </div>
@@ -30,16 +30,25 @@
   <main class="auth-main">
     <section class="auth-section">
       <div class="auth-container">
-        <h2 class="auth-title">Create Your Account</h2>
+        <h2 class="auth-title">Welcome Back</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              <div class="alert error">
+                <p>{{ message }}</p>
+              </div>
+            {% else %}
+              <div class="alert success">
+                <p>{{ message }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
         
-        <form method="POST" action="{{ url_for('auth.signup') }}" class="auth-form">
+        <form method="POST" action="{{ url_for('auth.signin') }}" class="auth-form">
           {{ form.hidden_tag() }}
-          
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
-            <div class="form-line"></div>
-          </div>
           
           <div class="form-group">
             <label for="email">Email</label>
@@ -53,20 +62,21 @@
             <div class="form-line"></div>
           </div>
           
-          <div class="form-group">
-            <label for="confirm_password">Confirm Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            <div class="form-line"></div>
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" name="remember"> Remember me
+            </label>
+            <a href="{{ url_for('auth.forgot_password') }}" class="forgot-password">Forgot password?</a>
           </div>
           
           <button type="submit" class="auth-button">
-            <span>Sign Up</span>
-            <i class="fas fa-user-plus"></i>
+            <span>Sign In</span>
+            <i class="fas fa-sign-in-alt"></i>
           </button>
         </form>
         
         <div class="auth-footer">
-          <p>Already have an account? <a href="{{ url_for('auth.signin') }}">Sign In</a></p>
+          <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign Up</a></p>
         </div>
       </div>
     </section>
@@ -74,7 +84,7 @@
 
   <style>
     .auth-main {
-      min-height: calc(130vh - 80px);
+      min-height: calc(120vh - 130px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -88,7 +98,7 @@
       border-radius: var(--border-radius-md);
       box-shadow: var(--shadow-md);
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
     }
     
     .auth-title {
@@ -129,6 +139,29 @@
     .auth-footer a {
       color: var(--primary-color);
       font-weight: 500;
+    }
+    
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-right: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    
+    .forgot-password {
+      font-size: 0.9rem;
+      padding-left: 1rem;
+      color: var(--primary-color);
     }
   </style>
 </body>
