@@ -20,11 +20,10 @@ from routes.route_path import RoutePath , routes as routes_blueprint
 from extensions import db, init_app
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from dashboard import dashboard
 
 
 def create_app():
-
-    print("=== Starting Flask App ===")
 
     # Load environment variables
     load_dotenv()
@@ -92,12 +91,8 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(auth_blueprint)
-    app.register_blueprint(routes_blueprint)
-
-
-    # # Create database tables
-    # with app.app_context():
-        
+    app.register_blueprint(routes_blueprint)  
+    app.register_blueprint(dashboard)      
 
     
     # Helper functions
@@ -139,17 +134,17 @@ def create_app():
         except Exception as e:
             return {'status': 'unhealthy', 'error': str(e)}, 500
 
-    @app.route('/dashboard')
-    @login_required
-    def dashboard():
-        if not current_user.is_authenticated:
-            return redirect( url_for('auth.signin') )
+    # @app.route('/dashboard')
+    # @login_required
+    # def dashboard():
+    #     if not current_user.is_authenticated:
+    #         return redirect( url_for('auth.signin') )
         
-        cv_data = CVData.query.filter_by(user_id=current_user.id).first()
-        form = CVForm()
-        return render_template( RoutePath.dashboard_index, 
-                            cv_data=cv_data.data if cv_data else None,
-                            form=form)
+    #     cv_data = CVData.query.filter_by(user_id=current_user.id).first()
+    #     form = CVForm()
+    #     return render_template( RoutePath.dashboard_index, 
+    #                         cv_data=cv_data.data if cv_data else None,
+    #                         form=form)
 
     @app.route('/upload', methods=['POST'])
     def upload_file():
@@ -432,101 +427,102 @@ def create_app():
             db.session.rollback()
             return {'success': False, 'error': str(e)}, 500
 
-    @app.route('/save_cv', methods=['POST'])
-    @login_required
-    def save_cv():
-        try:
-            # Get raw JSON data
-            raw_data = request.get_json()
+    # @app.route('/save_cv', methods=['POST'])
+    # @login_required
+    # def save_cv():
+    #     try:
+    #         # Get raw JSON data
+    #         raw_data = request.get_json()
             
-            # Debug print to see what's actually received
-            app.logger.debug(f"Received data: {raw_data}")
+    #         # Debug print to see what's actually received
+    #         app.logger.debug(f"Received data: {raw_data}")
             
-            # Validate we got data
-            if not raw_data:
-                return jsonify({'success': False, 'error': 'No data received'}), 400
+    #         # Validate we got data
+    #         if not raw_data:
+    #             return jsonify({'success': False, 'error': 'No data received'}), 400
 
-            # Get or create CV data
-            cv_data = CVData.query.filter_by(user_id=current_user.id).first()
+    #         # Get or create CV data
+    #         cv_data = CVData.query.filter_by(user_id=current_user.id).first()
 
-            if cv_data:
-                # Update existing data
-                cv_data.data = raw_data
-            else:
-                # Create new entry
-                cv_data = CVData(user_id=current_user.id, data=raw_data)
-                db.session.add(cv_data)
+    #         if cv_data:
+    #             # Update existing data
+    #             cv_data.data = raw_data
+    #         else:
+    #             # Create new entry
+    #             cv_data = CVData(user_id=current_user.id, data=raw_data)
+    #             db.session.add(cv_data)
             
-            db.session.commit()
-            return jsonify({'success': True}), 200
+    #         db.session.commit()
+    #         return jsonify({'success': True}), 200
             
-        except Exception as e:
-            app.logger.error(f"Error saving CV: {str(e)}")
-            db.session.rollback()
-            return jsonify({
-                'success': False, 
-                'error': str(e),
-                'received_data': raw_data  # For debugging
-            }), 500
+    #     except Exception as e:
+    #         app.logger.error(f"Error saving CV: {str(e)}")
+    #         db.session.rollback()
+    #         return jsonify({
+    #             'success': False, 
+    #             'error': str(e),
+    #             'received_data': raw_data  # For debugging
+    #         }), 500
 
-    @app.route('/preview_pdf_dashboard')
-    @login_required
-    def preview_pdf_dashboard():
-        cv_data = CVData.query.filter_by(user_id=current_user.id).first()
+    # @app.route('/preview_pdf_dashboard')
+    # @login_required
+    # def preview_pdf_dashboard():
+    #     cv_data = CVData.query.filter_by(user_id=current_user.id).first()
 
-        print("cv_data", cv_data)
-        if not cv_data:
-            flash("No CV data found")
-            send_from_directory(app.config['PDF_OUTPUT_FOLDER'], "no_cv.pdf")
+    #     print("cv_data", cv_data)
+    #     if not cv_data:
+    #         flash("No CV data found")
+    #         send_from_directory(app.config['PDF_OUTPUT_FOLDER'], "no_cv.pdf")
         
-        try:
-            unique_id = uuid.uuid4()
-            pdf_filename = generate_pdf_from_data(cv_data.data, unique_id)
-            return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], pdf_filename)
-        except Exception as e:
-            # flash(f"Error generating PDF: {str(e)}")
-            return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], "no_cv.pdf")
+    #     try:
+    #         unique_id = uuid.uuid4()
+    #         pdf_filename = generate_pdf_from_data(cv_data.data, unique_id)
+    #         return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], pdf_filename)
+    #     except Exception as e:
+    #         # flash(f"Error generating PDF: {str(e)}")
+    #         return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], "no_cv.pdf")
 
-    @app.route('/download_pdf_dashboard')
-    @login_required
-    def download_pdf_dashboard():
-        cv_data = CVData.query.filter_by(user_id=current_user.id).first()
-        if not cv_data:
-            flash("No CV data found")
-            return redirect(url_for('dashboard'))
+    # @app.route('/download_pdf_dashboard')
+    # @login_required
+    # def download_pdf_dashboard():
+    #     cv_data = CVData.query.filter_by(user_id=current_user.id).first()
+    #     if not cv_data:
+    #         flash("No CV data found")
+    #         return redirect(url_for('dashboard'))
         
-        try:
-            unique_id = uuid.uuid4()
-            pdf_filename = generate_pdf_from_data(cv_data.data, unique_id)
-            return send_from_directory(
-                app.config['PDF_OUTPUT_FOLDER'], 
-                pdf_filename, 
-                as_attachment=True,
-                download_name=f"{current_user.username}_cv.pdf"
-            )
-        except Exception as e:
-            # flash(f"Error generating PDF: {str(e)}")
-            return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], "no_cv.pdf")
+    #     try:
+    #         unique_id = uuid.uuid4()
+    #         pdf_filename = generate_pdf_from_data(cv_data.data, unique_id)
+    #         return send_from_directory(
+    #             app.config['PDF_OUTPUT_FOLDER'], 
+    #             pdf_filename, 
+    #             as_attachment=True,
+    #             download_name=f"{current_user.username}_cv.pdf"
+    #         )
+    #     except Exception as e:
+    #         # flash(f"Error generating PDF: {str(e)}")
+    #         return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], "no_cv.pdf")
 
-    def generate_pdf_from_data(cv_data, unique_id):
-        """Generate PDF from CV data dictionary"""
-        # Create a temporary JSON file
-        temp_json = os.path.join(app.config['UPLOAD_FOLDER'], f"temp_{unique_id}.json")
-        with open(temp_json, 'w') as f:
-            json.dump(cv_data, f)
+    # def generate_pdf_from_data(cv_data, unique_id):
+    #     """Generate PDF from CV data dictionary"""
+    #     # Create a temporary JSON file
+    #     temp_json = os.path.join(app.config['UPLOAD_FOLDER'], f"temp_{unique_id}.json")
+    #     with open(temp_json, 'w') as f:
+    #         json.dump(cv_data, f)
         
-        # Generate PDF
-        pdf_filename = generate_pdf(temp_json, unique_id)
+    #     # Generate PDF
+    #     pdf_filename = generate_pdf(temp_json, unique_id)
         
-        # Remove temporary file
-        os.remove(temp_json)
+    #     # Remove temporary file
+    #     os.remove(temp_json)
         
-        return pdf_filename
+    #     return pdf_filename
 
     @app.errorhandler(404)
     def page_not_found(e):
 
-        app.logger.warning(f"Page not found: {request.url} , {request.method}")
+        # Log the error and get the source of the request
+        app.logger.warning(f"Page not found: {request.url} , {request.method}" )
 
         return render_template( RoutePath.errors_404_index ), 404
     
@@ -546,10 +542,3 @@ def create_app():
                 cleanup_old_files(folder, days=1)
 
     return app
-
-# Create application instance
-# app = create_app()
-
-# if __name__ == '__main__':
-#     port = int(os.environ.get('PORT', 8000))
-#     app.run(host='0.0.0.0', port=port, debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')

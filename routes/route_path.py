@@ -49,6 +49,11 @@ class RoutePath:
     base_style = f'{static_css_dir_name}{_base_dir}/{base_style_file_name}'
     base_script = f'{static_js_dir_name}{_base_dir}/{base_script_file_name}'
 
+    _dashboard_dir = f'/{templates_dashboard_dir_name}'
+    dashboard_index = f'{_dashboard_dir}/{dashboard_index_file_name}'
+    dashboard_style = f'{static_css_dir_name}{_dashboard_dir}/{dashboard_style_file_name}'
+    dashboard_script = f'{static_js_dir_name}{_dashboard_dir}/{dashboard_script_file_name}'
+
 
     _images_dir = f'/{static_images_dir_name}'
     author_photos_dir = f'{_images_dir}/{static_images_author_photos_dir_name}'

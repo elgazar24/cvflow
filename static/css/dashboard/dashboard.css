@@ -1,0 +1,108 @@
+
+
+/* Dashboard-specific styles */
+.dashboard-main {
+    padding: 2rem;
+    padding-top: 140px;
+    background-color: var(--bg-light);
+    min-height: calc(100vh - 80px);
+}
+
+.dashboard-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.cv-editor,
+.cv-preview {
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius-md);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    height: fit-content;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.education-item,
+.experience-item,
+.project-item {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+}
+
+.remove-item {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+}
+
+.add-section-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.preview-iframe {
+    width: 100%;
+    height: 700px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    margin: 1rem 0;
+}
+
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--success-color);
+    color: white;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+}
+
+.responsibilities-list {
+    margin-top: 0.5rem;
+}
+
+.responsibility-item {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.add-responsibility {
+    margin-top: 0.5rem;
+}
+
+.preview-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light);
+}
+
+@media (max-width: 992px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+}

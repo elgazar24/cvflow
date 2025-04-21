@@ -16,12 +16,14 @@ static_css_dir_name = 'css'
 static_css_home_dir_name = 'home'
 static_css_errors_dir_name = 'errors'
 static_css_auth_dir_name = 'auth'
+static_css_dashboard_dir_name = 'dashboard'
 
 
 static_js_dir_name = 'js'
 static_js_home_dir_name = 'home'
 static_js_errors_dir_name = 'errors'
 static_js_auth_dir_name = 'auth'
+static_js_dashboard_dir_name = 'dashboard'
 
 static_images_dir_name = 'images'
 

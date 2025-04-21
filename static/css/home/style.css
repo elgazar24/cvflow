@@ -380,7 +380,7 @@ input:checked + .slider:before {
 }
 
 .template-selector {
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .templates-grid {

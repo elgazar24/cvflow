@@ -5,7 +5,8 @@
         "phone": "+971 56 335 0700",
         "linkedin": "https://www.linkedin.com/in/melgazar24/",
         "github": "https://github.com/elgazar24",
-        "location": "Dubai, UAE"
+        "location": "Dubai, UAE",
+        "image" : "path/to/image" 
     },
     "content": {
         "objective": "Mechatronics engineer with a focus on embedded software engineering and a strong technical background inprogramming languages such as C, C++, and Python. I am experienced in working with various microcontrollersand know how to interface with them effectively and I am also familiar with mobile development and web development.",
