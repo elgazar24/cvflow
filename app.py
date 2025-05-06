@@ -94,7 +94,8 @@ def create_app():
     def setup_logging():
         try:
             # Get absolute path to log file
-            log_file = os.path.join('opt/', 'app.log')
+            log_file = '../logs/app.log'
+            print(log_file)
 
             # Clear any existing handlers
             app.logger.handlers.clear()
