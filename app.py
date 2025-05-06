@@ -391,10 +391,11 @@ def create_app():
     def download_file(filename):
         return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], filename, as_attachment=True)
 
-    from flask import abort, send_file
+    from flask import  send_file
 
     @app.route('/preview/<filename>')
     def preview_pdf(filename):
+        app.logger.info(f"Received preview request for {filename}")
         try:
             # Ensure filename has .pdf extension
             if not filename.lower().endswith('.pdf'):
@@ -404,14 +405,18 @@ def create_app():
             pdf_dir = os.path.abspath(app.config['PDF_OUTPUT_FOLDER'])
             pdf_path = os.path.join(pdf_dir, filename)
 
+            app.logger.info(f"Previewing PDF: {pdf_path}")
+            app.logger.info(f"PDF directory: {pdf_dir}")
+
             # Security checks
             if not os.path.exists(pdf_path):
                 app.logger.error(f"Preview failed - file not found: {pdf_path}")
-                abort(404)
+                return page_not_found("Preview failed - File not found")
+                
 
             if not pdf_path.startswith(pdf_dir):
                 app.logger.error(f"Security violation: {pdf_path} outside allowed directory")
-                abort(403)
+                return page_not_found("Security violation")
 
             app.logger.info(f"Serving PDF preview: {pdf_path}")
 
@@ -430,7 +435,7 @@ def create_app():
 
         except Exception as e:
             app.logger.error(f"Preview failed: {str(e)}", exc_info=True)
-            abort(500)
+            return internal_server_error(e)
 
 
 
