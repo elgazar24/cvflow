@@ -545,7 +545,7 @@ def create_app():
   
     @app.errorhandler(404)
     def page_not_found(e):
-
+        
         # Log the error and get the source of the request
         app.logger.warning(f"Page not found: {request.url} , {request.method}" )
 
