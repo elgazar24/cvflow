@@ -221,7 +221,7 @@ class Generator:
          
     def generate_personl_info(self):
         # Get image path from JSON data
-        image_path = self.cv_data["personal_info"].get("image_path", "/Users/elgazar/Desktop/cvflow_server/cv_gen/mock/image.png")  # Default to image.png if not specified
+        image_path = self.cv_data["personal_info"].get("image_path", "N\\A")  # Default to image.png if not specified
         
         personal_info_str = (
             r"""

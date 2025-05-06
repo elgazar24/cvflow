@@ -124,7 +124,7 @@ def forgot_password():
         
         return redirect(url_for('auth.forgot_password'))
     
-    return render_template( RoutePath.forgot_password , form=form)
+    return render_template( RoutePath.forgot_password_index , form=form)
 
 @auth.route('/logout')
 @login_required
