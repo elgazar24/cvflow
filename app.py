@@ -138,6 +138,7 @@ def create_app():
         os.makedirs(app.config[folder], exist_ok=True)
         os.chmod(app.config[folder], 0o775)  # rwxrwxr-x
 
+
     # Register blueprints
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(routes_blueprint)  
