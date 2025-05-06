@@ -40,6 +40,12 @@ def dashboard_index():
         form=form
     )
 
+@dashboard.route('/get_templates', methods=['POST'])
+@login_required
+def get_templates():
+    templates = Template.query.all()
+    return jsonify({'success': True, 'templates': [{'id': template.id, 'name': template.name} for template in templates]}), 200
+
 @dashboard.route('/get_cv/<int:cv_id>')
 @login_required
 def get_cv(cv_id):
@@ -63,6 +69,7 @@ def get_template_fields(template_id):
         'fields': template.fields,
         'requires_image': template.requires_image
     }), 200
+
 
 @dashboard.route('/get_skills')
 @login_required
