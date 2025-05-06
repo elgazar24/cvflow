@@ -92,11 +92,11 @@ def create_app():
         gunicorn_logger = logging.getLogger('gunicorn.error')
         app.logger.handlers = gunicorn_logger.handlers
         app.logger.setLevel(gunicorn_logger.level)
-        
+
     else:  # When running directly
         app.logger.setLevel(logging.INFO)
         # Create a file handler if you want logs in a specific file
-        file_handler = logging.FileHandler('/path/to/your/app.log')
+        file_handler = logging.FileHandler('/tmp/app.log')
         file_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
         ))
