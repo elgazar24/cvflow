@@ -542,10 +542,13 @@ def create_app():
             db.session.rollback()
             return {'success': False, 'error': str(e)}, 500
 
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
   
     @app.errorhandler(404)
     def page_not_found(e):
-        
+
         # Log the error and get the source of the request
         app.logger.warning(f"Page not found: {request.url} , {request.method}" )
 
