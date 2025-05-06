@@ -87,11 +87,48 @@ def create_app():
         app.logger.warning("Flask-Limiter not installed. Rate limiting disabled.")
         limiter = None
 
-    # Configure logging
-    handler = logging.FileHandler('/var/log/wsgi/app.log')  # or your preferred log location
-    handler.setLevel(logging.INFO)
-    app.logger.addHandler(handler)
-    
+
+    from logging.handlers import RotatingFileHandler
+    import logging
+
+    def setup_logging():
+        try:
+            # Get absolute path to log file
+            log_dir = os.path.dirname(os.path.abspath(__file__))
+            log_file = os.path.join(log_dir, 'app.log')
+
+            # Clear any existing handlers
+            app.logger.handlers.clear()
+
+            # Create rotating file handler
+            handler = RotatingFileHandler(
+                log_file,
+                maxBytes=1024*1024,  # 1MB
+                backupCount=3,
+                encoding='utf-8'
+            )
+            handler.setFormatter(logging.Formatter(
+                '%(asctime)s - %(levelname)s - %(message)s'
+            ))
+            handler.setLevel(logging.INFO)
+
+            # Add handler to Flask's logger
+            app.logger.addHandler(handler)
+            app.logger.setLevel(logging.INFO)
+
+            # Test logging
+            app.logger.info("Logging setup completed successfully")
+            app.logger.info(f"Log file location: {log_file}")
+
+        except Exception as e:
+            print(f"CRITICAL: Failed to initialize logging: {str(e)}")
+            # Fallback to stderr
+            logging.basicConfig(level=logging.INFO)
+
+    # Initialize logging when app starts
+    setup_logging()
+
+
     # Create required directories
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     os.makedirs(app.config['LATEX_OUTPUT_FOLDER'], exist_ok=True)
