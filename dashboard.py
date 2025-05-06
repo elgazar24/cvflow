@@ -44,6 +44,9 @@ def dashboard_index():
 @login_required
 def get_templates():
     templates = Template.query.all()
+
+    templates.sort(key=lambda x: x.name)
+
     return jsonify({'success': True, 'templates': [{'id': template.id, 'name': template.name} for template in templates]}), 200
 
 @dashboard.route('/get_cv/<int:cv_id>')

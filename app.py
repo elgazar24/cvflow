@@ -3,10 +3,9 @@ import uuid
 import json
 import subprocess
 from datetime import datetime, timedelta
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory, flash, jsonify
+from flask import Flask, request, render_template, url_for, send_from_directory, flash, jsonify , send_file
 from werkzeug.utils import secure_filename
 import cv_gen.generator as generator
-from flask_login import login_required, current_user
 from models import User, CVData, ContactMessage
 from auth import auth as auth_blueprint
 from extensions import db, login_manager
@@ -21,7 +20,6 @@ from extensions import db, init_app
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from dashboard import dashboard
-import logging
 
 
 
@@ -417,7 +415,6 @@ def create_app():
             app.logger.error(f"Download failed: {str(e)}", exc_info=True)
             return internal_server_error(e)
 
-    from flask import  send_file
 
     @app.route('/preview/<filename>')
     def preview_pdf(filename):
