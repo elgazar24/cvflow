@@ -88,19 +88,9 @@ def create_app():
         limiter = None
 
     # Configure logging
-    if __name__ != '__main__':  # When running with WSGI
-        gunicorn_logger = logging.getLogger('gunicorn.error')
-        app.logger.handlers = gunicorn_logger.handlers
-        app.logger.setLevel(gunicorn_logger.level)
-
-    else:  # When running directly
-        app.logger.setLevel(logging.INFO)
-        # Create a file handler if you want logs in a specific file
-        file_handler = logging.FileHandler('/tmp/app.log')
-        file_handler.setFormatter(logging.Formatter(
-            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-        ))
-        app.logger.addHandler(file_handler)
+    handler = logging.FileHandler('/var/log/wsgi/app.log')  # or your preferred log location
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     
     # Create required directories
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
