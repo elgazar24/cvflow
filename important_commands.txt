@@ -9,3 +9,6 @@ sudo systemctl reload nginx
 sudo nano /etc/nginx/sites-available/cvflow
 
 sudo chmod +777 app.log
+
+
+tail -f ../logs/app.log
