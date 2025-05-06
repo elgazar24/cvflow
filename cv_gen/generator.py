@@ -29,6 +29,7 @@ class Generator:
     def __init__(self, source_path):
         self.source_path = source_path
         self.extract_cv_info()
+        
 
     def extract_cv_info(self):
         with open(self.source_path, "r") as file:
@@ -185,6 +186,16 @@ class Generator:
 
 % new command for external links:
 
+\newcommand{\mysspace}{0.1cm}
+\newcommand{\mainsectionsspace}{0.3cm}
+\newcommand{\MainHeaderSpace}{0.25cm}
+\newcommand{\SecHeaderSpace}{0.15cm}
+\newcommand{\SecAfterHeaderSpace}{0.25cm}
+
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{enumitem}
+
 
 \begin{document}
     \newcommand{\AND}{\unskip
@@ -195,79 +206,7 @@ class Generator:
     \sbox\ANDbox{$|$}
     """
 
-    
-    def generate_personl_info(self):
-        personal_info_str = ""
-
-        personal_info_str += r"""
-            \begin{header}
-            \fontsize{25 pt}{25 pt}\selectfont """
-
-        personal_info_str += self.cv_data["personal_info"]["name"]
-
-        personal_info_str += r"""
-
-            \vspace{5 pt}
-            \normalsize
-            \mbox{"""
-
-        personal_info_str += self.cv_data["personal_info"]["location"]
-        personal_info_str += r"""}%
-            \kern 5.0 pt%
-            \AND%
-            \kern 5.0 pt%
-            \mbox{\hrefWithoutArrow{mailto:"""
-        personal_info_str += self.cv_data["personal_info"]["email"]
-        personal_info_str += r"""}{"""
-        personal_info_str += self.cv_data["personal_info"]["email"]
-        personal_info_str += r"""}}%
-            \kern 5.0 pt%
-            \AND%
-            \kern 5.0 pt%
-            \mbox{\hrefWithoutArrow{tel:"""
-
-        personal_info_str += self.cv_data["personal_info"]["phone"]
-        personal_info_str += r"""}{"""
-
-        personal_info_str += self.cv_data["personal_info"]["phone"]
-        personal_info_str += r"""}}%
-            \kern 5.0 pt%
-            \AND%
-            \kern 5.0 pt%
-            \mbox{\hrefWithoutArrow{"""
-        personal_info_str += self.cv_data["personal_info"]["linkedin"]
-        personal_info_str += r"""}{LinkedIn}}%
-            \kern 5.0 pt%
-            \AND%
-            \kern 5.0 pt%
-            \mbox{\hrefWithoutArrow{"""
-        personal_info_str += self.cv_data["personal_info"]["github"]
-        personal_info_str += r"""}{Github}}%
-        \end{header}
-
-        \vspace{5 pt - 0.3 cm}
-    """
-        return personal_info_str
-
-
-    def generate_objective(self):
-        objective_str = ""
-
-        objective_str += r"""
-        \section{Objective}
-            \begin{onecolentry}
-            """
-        objective_str += self.cv_data["content"]["objective"]
-
-        objective_str += r"""
-            \end{onecolentry}
-        """
-
-        return objective_str
-
-
-    # change the format of the date to mm/dd/yyyy to Dec 2023 and "Present" will be "Present" 
-    def decode_date(self,date):
+    def decode_date(self, date):
         # check if the date is "Present"
         if date == "Present":
             return "Present"
@@ -275,223 +214,347 @@ class Generator:
             # parse the date string
             date_obj = datetime.strptime(date, "%Y-%m-%d")
             # convert to readable format like "Dec 2023"
-            return date_obj.strftime("%b %Y")  
+            return date_obj.strftime("%b %Y")
         except ValueError as e:
             print(f"Error parsing date: {date} - {e}")
             return date  # Return the original value if parsing fails
          
+    def generate_personl_info(self):
+        # Get image path from JSON data
+        image_path = self.cv_data["personal_info"].get("image_path", "/Users/elgazar/Desktop/cvflow_server/cv_gen/mock/image.png")  # Default to image.png if not specified
+        
+        personal_info_str = (
+            r"""
+\noindent
+\begin{minipage}[c]{0.22\textwidth}
+    \centering
+    \includegraphics[width=3.3cm,clip,trim=0 0 0 0]{"""
+            + image_path
+            + r"""}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.75\textwidth}
+    \vspace*{0.3cm}
+    \begin{flushleft}
+        {\bfseries\LARGE """
+            + self.cv_data["personal_info"]["name"]
+            + r"""} \\[6pt]
+        \href{mailto:"""
+            + self.cv_data["personal_info"]["email"]
+            + r"""}{"""
+            + self.cv_data["personal_info"]["email"]
+            + r"""} \\
+        \vspace*{\mysspace}
+        \href{tel:"""
+            + self.cv_data["personal_info"]["phone"]
+            + r"""}{"""
+            + self.cv_data["personal_info"]["phone"]
+            + r"""} \\
+        \vspace*{\mysspace}
+        """
+            + self.cv_data["personal_info"]["location"]
+            + r""" \\
+        \vspace*{\mysspace}
+        \href{"""
+            + self.cv_data["personal_info"]["linkedin"]
+            + r"""}{LinkedIn} /
+        \vspace*{\mysspace}
+        \href{"""
+            + self.cv_data["personal_info"]["github"]
+            + r"""}{Github} 
+        \vspace*{\mysspace}
+    \end{flushleft}
+\end{minipage}
+\vspace{\mainsectionsspace}
+"""
+        )
+        return personal_info_str
+
+    def generate_objective(self):
+        objective_str = ""
+
+        objective_str += r"""
+    \section{Objective}
+            \vspace{\MainHeaderSpace}
+        \begin{onecolentry}
+        """
+        objective_str += self.cv_data["content"]["objective"]
+
+        objective_str += r"""
+        \end{onecolentry}
+        \vspace{\mainsectionsspace}
+
+    """
+
+        return objective_str
 
     def generate_education(self):
         education_str = ""
 
         education_str += r"""
-        \section{Education}
-        """
+    \section{Education}
+            \vspace{\MainHeaderSpace}
+
+    """
 
         for s_education in self.cv_data["content"]["education"]:
             education_str += r"""
-            \begin{twocolentry}{
-                """
-            print()
-            education_str += self.decode_date(s_education["startDate"]) + " - " + self.decode_date(s_education["endDate"])
+        \begin{twocolentry}{
+            """
+            education_str += (
+                self.decode_date(s_education["startDate"])
+                + " - "
+                + self.decode_date(s_education["endDate"])
+            )
             education_str += r"""
-            }
-                \textbf{"""
+        }
+            \textbf{"""
             education_str += s_education["university"]
             education_str += r"""}, """
             education_str += s_education["degree"]
             education_str += r"""
-            \end{twocolentry}
+        \end{twocolentry}
 
-            \vspace{0.10 cm}
-            \begin{onecolentry}
-                \begin{highlights}
-                    \item GPA: 
-                    """
+        \vspace{\SecHeaderSpace}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item GPA: 
+                """
             education_str += s_education["gpa"]
 
-            if s_education["certificate"] != "N/A" and s_education["certificate"] != "N\A":
-
+            if s_education["certificate"] != "N/A" and s_education["certificate"] != "N\\A":
                 education_str += r"""(\href{"""
                 education_str += s_education["certificate"]
                 education_str += r"""}{Certificate})"""
+                
             education_str += r"""
-                \item \textbf{Coursework:} """
+            \item \textbf{Coursework:} """
             education_str += s_education["coursework"]
             education_str += r"""
-                \end{highlights}
-            \end{onecolentry}
-            """
+            \end{highlights}
+        \end{onecolentry}
+                \vspace{\SecAfterHeaderSpace}
+
+        """
 
         return education_str
-
 
     def generate_short_education(self):
         short_education_str = ""
 
         for s_short_education in self.cv_data["content"]["short_education"]:
             short_education_str += r"""
-                                    \begin{onecolentry}
-                                    """
+                                \begin{onecolentry}
+                                """
             short_education_str += r"""\textbf{""" + s_short_education["issuer"] + "}, "
             for certificate in s_short_education["certificates"]:
                 short_education_str += certificate
                 short_education_str += r"""
-                                        \kern 5.0 pt%"""
+                                    \kern 5.0 pt%"""
                 if certificate != s_short_education["certificates"][-1]:
                     short_education_str += r"""
-                                            \AND% 
-                                            \kern 5.0 pt%
-                                            """
-        short_education_str += r"""
+                                        \AND% 
+                                        \kern 5.0 pt%
+                                        """
+            short_education_str += r"""
                                 \end{onecolentry}
-                                \vspace{0.10 cm}
                                 """
+        short_education_str += r"""
+                            \vspace{\mainsectionsspace}
+                            """
         return short_education_str
-
 
     def generate_experience(self):
         experience_str = ""
 
         experience_str += r"""
-        \section{Experience}
-        """
+    \section{Experience}
+            \vspace{\MainHeaderSpace}
+
+    """
 
         for s_experience in self.cv_data["content"]["experience"]:
             experience_str += r"""
-            \begin{twocolentry}{
-                """
-            experience_str += self.decode_date(s_experience["startDate"]) + " - " + self.decode_date(s_experience["endDate"])
+        \begin{twocolentry}{
+            """
+            experience_str += (
+                self.decode_date(s_experience["startDate"])
+                + " - "
+                + self.decode_date(s_experience["endDate"])
+            )
             experience_str += r"""
-            }
-                \textbf{"""
+        }
+            \textbf{"""
             experience_str += s_experience["role"]
             experience_str += r"""}, """
             experience_str += s_experience["company"]
             experience_str += r"""
-            \end{twocolentry}
-
-            \vspace{0.10 cm}
-            \begin{onecolentry}
-                \begin{highlights}
-                    """
+        \end{twocolentry}
+        \vspace{\SecHeaderSpace}
+        \begin{onecolentry}
+            \begin{highlights}
+                """
             for responsibility in s_experience["responsibilities"]:
                 experience_str += r"""
-                    \item """
+                \item """
                 experience_str += responsibility
 
             experience_str += r"""
-                \end{highlights}
-            \end{onecolentry}
-            """
+            \end{highlights}
+        \end{onecolentry}
+        \vspace{\SecAfterHeaderSpace}
+        """
+        experience_str += r"""
+        \vspace{\mainsectionsspace}
+        """
 
         return experience_str
-
 
     def generate_projects(self):
         projects_str = ""
         projects_str += r"""
-    \section{Projects}
+\section{Projects}
+        \vspace{\MainHeaderSpace}
 
-        """
+    """
         for project in self.cv_data["content"]["projects"]:
             projects_str += r"""
-            \begin{twocolentry}{
-                \href{"""
+        \begin{twocolentry}{
+            \href{"""
             projects_str += project["github_link"]
             projects_str += r"""}{Github}
-            }
-                \textbf{"""
+        }
+            \textbf{"""
             projects_str += project["title"]
             projects_str += r"""}
-            \end{twocolentry}
-
-            \vspace{0.10 cm}
-            \begin{onecolentry}
-                \begin{highlights}"""
-            for responsibility in project["responsibilities"]:
+        \end{twocolentry}
+        """
+            if len(project["responsibilities"]) != 0:
                 projects_str += r"""
-                    \item """
-                projects_str += responsibility
-            projects_str += r"""
-                \end{highlights}
-            \end{onecolentry}
+            \vspace{\SecHeaderSpace}
+            \begin{onecolentry}
+            \begin{highlights}
             """
-
+                for responsibility in project["responsibilities"]:
+                    projects_str += r"""
+                \item """
+                    projects_str += responsibility
+                projects_str += r"""
+                            \end{highlights}
+                            \end{onecolentry}
+                            """
+                projects_str += r"""
+                            \vspace{\SecAfterHeaderSpace}
+                            """
+        projects_str += r"""
+        \vspace{\mainsectionsspace}
+        """
         return projects_str
-
 
     def generate_languages(self):
         skills_str = ""
         skills_str += r"""
-                        \section{Technologies}
-                            \begin{onecolentry}
-                                        \textbf{Languages:  }"""
+                    \section{Skills}
+                            \vspace{\MainHeaderSpace}
+
+                        \begin{onecolentry}
+                                    \textbf{Languages:  }"""
 
         for language in self.cv_data["content"]["languages"]:
-            object = language.replace("#", "\#")
-            if language != language[-1]:
+            object = language.replace("#", "\\#")
+            if language != self.cv_data["content"]["languages"][-1]:
                 skills_str += " " + object + ", "
             else:
                 skills_str += "  " + object
 
         skills_str += r"""
-                                \end{onecolentry}
+                            \end{onecolentry}
 
-                                \vspace{0.2 cm}
-                        """
+                            \vspace{0.2 cm}
+                    """
         return skills_str
 
+    # def generate_technologies(self):
+    #     technologies_str = ""
+
+    #     technologies_str += r"""
+    #                     \begin{onecolentry}     
+    #                                 \textbf{Skills: }
+    #                                 """
+
+    #     for technology in self.cv_data["content"]["technologies"]:
+    #         object = technology.replace("#", "\\#")
+    #         if technology != self.cv_data["content"]["technologies"][-1]:
+    #             technologies_str += " " + object + ", "
+    #         else:
+    #             technologies_str += " " + object
+
+    #     technologies_str += r"""
+    #                         \end{onecolentry}
+    #                         \vspace{\mainsectionsspace}
+    #                 """
+    #     return technologies_str
 
     def generate_technologies(self):
         technologies_str = ""
-
+    
         technologies_str += r"""
-                            \begin{onecolentry}     
-                                        \textbf{Technologies: }"""
-
+            \begin{onecolentry}     
+                \textbf{Skills: }
+            \end{onecolentry}
+            {\normalsize
+            \begin{multicols}{4}
+                \begin{itemize}[leftmargin=* , labelsep=0.1cm ,topsep=0pt]
+        """
+    
         for technology in self.cv_data["content"]["technologies"]:
-            object = technology.replace("#", "\#")
-            if technology != self.cv_data["content"]["technologies"][-1]:
-                technologies_str += " " + object + ", "
-            else:
-                technologies_str += " " + object
-
+            item = technology.replace("#", "\\#")
+            technologies_str += f"\\item {item}\n"
+    
         technologies_str += r"""
-                                \end{onecolentry}
-                        """
+                \end{itemize}
+            \end{multicols}
+            }
+        """
         return technologies_str
 
 
     def add_footer(self):
         return r"""
-    \end{document}
-        """
-
-
-    def generate_cv(self):
-
-        self.cv_str += self.add_header()
-        self.cv_str += self.generate_personl_info()
-        self.cv_str += self.generate_objective()
-        self.cv_str += self.generate_education()
-        self.cv_str += self.generate_short_education()
-        self.cv_str += self.generate_experience()
-        self.cv_str += self.generate_projects()
-        self.cv_str += self.generate_languages()
-        self.cv_str += self.generate_technologies()
-        self.cv_str += self.add_footer()
-        
+\end{document}
+    """
 
     def make_cv(self):
+        self.cv_str = ""
+        self.cv_str += self.add_header()
+        self.cv_str += self.generate_personl_info()
+        
+        # Check if sections exist before including them
+        if "sections" in self.cv_data:
+            if self.cv_data["sections"].get("objective", True):
+                self.cv_str += self.generate_objective()
+            if self.cv_data["sections"].get("education", True):
+                self.cv_str += self.generate_education()
+            if self.cv_data["sections"].get("short_education", True):
+                self.cv_str += self.generate_short_education()
+            if self.cv_data["sections"].get("languages", True):
+                self.cv_str += self.generate_languages()
+            if self.cv_data["sections"].get("technologies", True):
+                self.cv_str += self.generate_technologies()
+            if self.cv_data["sections"].get("experience", True):
+                self.cv_str += self.generate_experience()
+            if self.cv_data["sections"].get("projects", True):
+                self.cv_str += self.generate_projects()
+        else:
+            # If no sections specified, include all by default
+            self.cv_str += self.generate_objective()
+            self.cv_str += self.generate_education()
+            self.cv_str += self.generate_short_education()
+            self.cv_str += self.generate_languages()
+            self.cv_str += self.generate_technologies()
+            self.cv_str += self.generate_experience()
+            self.cv_str += self.generate_projects()
 
-        self.generate_cv()
+        self.cv_str += self.add_footer()
 
         return self.cv_str
-
-
-
-        
-
-
-

@@ -1,21 +1,68 @@
-{% extends RoutePath.base_index  %}
+{% extends RoutePath.base_index %}
 
 {% block title %}Dashboard - CVFlow{% endblock %}
 
-
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.dashboard_style) }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script src="{{url_for('static', filename= RoutePath.dashboard_script)}}" defer></script>
 {% endblock %}
 
 {% block content %}
 <main class="dashboard-main">
     <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>My CVs</h3>
+                <button id="create-new-cv" class="new-cv-btn">
+                    <i class="fas fa-plus"></i> New CV
+                </button>
+            </div>
+            <div class="cv-list">
+                {% if cv_data %}
+                {% for cv in cv_data %}
+                <div class="cv-list-item" data-cv-id="{{ cv.id }}">
+                    <div class="cv-item-content">
+                        <span class="cv-name">{{ cv.name }}</span>
+                        <span class="cv-date">{{ cv.last_updated.strftime('%d %b %Y') }}</span>
+                    </div>
+                    <div class="cv-item-actions">
+                        <button class="cv-action-btn edit-cv" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="cv-action-btn delete-cv" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="no-cv-message">
+                    <i class="fas fa-file-alt"></i>
+                    <p>No CVs created yet</p>
+                    <p>Create your first CV to get started</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="cv-editor">
-            <h2>Edit Your CV</h2>
+            <div class="editor-header">
+                <h2>Edit Your CV</h2>
+                <div class="template-selector">
+                    <label for="template-select">Template:</label>
+                    <select id="template-select">
+                        {% for template in templates %}
+                        <option value="{{ template.id }}">{{ template.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             <div class="alert">
@@ -28,92 +75,90 @@
 
             <form id="cv-form" method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
+                <input type="hidden" id="cv-id" name="cv_id" value="">
+                <input type="hidden" id="template-id" name="template_id" value="1">
+
+                <div class="form-section cv-name-section">
+                    <h3><i class="fas fa-file-signature"></i> CV Name</h3>
+                    <div class="form-group">
+                        <input type="text" id="cv-name" name="cv_name" placeholder="Untitled CV">
+                        <div class="form-line"></div>
+                    </div>
+                </div>
 
                 <div class="form-section">
                     <h3><i class="fas fa-user"></i> Personal Information</h3>
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name"
-                            value="{{ cv_data.personal_info.name if cv_data and cv_data.personal_info }}">
-                        <div class="form-line"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email"
-                            value="{{ cv_data.personal_info.email if cv_data and cv_data.personal_info }}">
-                        <div class="form-line"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" id="phone" name="phone"
-                            value="{{ cv_data.personal_info.phone if cv_data and cv_data.personal_info }}">
-                        <div class="form-line"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="linkedin">LinkedIn</label>
-                        <input type="url" id="linkedin" name="linkedin"
-                            value="{{ cv_data.personal_info.linkedin if cv_data and cv_data.personal_info }}">
-                        <div class="form-line"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="github">GitHub</label>
-                        <input type="url" id="github" name="github"
-                            value="{{ cv_data.personal_info.github if cv_data and cv_data.personal_info }}">
-                        <div class="form-line"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="location">Location</label>
-                        <input type="text" id="location" name="location"
-                            value="{{ cv_data.personal_info.location if cv_data and cv_data.personal_info }}">
-                        <div class="form-line"></div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-bullseye"></i> Objective</h3>
-                    <div class="form-group">
-                        <textarea id="objective" name="objective"
-                            rows="4">{{ cv_data.content.objective if cv_data and cv_data.content }}</textarea>
-                        <div class="form-line"></div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-graduation-cap"></i> Education</h3>
-                    <div id="education-fields">
-                        {% if cv_data and cv_data.content and cv_data.content.education %}
-                        {% for edu in cv_data.content.education %}
-                        <div class="education-item">
-                            <div class="form-group">
-                                <label>Degree</label>
-                                <input type="text" name="education-degree[]" value="{{ edu.degree }}">
+                    <div class="personal-info-container">
+                        <div class="profile-image-container" id="profile-image-section">
+                            <div class="profile-image-preview">
+                                <img id="profile-image" src="{{ url_for('static', filename='img/profile-placeholder.png') }}" alt="Profile Image">
                             </div>
-                            <div class="form-group">
-                                <label>University</label>
-                                <input type="text" name="education-university[]" value="{{ edu.university }}">
+                            <div class="profile-image-upload">
+                                <label for="profile-image-input" class="upload-btn">
+                                    <i class="fas fa-upload"></i> Upload Photo
+                                </label>
+                                <input type="file" id="profile-image-input" name="profile_image" accept="image/*" style="display: none;">
+                                <input type="hidden" id="profile-image-filename" name="profile_image_filename">
                             </div>
-                            <div class="form-group">
-                                <label>Start Date</label>
-                                <input type="text" name="education-startDate[]" value="{{ edu.startDate }}">
-                            </div>
-                            <div class="form-group">
-                                <label>End Date</label>
-                                <input type="text" name="education-endDate[]" value="{{ edu.endDate }}">
-                            </div>
-                            <div class="form-group">
-                                <label>GPA</label>
-                                <input type="text" name="education-gpa[]" value="{{ edu.gpa }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Coursework</label>
-                                <textarea name="education-coursework[]" rows="3">{{ edu.coursework }}</textarea>
-                            </div>
-                            <button type="button" class="remove-item">
-                                <i class="fas fa-trash"></i>
-                            </button>
                         </div>
-                        {% endfor %}
-                        {% endif %}
+                        
+                        <div class="personal-info-fields">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="personal_info.name">
+                                <div class="form-line"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="personal_info.email">
+                                <div class="form-line"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="text" id="phone" name="personal_info.phone">
+                                <div class="form-line"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="linkedin">LinkedIn</label>
+                                <input type="url" id="linkedin" name="personal_info.linkedin">
+                                <div class="form-line"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="github">GitHub</label>
+                                <input type="url" id="github" name="personal_info.github">
+                                <div class="form-line"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location</label>
+                                <input type="text" id="location" name="personal_info.location">
+                                <div class="form-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-bullseye"></i> Objective</h3>
+                        <button type="button" class="ai-recommend-btn" data-field="objective">
+                            <i class="fas fa-robot"></i> AI Recommend
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="objective" name="content.objective" rows="4"></textarea>
+                        <div class="form-line"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                        <button type="button" class="ai-recommend-btn" data-field="education">
+                            <i class="fas fa-robot"></i> AI Recommend
+                        </button>
+                    </div>
+                    <div id="education-fields">
+                        <!-- Education items will be added dynamically -->
                     </div>
                     <button type="button" id="add-education" class="add-section-button">
                         <i class="fas fa-plus"></i> Add Education
@@ -121,53 +166,14 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-briefcase"></i> Experience</h3>
+                    <div class="section-header">
+                        <h3><i class="fas fa-briefcase"></i> Experience</h3>
+                        <button type="button" class="ai-recommend-btn" data-field="experience">
+                            <i class="fas fa-robot"></i> AI Recommend
+                        </button>
+                    </div>
                     <div id="experience-fields">
-                        {% if cv_data and cv_data.content and cv_data.content.experience %}
-                        {% for exp in cv_data.content.experience %}
-                        <div class="experience-item">
-                            <div class="form-group">
-                                <label>Role</label>
-                                <input type="text" name="experience-role[]" value="{{ exp.role }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Company</label>
-                                <input type="text" name="experience-company[]" value="{{ exp.company }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Location</label>
-                                <input type="text" name="experience-location[]" value="{{ exp.location }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Start Date</label>
-                                <input type="text" name="experience-startDate[]" value="{{ exp.startDate }}">
-                            </div>
-                            <div class="form-group">
-                                <label>End Date</label>
-                                <input type="text" name="experience-endDate[]" value="{{ exp.endDate }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Responsibilities</label>
-                                <div class="responsibilities-list">
-                                    {% for resp in exp.responsibilities %}
-                                    <div class="responsibility-item">
-                                        <input type="text" name="experience-responsibility[]" value="{{ resp }}">
-                                        <button type="button" class="remove-responsibility">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                <button type="button" class="add-responsibility">
-                                    <i class="fas fa-plus"></i> Add Responsibility
-                                </button>
-                            </div>
-                            <button type="button" class="remove-item">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                        {% endfor %}
-                        {% endif %}
+                        <!-- Experience items will be added dynamically -->
                     </div>
                     <button type="button" id="add-experience" class="add-section-button">
                         <i class="fas fa-plus"></i> Add Experience
@@ -175,41 +181,14 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-project-diagram"></i> Projects</h3>
+                    <div class="section-header">
+                        <h3><i class="fas fa-project-diagram"></i> Projects</h3>
+                        <button type="button" class="ai-recommend-btn" data-field="projects">
+                            <i class="fas fa-robot"></i> AI Recommend
+                        </button>
+                    </div>
                     <div id="project-fields">
-                        {% if cv_data and cv_data.content and cv_data.content.projects %}
-                        {% for proj in cv_data.content.projects %}
-                        <div class="project-item">
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input type="text" name="project-title[]" value="{{ proj.title }}">
-                            </div>
-                            <div class="form-group">
-                                <label>GitHub Link</label>
-                                <input type="url" name="project-github_link[]" value="{{ proj.github_link }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Responsibilities</label>
-                                <div class="responsibilities-list">
-                                    {% for resp in proj.responsibilities %}
-                                    <div class="responsibility-item">
-                                        <input type="text" name="project-responsibility[]" value="{{ resp }}">
-                                        <button type="button" class="remove-responsibility">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                <button type="button" class="add-responsibility">
-                                    <i class="fas fa-plus"></i> Add Responsibility
-                                </button>
-                            </div>
-                            <button type="button" class="remove-item">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                        {% endfor %}
-                        {% endif %}
+                        <!-- Project items will be added dynamically -->
                     </div>
                     <button type="button" id="add-project" class="add-section-button">
                         <i class="fas fa-plus"></i> Add Project
@@ -217,45 +196,230 @@
                 </div>
 
                 <div class="form-section">
-                    <h3><i class="fas fa-code"></i> Skills</h3>
+                    <div class="section-header">
+                        <h3><i class="fas fa-code"></i> Skills</h3>
+                        <button type="button" class="ai-recommend-btn" data-field="skills">
+                            <i class="fas fa-robot"></i> AI Recommend
+                        </button>
+                    </div>
                     <div class="form-group">
                         <label>Languages</label>
-                        <textarea id="languages" name="languages"
-                            rows="2">{{ cv_data.content.languages|join(', ') if cv_data and cv_data.content and cv_data.content.languages }}</textarea>
+                        <select id="languages" name="content.languages" class="skills-select" multiple="multiple">
+                            {% for skill in skills %}
+                            {% if skill.category == 'language' %}
+                            <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
                         <div class="form-line"></div>
-                        <small class="text-muted">Comma separated list</small>
                     </div>
                     <div class="form-group">
                         <label>Technologies</label>
-                        <textarea id="technologies" name="technologies"
-                            rows="2">{{ cv_data.content.technologies|join(', ') if cv_data and cv_data.content and cv_data.content.technologies }}</textarea>
+                        <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple">
+                            {% for skill in skills %}
+                            {% if skill.category == 'technology' %}
+                            <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
                         <div class="form-line"></div>
-                        <small class="text-muted">Comma separated list</small>
                     </div>
                 </div>
 
-                <button type="submit" class="generate-button">
-                    <i class="fas fa-save"></i> Save Changes
-                </button>
+                <div class="form-actions">
+                    <button type="button" id="save-draft-btn" class="save-draft-button">
+                        <i class="fas fa-save"></i> Save Draft
+                    </button>
+                    <button type="submit" class="generate-button">
+                        <i class="fas fa-file-pdf"></i> Save & Generate PDF
+                    </button>
+                </div>
             </form>
         </div>
 
         <div class="cv-preview">
             <div class="preview-header">
                 <h3><i class="fas fa-eye"></i> Live Preview</h3>
-                <a href="{{ url_for('dashboard.download_pdf_dashboard') }}" class="download-button">
-                    <i class="fas fa-download"></i> Download PDF
-                </a>
+                <div class="preview-actions">
+                    <button id="refresh-preview" class="refresh-button">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <a id="download-pdf-link" href="#" class="download-button">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
             </div>
-            {% if cv_data %}
-            <iframe src="{{ url_for('dashboard.preview_pdf_dashboard') }}" class="preview-iframe"></iframe>
-            {% else %}
-            <div class="preview-placeholder">
-                <i class="fas fa-file-pdf fa-3x"></i>
-                <p>Your CV preview will appear here after saving</p>
+            <div class="preview-container">
+                <iframe id="preview-iframe" src="" class="preview-iframe"></iframe>
+                <div class="preview-placeholder">
+                    <i class="fas fa-file-pdf fa-3x"></i>
+                    <p>Your CV preview will appear here after saving</p>
+                </div>
             </div>
-            {% endif %}
         </div>
     </div>
 </main>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Delete CV</h3>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete this CV? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="cancel-delete" class="cancel-button">Cancel</button>
+                <button id="confirm-delete" class="danger-button">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Recommend Modal -->
+<div id="ai-recommend-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>AI Recommendations</h3>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="ai-prompt-section">
+                <label for="ai-prompt">What would you like to improve?</label>
+                <input type="text" id="ai-prompt" placeholder="E.g., Make my experience more impactful">
+                <button id="get-ai-recommendation" class="primary-button">
+                    <i class="fas fa-robot"></i> Get Recommendations
+                </button>
+            </div>
+            <div class="ai-recommendation-result">
+                <h4>Recommendation</h4>
+                <div id="ai-recommendation-content">
+                    <div class="ai-loading">
+                        <div class="spinner"></div>
+                        <p>Generating recommendations...</p>
+                    </div>
+                    <div class="ai-result"></div>
+                </div>
+                <div class="ai-actions">
+                    <button id="apply-ai-recommendation" class="success-button">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Templates for dynamic form fields -->
+<template id="education-template">
+    <div class="education-item">
+        <div class="form-group">
+            <label>Degree</label>
+            <input type="text" name="education-degree[]" required>
+        </div>
+        <div class="form-group">
+            <label>University</label>
+            <input type="text" name="education-university[]" required>
+        </div>
+        <div class="form-group">
+            <label>Start Date</label>
+            <input type="text" name="education-startDate[]">
+        </div>
+        <div class="form-group">
+            <label>End Date</label>
+            <input type="text" name="education-endDate[]">
+        </div>
+        <div class="form-group">
+            <label>GPA</label>
+            <input type="text" name="education-gpa[]">
+        </div>
+        <div class="form-group">
+            <label>Coursework</label>
+            <textarea name="education-coursework[]" rows="3"></textarea>
+        </div>
+        <button type="button" class="remove-item">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</template>
+
+<template id="experience-template">
+    <div class="experience-item">
+        <div class="form-group">
+            <label>Role</label>
+            <input type="text" name="experience-role[]" required>
+        </div>
+        <div class="form-group">
+            <label>Company</label>
+            <input type="text" name="experience-company[]" required>
+        </div>
+        <div class="form-group">
+            <label>Location</label>
+            <input type="text" name="experience-location[]">
+        </div>
+        <div class="form-group">
+            <label>Start Date</label>
+            <input type="text" name="experience-startDate[]">
+        </div>
+        <div class="form-group">
+            <label>End Date</label>
+            <input type="text" name="experience-endDate[]">
+        </div>
+        <div class="form-group">
+            <label>Responsibilities</label>
+            <div class="responsibilities-list">
+                <div class="responsibility-item">
+                    <input type="text" name="experience-responsibility[]">
+                    <button type="button" class="remove-responsibility">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="add-responsibility">
+                <i class="fas fa-plus"></i> Add Responsibility
+            </button>
+        </div>
+        <button type="button" class="remove-item">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</template>
+
+<template id="project-template">
+    <div class="project-item">
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="project-title[]" required>
+        </div>
+        <div class="form-group">
+            <label>GitHub Link</label>
+            <input type="url" name="project-github_link[]">
+        </div>
+        <div class="form-group">
+            <label>Responsibilities</label>
+            <div class="responsibilities-list">
+                <div class="responsibility-item">
+                    <input type="text" name="project-responsibility[]">
+                    <button type="button" class="remove-responsibility">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="add-responsibility">
+                <i class="fas fa-plus"></i> Add Responsibility
+            </button>
+        </div>
+        <button type="button" class="remove-item">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</template>
+
+<template id="responsibility-template">
+    <div class="responsibility-item">
+        <input type="text" name="" required>
+        <button type="button" class="remove-responsibility">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</template>
 {% endblock %}

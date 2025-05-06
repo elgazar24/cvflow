@@ -1,0 +1,85 @@
+{
+    "personal_info": {
+      "name": "Mohamed Elgazar",
+      "email": "melgazar725@gmail.com",
+      "phone": "+971 507557673",
+      "linkedin": "https://www.linkedin.com/in/melgazar24/",
+      "github": "https://github.com/elgazar24",
+      "location": "Dubai, United Arab Emirates",
+      "image": ""
+    },
+    "sections": {
+      "objective": true,
+      "experience": true,
+      "education": true,
+      "short_education": false,
+      "projects": false,  
+      "languages": true,
+      "technologies": false
+    },
+    "content": {
+      "objective": "Customer Service Executive with 3+ years of experience in sales, team leadership, and resolving customer inquiries. Proven track record in driving sales growth, managing teams, and delivering exceptional client support in the retail and education sectors. Skilled in communication, conflict resolution, and CRM tools. Passionate about fostering customer loyalty and improving service efficiency.",
+      "education": [
+        {
+          "degree": "Bachelor of Mechatronics Engineering",
+          "university": "Mansoura University",
+          "gpa": "3.4/4.0",
+          "certificate": "N\\A",
+          "startDate": "Sept 2020",
+          "endDate": "Sept 2024",
+          "coursework": " Linear algebra, Statistics, Artificial intelligence , Project Management, Sales, Business Analysis "
+        }
+      ], 
+      "experience": [
+        {
+          "role": "Sales Manager",
+          "company": "Bota Store",
+          "location": "Egypt",
+          "startDate": "2021",
+          "endDate": "2022",
+          "responsibilities": [
+            "Led a team of 3+ sales associates to achieve a 25% increase in quarterly revenue.",
+            "Trained staff on product knowledge, upselling techniques, and customer engagement.",
+            "Resolved escalated customer complaints, ensuring 100% satisfaction retention.",
+            "Analyzed sales trends to optimize inventory and promotional strategies."
+          ]
+        },
+        {
+          "role": "Sales Associate",
+          "company": "Desire Store (Clothing Sector)",
+          "location": "Egypt",
+          "startDate": "2020",
+          "endDate": "2021",
+          "responsibilities": [
+            "Provided personalized shopping experiences, boosting repeat customer rates by 30%.",
+            "Managed cash registers and processed transactions with 99% accuracy.",
+            "Maintained visual merchandising standards to enhance in-store appeal."
+          ]
+        },
+        {
+          "role": "Instructor & Sales Inquiry Specialist",
+          "company": "Roboto Academy",
+          "location": "Egypt",
+          "startDate": "Oct 2024",
+          "endDate": "Apr 2025",
+          "responsibilities": [
+            "Handled inbound sales inquiries via email, phone, and live chat.",
+            "Trained clients on product features and resolved technical questions.",
+            "Collaborated with the sales team to convert inquiries into confirmed bookings."
+          ]
+        }
+      ],
+      "languages": [
+        "Arabic (Native)",
+        "English (Professional)"
+      ],
+      "technologies": [
+        "Microsoft Office Suite",
+        "Zendesk",
+        "CRM Systems",
+        "Google Suite",
+        "LiveChat",
+        "SQL (Data Analysis)"
+      ]
+    }
+  }

@@ -18,7 +18,7 @@
       "technologies": true
     },
     "content": {
-      "objective": "Mechatronics Engineer with a strong focus on AI and data science, bringing hands-on experience in Python, C++, SQL,  and  machine  learning.  Passionate  about  transforming  complex  data  into  meaningful  insights  through statistical modeling, predictive algorithms, and data visualization. Adept at tackling real-world challenges with AIdriven  solutions,  collaborating  effectively  in  team  environments,  and  managing  projects  with  a  proactive  and analytical mindset. Committed to continuous learning and staying at the forefront of technological advancements.",
+      "objective": "Dynamic Embedded Software Engineer with practical experience in developing and maintaining software for embedded devices. Boasting hands-on skills in microcontroller programming, Linux device driver development, and hardware communication protocols like I2C and SPI. Completed an Embedded Systems Professional Nanodegree with a focus on automotive communication and real-time operating systems. Proven ability to troubleshoot and debug complex systems effectively. Eager to leverage expertise to contribute to innovative projects at the company.",
       "education": [
         {
           "degree": "Bachelor of Mechatronics Engineering",
@@ -26,8 +26,17 @@
           "startDate": "Sept 2020",
           "endDate": "Sept 2024",
           "gpa": "3.4/4.0",
-          "certificate": "N\\A",
+          "certificate": "https://drive.google.com/file/d/1_T2m4k78DP20ini8dCwFxxhKK5xpftuy/view?usp=sharing",
           "coursework": "Mechanics, Machine Learning, Embedded systems, Robotics, Linear algebra, Statistics, Artificial intelligence"
+        },
+        {
+          "degree": "Embedded Systems Professional Nanodegree",
+          "university": "Udacity - Egypt FWD",
+          "gpa": "Completed",
+          "startDate": "Sept 2022",
+          "endDate": "Dec 2022",
+          "certificate": "https://drive.google.com/file/d/1qg4IM_zmd8Wyk5V9Xo05Ln9YCU90FEMU/view?usp=share_link",
+          "coursework": "Embedded Systems, AUTOSAR , Automotive , Automotive Communication protocols , Agaile , AVR and ARM microcontrollers"
         },
         {
           "degree": "Associate Data Scientist in Python - Career track",
@@ -66,15 +75,6 @@
           "coursework": "Python ,Supervised Learning, NumPy , scikit-learn, Machine learning  , Gradient Descent"
         },
         {
-          "degree": "Embedded Systems Professional Nanodegree",
-          "university": "Udacity - Egypt FWD",
-          "gpa": "Completed",
-          "startDate": "Sept 2022",
-          "endDate": "Dec 2022",
-          "certificate": "https://drive.google.com/file/d/1qg4IM_zmd8Wyk5V9Xo05Ln9YCU90FEMU/view?usp=share_link",
-          "coursework": "Embedded Systems, AUTOSAR , Automotive , Automotive Communication protocols , Agaile , AVR and ARM microcontrollers"
-        },
-        {
           "degree": "Mobile App Development with Flutter and Dart (iOS and Android)",
           "university": "Udemy",
           "gpa": "Completed",
@@ -95,9 +95,9 @@
       ],
       "experience": [
         {
-          "role": "AI Training Contributor",
-          "company": "Outlier.ai – https://www.dataannotation.tech/",
-          "location": "Remote",
+          "role": "Software Developer in Artificial Intelligence Training",
+          "company": "Outlier.ai – dataannotation.tech",
+          "location": "Remote , United Arab Emirates",
           "startDate": "Jan 2025",
           "endDate": "Present",
           "responsibilities": [
@@ -114,8 +114,9 @@
           "endDate": "Apr 2025",
           "responsibilities": [
             "Designed and delivered robotics and computer science curricula.",
-            "Taught advanced programming and AI concepts to students.",
-            "Fostered a hands-on learning environment with robotics kits and software tools."
+            "Taught advanced programming and AI concepts to students like python, C++ and Linear Regression.",
+            "Fostered a hands-on learning environment with robotics kits and software tools.",
+            "Incressed Course bookings by 20% by applying new curriculum and teaching methods."
           ]
         },
         {
@@ -127,7 +128,7 @@
           "responsibilities": [
             "Acquired knowledge of power distribution systems and substation components.",
             "Assisted in the maintenance and troubleshooting of transformers and circuit breakers.",
-            "Developed basic understanding of SCADA systems used in electricity distribution.",
+            "Worked with SCADA systems used in electricity distribution.",
             "Observed load balancing and fault analysis in medium and low voltage networks.",
             "Collaborated with engineers on preventive maintenance and system upgrades."
           ]
@@ -139,11 +140,12 @@
           "startDate": "June 2023",
           "endDate": "Jan 2024",
           "responsibilities": [
-            "Gained practical experience in microcontroller interfacing and automotive communication protocols.",
+            "Worked on projects with microcontroller interfacing and automotive communication protocols.",
             "Learned AUTOSAR software architecture and MISRA-C standards.",
             "Developed real-time firmware for ARM and AVR microcontrollers.",
             "Worked with a team of developers to develop an embedded system project.",
-            "Gained hands-on experience with microcontroller-based systems and Real-Time Operating Systems."
+            "Gained hands on experience on testing and debugging embedded systems.",
+            "Developed Smart home system using Real-Time Operating Systems ."
           ]
         },
         {
@@ -155,7 +157,7 @@
           "responsibilities": [
             "Learned troubleshooting techniques for air, fuel, lubrication, and cooling systems.",
             "Applied knowledge of PLC systems and industrial automation controls.",
-            "Worked with inverters, switchgear, and spreader control systems.",
+            "Worked with inverters and switchgear control systems.",
             "Understood the control circuit design of port tractor systems."
           ]
         },
@@ -176,6 +178,56 @@
       ],
       "projects": [
         {
+          "title": "Advanced Exploration Robot",
+          "github_link": "https://github.com/melgazar24/Advanced-Exploration-Robot",
+          "responsibilities": [
+            "Developed a pipe exploration robot using the Raspberry Pi with Linux OS and OpenCV.",
+            "Using Python to program the Raspberry Pi to collect data from sensors ( Camera, Ultrasonic, etc.).",
+            "Tools used: C++ , Python, Raspberry Pi , NodeJs , STM32 MCU , Linux and OpenCV."
+          ]
+        },
+        {
+          "title": "Smart Home System using RTOS",
+          "github_link": "https://github.com/melgazar24/Smart-Home-RTOS",
+          "responsibilities": [
+            "Designed and implemented a real-time smart home system using FreeRTOS on ARM Cortex-M microcontroller.",
+            "Managed multiple concurrent tasks including lighting control, temperature monitoring, motion detection, and fan automation.",
+            "Used semaphores, queues, and task prioritization to ensure real-time performance and task synchronization.",
+            "Integrated sensors (PIR, DHT11, LDR) and actuators (relays, LEDs) with STM32 and handled I/O using FreeRTOS drivers.",
+            "Tools used: C, STM32CubeIDE, FreeRTOS, STM32F103, Segger J-Link."
+          ]
+        },
+        {
+          "title": "AVR and ARM Drivers",
+          "github_link": "https://github.com/melgazar24/Arm-Drivers",
+          "responsibilities": [
+            "Write drivers code for peripherals such as GPIO, GPT , SPI, I2C, and ADC.",
+            "Developed projects using ARM Cortex-M3 based STM32 microcontrollers.",
+            "Tools Used: C, .C++, STM32CubeMX , XC8 , Segger debugger"
+          ]
+        },
+        {
+          "title": "Stock Price Prediction with Machine Learning",
+          "github_link": "https://github.com/melgazar24/Stock-Price-Prediction-ML",
+          "responsibilities": [
+            "Built a machine learning model to predict future stock prices based on historical data.",
+            "Used regression and LSTM models to capture time-dependent market trends.",
+            "Engineered features such as rolling mean, volatility, and technical indicators.",
+            "Evaluated model accuracy using RMSE and cross-validation techniques.",
+            "Tools used: Python, Scikit-learn, Keras, Pandas, yFinance, Matplotlib."
+          ]
+        },
+        {
+          "title": "Company Revenue and Financial Report Analysis",
+          "github_link": "https://github.com/melgazar24/Company-Financial-EDA",
+          "responsibilities": [
+            "Analyzed quarterly and annual financial reports of publicly traded companies.",
+            "Extracted insights from revenue, net income, debt ratio, and expense trends over time.",
+            "Used statistical analysis to detect patterns in profitability and cash flow movements.",
+            "Tools used: Python, Pandas, Matplotlib, Power BI, Excel."
+          ]
+        },
+        {
           "title": "Student Performance Prediction Using Multiple Variables",
           "github_link": "https://github.com/elgazar24/Student-Performance-Prediction-Using-Multiple-Variables.git",
           "responsibilities": []
@@ -190,37 +242,21 @@
             "Regression techniques are used to optimize the model for an accurate price prediction.",
             "Tools used: Python, Pandas, NumPy, Matplotlib."
           ]
-        },
-        {
-          "title": "Advanced Exploration Robot",
-          "github_link": "https://github.com/melgazar24/",
-          "responsibilities": [
-            "Developed a pipe exploration robot using the Raspberry Pi.",
-            "Using Python to program the Raspberry Pi to collect data from sensors ( Camera, Ultrasonic, etc.).",
-            "Tools used: C++ , Python, Raspberry Pi , NodeJs , STM32 MCU , Linux and OpenCV."
-          ]
-        },
-        {
-          "title": "AVR and ARM Drivers",
-          "github_link": "https://github.com/melgazar24/",
-          "responsibilities": [
-            "Write drivers code for peripherals such as GPIO, GPT , SPI, I2C, and ADC.",
-            "Developed projects using ARM Cortex-M3 based STM32 microcontrollers.",
-            "Tools Used: C, .C++, STM32CubeMX , XC8 , Segger debugger"
-          ]
         }
       ],
       "languages": [
-        "C++",
-        "C",
-        "Python",
-        "SQL",
-        "Dart",
-        "HTML",
-        "CSS",
-        "JavaScript"
+        "Arabic ( Native )",
+        "English ( Professional )"
       ],
       "technologies": [
+        "Python ( Expert )",
+        "C++ ( Expert )",
+        "SQL ( Advanced )",
+        "Dart ( Advanced )",
+        "C ( Advanced )",
+        "HTML ( Intermediate )",
+        "CSS ( Intermediate )",
+        "JavaScript ( Intermediate )",
         "OpenCV",
         "TensorFlow",
         "Pandas",
@@ -234,6 +270,7 @@
         "VS Code",
         "XCode",
         "ARM",
+        "Communication Protocols",
         "AVR",
         "Flutter",
         "Git",
