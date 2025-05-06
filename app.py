@@ -130,9 +130,9 @@ def create_app():
 
 
     # Create required directories
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['LATEX_OUTPUT_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['PDF_OUTPUT_FOLDER'], exist_ok=True)
+    for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER']:
+        os.makedirs(app.config[folder], exist_ok=True)
+        os.chmod(app.config[folder], 0o775)  # rwxrwxr-x
 
     # Register blueprints
     app.register_blueprint(auth_blueprint)
@@ -295,7 +295,7 @@ def create_app():
                 app.logger.info("Starting PDF generation with pdflatex")
                 try:
                     result = subprocess.run(
-                        ["pdflatex", "-interaction=nonstopmode", "-output-directory", app.config['PDF_OUTPUT_FOLDER'], latex_output_path],
+                        ["/usr/bin/pdflatex", "-interaction=nonstopmode", "-output-directory", app.config['PDF_OUTPUT_FOLDER'], latex_output_path],
                         capture_output=True,
                         text=True,
                         timeout=30  # Add timeout to prevent hanging
@@ -372,8 +372,8 @@ def create_app():
             tex_file.write(cv_str)
 
         subprocess.run(
-            ["pdflatex", "-interaction=nonstopmode", "-output-directory", 
-            app.config['PDF_OUTPUT_FOLDER'], latex_output_path],
+            ["/usr/bin/pdflatex", "-interaction=nonstopmode", "-output-directory", 
+            app.config['PDF_OUTPUT_FOLDER'] , latex_output_path],
             capture_output=True,
             text=True
         )
@@ -391,9 +391,49 @@ def create_app():
     def download_file(filename):
         return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], filename, as_attachment=True)
 
+    from flask import abort, send_file
+
     @app.route('/preview/<filename>')
     def preview_pdf(filename):
-        return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], filename)
+        try:
+            # Ensure filename has .pdf extension
+            if not filename.lower().endswith('.pdf'):
+                filename += '.pdf'
+
+            # Construct full safe path
+            pdf_dir = os.path.abspath(app.config['PDF_OUTPUT_FOLDER'])
+            pdf_path = os.path.join(pdf_dir, filename)
+
+            # Security checks
+            if not os.path.exists(pdf_path):
+                app.logger.error(f"Preview failed - file not found: {pdf_path}")
+                abort(404)
+
+            if not pdf_path.startswith(pdf_dir):
+                app.logger.error(f"Security violation: {pdf_path} outside allowed directory")
+                abort(403)
+
+            app.logger.info(f"Serving PDF preview: {pdf_path}")
+
+            # Serve with correct headers
+            response = send_file(
+                pdf_path,
+                mimetype='application/pdf',
+                as_attachment=False,
+                conditional=True
+            )
+
+            # Cache control headers
+            response.headers['Cache-Control'] = 'no-store, max-age=0'
+            response.headers['Pragma'] = 'no-cache'
+            return response
+
+        except Exception as e:
+            app.logger.error(f"Preview failed: {str(e)}", exc_info=True)
+            abort(500)
+
+
+
 
     @app.route('/sample-json')
     def sample_json():
