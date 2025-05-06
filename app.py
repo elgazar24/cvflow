@@ -129,6 +129,10 @@ def create_app():
     setup_logging()
 
 
+    app.logger.info( " UPLOAD_FOLDER:" +  app.config['UPLOAD_FOLDER'] )
+    app.logger.info( " LATEX_OUTPUT_FOLDER:" +  app.config['LATEX_OUTPUT_FOLDER'] )
+    app.logger.info( " PDF_OUTPUT_FOLDER:" +  app.config['PDF_OUTPUT_FOLDER'] )
+
     # Create required directories
     for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER']:
         os.makedirs(app.config[folder], exist_ok=True)
@@ -389,7 +393,28 @@ def create_app():
 
     @app.route('/download/<filename>')
     def download_file(filename):
-        return send_from_directory(app.config['PDF_OUTPUT_FOLDER'], filename, as_attachment=True)
+        try:
+            # Security checks
+            if not filename.lower().endswith('.pdf'):
+                filename += '.pdf'
+
+            pdf_path = os.path.join(os.path.abspath(app.config['PDF_OUTPUT_FOLDER']), filename)
+
+            if not os.path.exists(pdf_path):
+                app.logger.error(f"Download failed - file not found: {pdf_path}")
+                return page_not_found("Download failed - File not found")
+
+            app.logger.info(f"Serving download for: {pdf_path}")
+            return send_from_directory(
+                app.config['PDF_OUTPUT_FOLDER'],
+                filename,
+                as_attachment=True,
+                mimetype='application/pdf'
+            )
+
+        except Exception as e:
+            app.logger.error(f"Download failed: {str(e)}", exc_info=True)
+            return internal_server_error(e)
 
     from flask import  send_file
 
