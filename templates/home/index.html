@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +20,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <meta property="og:title" content="CVFlow - Create Professional CVs in Seconds">
   <meta property="og:description" content="Generate polished resumes fully compatible with ATS in seconds">
-  <meta property="og:image" content="https://cvflow.live/favicon.ico"> 
+  <meta property="og:image" content="https://cvflow.live/favicon.ico">
   <meta property="og:url" content="https://cvflow.live">
   <meta name="twitter:card" content="summary_large_image">
 </head>
+
 <body>
   <div class="theme-switch-wrapper">
     <label class="theme-switch" for="theme-toggle">
@@ -116,14 +118,14 @@
 
 
       <div class="image-option-section">
-        <h3>Step 2: Add Profile Image?</h3>
+        <h3>Step 2: Add Image </h3>
         <div class="image-option-controls">
           <div class="option-toggle">
             <label class="toggle">
               <input type="checkbox" id="include-image-toggle">
               <span class="toggle-slider"></span>
             </label>
-            <span class="toggle-label">Include profile image</span>
+            <span class="toggle-label">Include image</span>
           </div>
           <div id="image-upload-container" class="hidden">
             <div class="image-preview-area">
@@ -138,10 +140,11 @@
         </div>
       </div>
 
+      <!-- 3. Tutorial Video Section - Add this before the upload-container div -->
       <div class="tutorial-section">
         <h3>Step 3: How to Use CVFlow</h3>
         <div class="video-container">
-          <iframe src="https://cvflow.live/how-to-use/intro-vid" allowfullscreen></iframe>
+          <iframe src="/how-to-use/intro-vid" allowfullscreen></iframe>
           <div class="video-overlay">
             <button id="play-tutorial" class="play-button">
               <i class="fa-solid fa-play"></i>
@@ -157,7 +160,7 @@
           <span>Go to Dashboard</span>
         </a>
       </div>
-      
+
 
 
       <div class="upload-container">
@@ -172,7 +175,7 @@
             <p class="file-selected-name"></p>
           </div>
           <div class="upload-actions">
-            <button  type="submit" class="generate-button">
+            <button type="submit" class="generate-button">
               <span>Generate CV</span>
               <i class="fa-solid fa-wand-magic-sparkles"></i>
             </button>
@@ -213,7 +216,7 @@
       </div>
     </section>
 
-    
+
     <section id="templates" class="templates-section">
       <h2>CV Templates</h2>
       <div class="templates-showcase">
@@ -223,7 +226,8 @@
           </div>
           <div class="template-info">
             <h3>Professional</h3>
-            <p>Clean, formal style perfect for traditional industries. Emphasizes experience and achievements with a structured layout.</p>
+            <p>Clean, formal style perfect for traditional industries. Emphasizes experience and achievements with a
+              structured layout.</p>
             <ul class="template-features">
               <li><i class="fa-solid fa-check"></i> Classic typography</li>
               <li><i class="fa-solid fa-check"></i> Formal structure</li>
@@ -231,14 +235,15 @@
             </ul>
           </div>
         </div>
-        
+
         <div class="template-showcase-item reverse">
           <div class="template-image modern">
             <div class="template-layers"></div>
           </div>
           <div class="template-info">
             <h3>Modern</h3>
-            <p>Contemporary design with accent colors and creative layout. Ideal for creative industries and tech roles.</p>
+            <p>Contemporary design with accent colors and creative layout. Ideal for creative industries and tech roles.
+            </p>
             <ul class="template-features">
               <li><i class="fa-solid fa-check"></i> Color accents</li>
               <li><i class="fa-solid fa-check"></i> Modern typography</li>
@@ -246,14 +251,15 @@
             </ul>
           </div>
         </div>
-        
+
         <div class="template-showcase-item">
           <div class="template-image minimalist">
             <div class="template-layers"></div>
           </div>
           <div class="template-info">
             <h3>Minimalist</h3>
-            <p>Clean, spacious design that lets your content breathe. Perfect for those who appreciate simplicity and elegance.</p>
+            <p>Clean, spacious design that lets your content breathe. Perfect for those who appreciate simplicity and
+              elegance.</p>
             <ul class="template-features">
               <li><i class="fa-solid fa-check"></i> Ample white space</li>
               <li><i class="fa-solid fa-check"></i> Elegant typography</li>
@@ -271,16 +277,23 @@
           <div class="about-image">
             <div class="avatar-placeholder">
               <!-- add image -->
-              <img src="{{ url_for('static', filename='images/mohamed_photo/mohamed_photo.png') }}" alt="mohamed_elgazar_photo" class="avatar-placeholder">
+              <img src="{{ url_for('static', filename='images/mohamed_photo/mohamed_photo.png') }}"
+                alt="mohamed_elgazar_photo" class="avatar-placeholder">
               <!-- <i class="fa-solid fa-user"></i> -->
             </div>
           </div>
           <div class="about-text">
-            <p>Mechatronics Engineer with a strong focus on AI and data science, bringing hands-on experience in Python, C++, 
-              SQL,  and  machine  learning.  Passionate  about  transforming  complex  data  into  meaningful  insights  through 
-              statistical modeling, predictive algorithms, and data visualization. Adept at tackling real-world challenges with AIdriven  solutions,  collaborating  effectively  in  team  environments,  and  managing  projects  with  a  proactive  and 
-              analytical mindset. Committed to continuous learning and staying at the forefront of technological advancements</p>
-            <p>My passion lies in creating tools that simplify complex processes while maintaining high quality output. This CV generator is just one example of how I combine technical expertise with practical applications.</p>
+            <p>Mechatronics Engineer with a strong focus on AI and data science, bringing hands-on experience in Python,
+              C++,
+              SQL, and machine learning. Passionate about transforming complex data into meaningful insights through
+              statistical modeling, predictive algorithms, and data visualization. Adept at tackling real-world
+              challenges with AIdriven solutions, collaborating effectively in team environments, and managing projects
+              with a proactive and
+              analytical mindset. Committed to continuous learning and staying at the forefront of technological
+              advancements</p>
+            <p>My passion lies in creating tools that simplify complex processes while maintaining high quality output.
+              This CV generator is just one example of how I combine technical expertise with practical applications.
+            </p>
             <div class="about-skills">
               <span class="skill-tag">Python</span>
               <span class="skill-tag">Machine Learning</span>
@@ -351,7 +364,8 @@
           <h3>Connect</h3>
           <div class="social-links">
             <a href="https://github.com/elgazar24" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/melgazar24/" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.linkedin.com/in/melgazar24/" aria-label="LinkedIn"><i
+                class="fa-brands fa-linkedin"></i></a>
             <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
             <a href="mailto:melgazar725@example.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
           </div>
@@ -359,7 +373,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Mohamed Elgazar | Made with <i class="fa-solid fa-laptop-code"></i> + <i class="fa-solid fa-mug-hot"></i> | <a href="mailto:melgazar725@example.com">melgazar725@gmail.com</a></p>
+      <p>© 2025 Mohamed Elgazar | Made with <i class="fa-solid fa-laptop-code"></i> + <i
+          class="fa-solid fa-mug-hot"></i> | <a href="mailto:melgazar725@example.com">melgazar725@gmail.com</a></p>
     </div>
   </footer>
 
@@ -521,4 +536,5 @@
     </div>
   </div>
 </body>
+
 </html>

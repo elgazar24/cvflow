@@ -204,6 +204,7 @@ def create_app():
         # Handle image upload if provided
         profile_image = None
         image_path = None
+
         if 'profile_image' in request.files:
             profile_image = request.files['profile_image']
             if profile_image and allowed_image_file(profile_image.filename):
@@ -211,6 +212,9 @@ def create_app():
                 # Save the image with unique ID
                 image_filename = f"{unique_id}_{secure_filename(profile_image.filename)}"
                 image_path = os.path.join(app.config['IMAGE_UPLOAD_FOLDER'], image_filename)
+
+                # Save the image
+                app.logger.info(f"Image saved to: {image_path}")
                 profile_image.save(image_path)
 
                 # Pass the image path to the cv data
@@ -548,6 +552,17 @@ def create_app():
         except Exception as e:
             db.session.rollback()
             return {'success': False, 'error': str(e)}, 500
+
+
+    @app.route('/how-to-use/intro-vid', methods=['GET'])
+    def intro_video():
+        # Send the intro video
+        return send_file(
+            os.path.join(app.root_path, 'static', 'videos', 'intro-vid.mp4'),
+            mimetype='video/mp4',
+            as_attachment=False,
+            conditional=True
+        )
 
     @app.errorhandler(404)
     def page_not_found(e):
