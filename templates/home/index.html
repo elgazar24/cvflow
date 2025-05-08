@@ -87,9 +87,9 @@
     <section id="upload-section" class="upload-section">
       <h2>Create Your CV</h2>
       <div class="template-selector">
-        <h3>Choose a Template</h3>
+        <h3>Step 1: Choose a Template</h3>
         <div class="templates-grid">
-          <div class="template-card" data-template="professional">
+          <div class="template-card selected" data-template="professional">
             <div class="template-preview professional">
               <div class="template-preview-inner"></div>
             </div>
@@ -115,7 +115,53 @@
       </div>
 
 
+      <div class="image-option-section">
+        <h3>Step 2: Add Profile Image?</h3>
+        <div class="image-option-controls">
+          <div class="option-toggle">
+            <label class="toggle">
+              <input type="checkbox" id="include-image-toggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Include profile image</span>
+          </div>
+          <div id="image-upload-container" class="hidden">
+            <div class="image-preview-area">
+              <div id="image-preview">
+                <i class="fa-solid fa-user"></i>
+              </div>
+            </div>
+            <label for="image-input" class="file-input-label">Upload Image</label>
+            <input type="file" id="image-input" name="profile_image" accept="image/*">
+            <p class="image-note">Recommended: Square image, 300x300px</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-section">
+        <h3>Step 3: How to Use CVFlow</h3>
+        <div class="video-container">
+          <iframe src="https://cvflow.live/how-to-use/intro-vid" allowfullscreen></iframe>
+          <div class="video-overlay">
+            <button id="play-tutorial" class="play-button">
+              <i class="fa-solid fa-play"></i>
+              <span>Watch Tutorial</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-button-container">
+        <a href="/dashboard" class="dashboard-button">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Go to Dashboard</span>
+        </a>
+      </div>
+      
+
+
       <div class="upload-container">
+        <h3>Step 4: Upload Your CV Data</h3>
         <form method="POST" enctype="multipart/form-data" id="upload-form" action="/upload">
           <div class="drag-drop-area" id="drag-drop-area">
             <i class="fa-solid fa-file-arrow-up"></i>
@@ -167,6 +213,7 @@
       </div>
     </section>
 
+    
     <section id="templates" class="templates-section">
       <h2>CV Templates</h2>
       <div class="templates-showcase">

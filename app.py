@@ -46,6 +46,7 @@ def create_app():
         UPLOAD_FOLDER=os.path.join('instance', 'uploads'),
         LATEX_OUTPUT_FOLDER=os.path.join('instance', 'latex_outputs'),
         PDF_OUTPUT_FOLDER=os.path.join('instance', 'pdf_outputs'),
+        IMAGE_UPLOAD_FOLDER=os.path.join('instance', 'image_uploads'),
         ALLOWED_EXTENSIONS={'json', 'txt'},
         MAX_CONTENT_LENGTH= eval(os.getenv('MAX_CONTENT_LENGTH')),
         
@@ -127,12 +128,8 @@ def create_app():
     setup_logging()
 
 
-    app.logger.info( " UPLOAD_FOLDER:" +  app.config['UPLOAD_FOLDER'] )
-    app.logger.info( " LATEX_OUTPUT_FOLDER:" +  app.config['LATEX_OUTPUT_FOLDER'] )
-    app.logger.info( " PDF_OUTPUT_FOLDER:" +  app.config['PDF_OUTPUT_FOLDER'] )
-
     # Create required directories
-    for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER']:
+    for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER','IMAGE_UPLOAD_FOLDER']:
         os.makedirs(app.config[folder], exist_ok=True)
         os.chmod(app.config[folder], 0o775)  # rwxrwxr-x
 
@@ -168,6 +165,12 @@ def create_app():
             return jsonify(response), status
         return wrapper
 
+    # Add this helper function to check allowed image types
+    def allowed_image_file(filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+    
+
     # Routes
     @app.route('/')
     def index():
@@ -182,17 +185,6 @@ def create_app():
         except Exception as e:
             return {'status': 'unhealthy', 'error': str(e)}, 500
 
-    # @app.route('/dashboard')
-    # @login_required
-    # def dashboard():
-    #     if not current_user.is_authenticated:
-    #         return redirect( url_for('auth.signin') )
-        
-    #     cv_data = CVData.query.filter_by(user_id=current_user.id).first()
-    #     form = CVForm()
-    #     return render_template( RoutePath.dashboard_index, 
-    #                         cv_data=cv_data.data if cv_data else None,
-    #                         form=form)
 
     @app.route('/upload', methods=['POST'])
     def upload_file():
@@ -209,6 +201,21 @@ def create_app():
             app.logger.warning("Empty filename in file upload")
             return render_template( RoutePath.home_index )
         
+        # Handle image upload if provided
+        profile_image = None
+        image_path = None
+        if 'profile_image' in request.files:
+            profile_image = request.files['profile_image']
+            if profile_image and allowed_image_file(profile_image.filename):
+
+                # Save the image with unique ID
+                image_filename = f"{unique_id}_{secure_filename(profile_image.filename)}"
+                image_path = os.path.join(app.config['IMAGE_UPLOAD_FOLDER'], image_filename)
+                profile_image.save(image_path)
+
+                # Pass the image path to the cv data
+                
+        
         if file and allowed_file(file.filename):
             unique_id = uuid.uuid4()
             safe_filename = secure_filename(file.filename)
@@ -222,11 +229,6 @@ def create_app():
                 template_style = request.form.get('template', 'professional')
                 app.logger.info(f"Selected template style: {template_style}")
                 
-                # Verify upload directories exist
-                for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER']:
-                    if not os.path.exists(app.config[folder]):
-                        os.makedirs(app.config[folder])
-                        app.logger.info(f"Created directory: {app.config[folder]}")
                 
                 input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 latex_output_path = os.path.join(app.config['LATEX_OUTPUT_FOLDER'], f"{unique_id}.tex")
@@ -236,7 +238,9 @@ def create_app():
                 app.logger.info(f"File paths configured - "
                             f"Input: {input_path}, "
                             f"LaTeX Output: {latex_output_path}, "
-                            f"PDF Output: {pdf_output_path}")
+                            f"PDF Output: {pdf_output_path}"
+                            f"Profile Image: {image_path}"
+                            )
                 
                 # Verify file content before saving
                 #if file.content_length == 0:
@@ -267,8 +271,13 @@ def create_app():
             try:
                 # Generate LaTeX from input with selected template
                 app.logger.info("Starting LaTeX generation")
-                cv_generator = generator.Generator(input_path)#, template=template_style)
+                if image_path is not None:
+                    cv_generator = generator.Generator(input_path, template=template_style, image_path=image_path)
+                else:
+                    cv_generator = generator.Generator(input_path, template=template_style)
+
                 cv_str = cv_generator.make_cv()
+
                 app.logger.info(f"Generated LaTeX content (length: {len(cv_str)} characters)")
                 
                 try:

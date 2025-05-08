@@ -25,9 +25,13 @@ class Generator:
     source_path = ""
     cv_data = {}
     cv_str = ""
+    image_path = None
+    template = None
 
-    def __init__(self, source_path):
+    def __init__(self, source_path, template , image_path=None):
         self.source_path = source_path
+        self.image_path = image_path
+        self.template = template
         self.extract_cv_info()
         
 

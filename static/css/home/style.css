@@ -379,6 +379,8 @@ input:checked + .slider:before {
   margin: 0 auto;
 }
 
+
+/* Template Section Styling */
 .template-selector {
   margin-bottom: 4rem;
 }
@@ -458,6 +460,251 @@ input:checked + .slider:before {
   font-size: 0.9rem;
 }
 
+
+/* Select Image Styling */
+
+.image-option-section {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius-md);
+}
+
+.image-option-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.option-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--text-lighter);
+  transition: var(--transition);
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: var(--transition);
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+.toggle-label {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+#image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+#image-upload-container.hidden {
+  display: none;
+}
+
+.image-preview-area {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-light);
+  border: 2px dashed var(--border-color);
+}
+
+#image-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-lighter);
+  font-size: 3rem;
+  background-size: cover;
+  background-position: center;
+}
+
+.image-note {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  text-align: center;
+}
+
+/* Tutorial Video Section */
+.tutorial-section {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius-md);
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-dark);
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.video-overlay:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.play-button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+}
+
+.play-button:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.play-button i {
+  font-size: 1.2rem;
+}
+
+/* Dashboard Button */
+.dashboard-button-container {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.dashboard-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.5rem;
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.dashboard-button:hover {
+  background-color: var(--bg-color);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.dashboard-button i {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+/* Update upload container heading */
+.upload-container h3 {
+  margin-bottom: 1.2rem;
+}
+
+/* Step numbering for headings */
+.upload-section h3 {
+  position: relative;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-section h3:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 1.5px;
+}
+
+
+/* Upload Cv Date Styling */
 .upload-container {
   margin-bottom: 2rem;
 }
