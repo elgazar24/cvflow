@@ -86,6 +86,24 @@
         </div>
       </div>
     </section>
+
+    <section class="how-to-use">
+      <div class="tutorial-section">
+        <h3>How to Use CVFlow</h3>
+        <div class="video-container">
+          <iframe src="/how-to-use/intro-vid" allowfullscreen></iframe>
+          <div class="video-overlay">
+            <button id="play-tutorial" class="play-button">
+              <i class="fa-solid fa-play"></i>
+              <span>Watch Tutorial</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
     <section id="upload-section" class="upload-section">
       <h2>Create Your CV</h2>
       <div class="template-selector">
@@ -140,31 +158,24 @@
         </div>
       </div>
 
-      <!-- 3. Tutorial Video Section - Add this before the upload-container div -->
-      <div class="tutorial-section">
-        <h3>Step 3: How to Use CVFlow</h3>
-        <div class="video-container">
-          <iframe src="/how-to-use/intro-vid" allowfullscreen></iframe>
-          <div class="video-overlay">
-            <button id="play-tutorial" class="play-button">
-              <i class="fa-solid fa-play"></i>
-              <span>Watch Tutorial</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
-      <div class="dashboard-button-container">
-        <a href="/dashboard" class="dashboard-button">
-          <i class="fa-solid fa-gauge-high"></i>
-          <span>Go to Dashboard</span>
-        </a>
-      </div>
+
 
 
 
       <div class="upload-container">
-        <h3>Step 4: Upload Your CV Data</h3>
+        <div class="upload-header">
+          <h3>Step 3: Upload Your CV Data</h3>
+
+          <div class="dropdown-sample-file">
+            <label for="download-sample-file" class="download-sample-file-label">Download Sample File</label>
+            <div class="dropdown-content">
+              <a href="#" id="download-txt">Text File (.txt)</a>
+              <a href="#" id="download-json">JSON File (.json)</a>
+              <a href="#" id="download-docx">Word Document (.docx)</a>
+            </div>
+          </div>
+        </div>        
         <form method="POST" enctype="multipart/form-data" id="upload-form" action="/upload">
           <div class="drag-drop-area" id="drag-drop-area">
             <i class="fa-solid fa-file-arrow-up"></i>
@@ -179,6 +190,12 @@
               <span>Generate CV</span>
               <i class="fa-solid fa-wand-magic-sparkles"></i>
             </button>
+
+            <button type="button" id="go-to-dashboard" class="dashboard-button">
+              <span>Go to Dashboard</span>
+              <i class="fa-solid fa-gauge-high"></i>
+            </button>
+
           </div>
         </form>
 
@@ -202,7 +219,6 @@
           <span>Download PDF</span>
         </a>
       </div>
-      {% endif %}
 
       <div id="live-preview" class="live-preview">
         <h3>Live Preview</h3>
@@ -214,6 +230,7 @@
           <iframe id="pdf-preview" width="100%" height="600px"></iframe>
         </div>
       </div>
+      {% endif %}
     </section>
 
 

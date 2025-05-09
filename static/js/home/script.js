@@ -67,6 +67,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    document.getElementById('go-to-dashboard').addEventListener('click', function () {
+        window.location.href = '/dashboard';
+    });
+
+    document.getElementById('download-txt').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = '/samples/txt-sample-file';
+    });
+
+    document.getElementById('download-json').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = '/samples/json-sample-file';
+    });
+
+    document.getElementById('download-docx').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = '/samples/docx-sample-file';
+    });
+
     // Image upload handling
     const includeImageToggle = document.getElementById('include-image-toggle');
     const imageUploadContainer = document.getElementById('image-upload-container');
@@ -218,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Update form submission to include image
     if (uploadForm) {
-        
+
         const originalSubmitHandler = uploadForm.onsubmit;
 
         uploadForm.onsubmit = function (e) {

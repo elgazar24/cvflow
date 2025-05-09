@@ -3,7 +3,7 @@ import uuid
 import json
 import subprocess
 from datetime import datetime, timedelta
-from flask import Flask, request, render_template, url_for, send_from_directory, flash, jsonify , send_file
+from flask import Flask, request, render_template, url_for, send_from_directory, flash, jsonify , send_file ,make_response
 from werkzeug.utils import secure_filename
 import cv_gen.generator as generator
 from models import User, CVData, ContactMessage
@@ -47,8 +47,9 @@ def create_app():
         LATEX_OUTPUT_FOLDER=os.path.join('instance', 'latex_outputs'),
         PDF_OUTPUT_FOLDER=os.path.join('instance', 'pdf_outputs'),
         IMAGE_UPLOAD_FOLDER=os.path.join('instance', 'image_uploads'),
-        ALLOWED_EXTENSIONS={'json', 'txt'},
+        ALLOWED_EXTENSIONS={'json', 'txt','docx','doc'},
         MAX_CONTENT_LENGTH= eval(os.getenv('MAX_CONTENT_LENGTH')),
+
         
         # Email Configuration
         MAIL_SERVER=os.getenv('MAIL_SERVER', 'smtp.gmail.com'),
@@ -210,6 +211,7 @@ def create_app():
             if profile_image and allowed_image_file(profile_image.filename):
 
                 # Save the image with unique ID
+                unique_id = uuid.uuid4()
                 image_filename = f"{unique_id}_{secure_filename(profile_image.filename)}"
                 image_path = os.path.join(app.config['IMAGE_UPLOAD_FOLDER'], image_filename)
 
@@ -275,6 +277,7 @@ def create_app():
             try:
                 # Generate LaTeX from input with selected template
                 app.logger.info("Starting LaTeX generation")
+                cv_generator = None
                 if image_path is not None:
                     cv_generator = generator.Generator(input_path, template=template_style, image_path=image_path)
                 else:
@@ -530,6 +533,68 @@ def create_app():
         }
         
         return jsonify(sample)
+
+
+    # Text file download endpoint
+    @app.route('/samples/txt-sample-file')
+    def txt_file():
+        
+        # Sample text data
+        text_data = "This is a sample text file."
+        
+        # Create a response with the text content
+        response = make_response(text_data)
+        
+        # Set headers to force download
+        response.headers["Content-Disposition"] = "attachment; filename=sample.txt"
+        response.headers["Content-Type"] = "text/plain"
+        
+        return response
+
+    # JSON file download endpoint
+    @app.route('/samples/json-sample-file')
+    def json_file():
+        # Sample JSON data
+        json_data = {
+            "name": "Sample Data",
+            "type": "JSON",
+            "items": ["item1", "item2", "item3"]
+        }
+        
+        # Create a response with the JSON content
+        response = make_response(json.dumps(json_data, indent=2))
+        
+        # Set headers to force download
+        response.headers["Content-Disposition"] = "attachment; filename=sample.json"
+        response.headers["Content-Type"] = "application/json"
+        
+        return response
+
+    # DOCX file download endpoint
+    @app.route('/samples/docx-sample-file')
+    def docx_file():
+        pass
+
+
+        # # Create a new Word document
+        # doc = Document()
+        
+        # # Add content to the document
+        # doc.add_paragraph('This is a sample Word document.')
+        
+        # # Save document to a BytesIO object
+        # file_stream = io.BytesIO()
+        # doc.save(file_stream)
+        # file_stream.seek(0)
+        
+        # Return the document as a downloadable file
+        # return send_file(
+        #     file_stream,
+        #     as_attachment=True,
+        #     download_name='sample.docx',
+        #     mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        # )
+    
 
     @app.route('/contact', methods=['POST'])
     @limiter.limit("5 per minute") 

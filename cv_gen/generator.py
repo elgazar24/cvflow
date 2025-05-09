@@ -225,7 +225,9 @@ class Generator:
          
     def generate_personl_info(self):
         # Get image path from JSON data
-        image_path = self.cv_data["personal_info"].get("image_path", "N\\A")  # Default to image.png if not specified
+        image_path = 'image.png'
+        if self.image_path is not None:
+            image_path = self.image_path
         
         personal_info_str = (
             r"""
