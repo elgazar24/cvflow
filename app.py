@@ -207,8 +207,14 @@ def create_app():
         image_path = None
 
         if 'profile_image' in request.files:
+
+            app.logger.info("Profile image Found in request")
+
             profile_image = request.files['profile_image']
+
             if profile_image and allowed_image_file(profile_image.filename):
+
+                app.logger.info("Profile image uploaded successfully")
 
                 # Save the image with unique ID
                 unique_id = uuid.uuid4()

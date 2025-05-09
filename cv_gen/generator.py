@@ -28,7 +28,7 @@ class Generator:
     image_path = None
     template = None
 
-    def __init__(self, source_path, template , image_path=None):
+    def __init__(self, source_path, template = None , image_path=None):
         self.source_path = source_path
         self.image_path = image_path
         self.template = template
