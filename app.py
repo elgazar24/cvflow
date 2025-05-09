@@ -203,29 +203,33 @@ def create_app():
             return render_template( RoutePath.home_index )
         
         # Handle image upload if provided
-        profile_image = None
-        image_path = None
 
-        if 'profile_image' in request.files:
+        try : 
+            profile_image = None
+            image_path = None
 
-            app.logger.info("Profile image Found in request")
+            if 'profile_image' in request.files:
 
-            profile_image = request.files['profile_image']
+                app.logger.info("Profile image Found in request")
 
-            if profile_image and allowed_image_file(profile_image.filename):
+                profile_image = request.files['profile_image']
 
-                app.logger.info("Profile image uploaded successfully")
+                if profile_image and allowed_image_file(profile_image.filename):
 
-                # Save the image with unique ID
-                unique_id = uuid.uuid4()
-                image_filename = f"{unique_id}_{secure_filename(profile_image.filename)}"
-                image_path = os.path.join(app.config['IMAGE_UPLOAD_FOLDER'], image_filename)
+                    app.logger.info("Profile image uploaded successfully")
 
-                # Save the image
-                app.logger.info(f"Image saved to: {image_path}")
-                profile_image.save(image_path)
+                    # Save the image with unique ID
+                    unique_id = uuid.uuid4()
+                    image_filename = f"{unique_id}_{secure_filename(profile_image.filename)}"
+                    image_path = os.path.join(app.config['IMAGE_UPLOAD_FOLDER'], image_filename)
 
-                # Pass the image path to the cv data
+                    # Save the image
+                    app.logger.info(f"Image saved to: {image_path}")
+                    profile_image.save(image_path)
+                
+        except Exception as e:
+            app.logger.info("Profile image upload failed with error:" + str(e))
+
                 
         
         if file and allowed_file(file.filename):
@@ -283,11 +287,21 @@ def create_app():
             try:
                 # Generate LaTeX from input with selected template
                 app.logger.info("Starting LaTeX generation")
+
                 cv_generator = None
-                if image_path is not None:
-                    cv_generator = generator.Generator(input_path, template=template_style, image_path=image_path)
-                else:
-                    cv_generator = generator.Generator(input_path, template=template_style)
+
+                try : 
+
+                    if image_path is not None:
+
+                        app.logger.info(f"Image path provided And Sent To Generator: {image_path}")
+
+                        cv_generator = generator.Generator(input_path, template=template_style, image_path=image_path)
+                    else:
+                        cv_generator = generator.Generator(input_path, template=template_style)
+
+                except Exception as e:
+                    app.logger.error(f"Failed to generate CV with selected template: {str(e)}", exc_info=True)
 
                 cv_str = cv_generator.make_cv()
 
