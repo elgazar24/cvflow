@@ -180,7 +180,6 @@ def get_template_fields(template_id):
                     "objective",
                     "education",
                     "experience",
-                    "projects",
                     "skills",
                 ],
             }
