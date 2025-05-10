@@ -33,7 +33,20 @@ def dashboard_index():
     cv_data = CVData.query.filter_by(user_id=current_user.id).all()
 
     # Get available templates
-    templates = Template.query.all()
+    templates = [
+                    {
+                        "id": 1,
+                        "name": "Default",
+                        "requires_image": True,
+                        "fields": [],
+                    },
+                    {
+                        "id": 2,
+                        "name": "Professional",
+                        "requires_image": True,
+                        "fields": [],
+                    },
+                ],
 
     # Get available skills
     skills = Skill.query.all()
