@@ -46,13 +46,13 @@ def dashboard_index():
                         "requires_image": True,
                         "fields": [],
                     },
-                ],
+                ]
 
     # Get available skills
     skills = Skill.query.all()
 
     form = CVForm()
-    
+
     return render_template(
         RoutePath.dashboard_index,
         cv_data=cv_data,
