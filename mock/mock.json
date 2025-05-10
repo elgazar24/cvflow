@@ -1,0 +1,243 @@
+{
+    "personal_info": {
+      "name": "Mohamed Elgazar",
+      "email": "melgazar725@gmail.com",
+      "phone": "+971 507557673",
+      "linkedin": "https://www.linkedin.com/in/melgazar24/",
+      "github": "https://github.com/elgazar24",
+      "location": "Dubai, United Arab Emirates",
+      "image": ""
+    },
+    "sections": {
+      "objective": true,
+      "experience": true,
+      "education": true,
+      "short_education": false,
+      "projects": true,
+      "languages": true,
+      "technologies": true
+    },
+    "content": {
+      "objective": "Mechatronics Engineer with a strong focus on AI and data science, bringing hands-on experience in Python, C++, SQL,  and  machine  learning.  Passionate  about  transforming  complex  data  into  meaningful  insights  through statistical modeling, predictive algorithms, and data visualization. Adept at tackling real-world challenges with AIdriven  solutions,  collaborating  effectively  in  team  environments,  and  managing  projects  with  a  proactive  and analytical mindset. Committed to continuous learning and staying at the forefront of technological advancements.",
+      "education": [
+        {
+          "degree": "Bachelor of Mechatronics Engineering",
+          "university": "Mansoura University",
+          "startDate": "Sept 2020",
+          "endDate": "Sept 2024",
+          "gpa": "3.4/4.0",
+          "certificate": "N\\A",
+          "coursework": "Mechanics, Machine Learning, Embedded systems, Robotics, Linear algebra, Statistics, Artificial intelligence"
+        },
+        {
+          "degree": "Associate Data Scientist in Python - Career track",
+          "university": "DataCamp",
+          "startDate": "Dec 2024",
+          "endDate": "Apr 2025",
+          "gpa": "Completed",
+          "certificate": "N\\A",
+          "coursework": "Python , SQL , Data Manipulation , Machine Learning , Statistics , Data Visualization"
+        },
+        {
+          "degree": "Associate Data Analyst in SQL - Career track",
+          "university": "DataCamp",
+          "startDate": "Dec 2024",
+          "endDate": "Apr 2025",
+          "gpa": "Completed",
+          "certificate": "N\\A",
+          "coursework": "Python , SQL , Data Manipulation , Data Analysis , Data Visualization , Data Communication"
+        },
+        {
+          "degree": "Advanced Learning Algorithms",
+          "university": "DeepLearning.AI and Stanford University",
+          "startDate": "Jan 2025",
+          "endDate": "Mar 2025",
+          "gpa": "Completed",
+          "certificate": "https://coursera.org/verify/OMHULMAU912D",
+          "coursework": "Neural Networks, TensorFlow, Machine learning  , Decision trees  , Linear algebra , Statistics , Artificial intelligence"
+        },
+        {
+          "degree": "Supervised Machine Learning: Regression and Classification",
+          "university": "DeepLearning.AI and Stanford University",
+          "startDate": "Jan 2025",
+          "endDate": "Mar 2025",
+          "gpa": "Completed",
+          "certificate": "https://coursera.org/verify/968W8PWXYICQ",
+          "coursework": "Python ,Supervised Learning, NumPy , scikit-learn, Machine learning  , Gradient Descent"
+        },
+        {
+          "degree": "Embedded Systems Professional Nanodegree",
+          "university": "Udacity - Egypt FWD",
+          "gpa": "Completed",
+          "startDate": "Sept 2022",
+          "endDate": "Dec 2022",
+          "certificate": "https://drive.google.com/file/d/1qg4IM_zmd8Wyk5V9Xo05Ln9YCU90FEMU/view?usp=share_link",
+          "coursework": "Embedded Systems, AUTOSAR , Automotive , Automotive Communication protocols , Agaile , AVR and ARM microcontrollers"
+        },
+        {
+          "degree": "Mobile App Development with Flutter and Dart (iOS and Android)",
+          "university": "Udemy",
+          "gpa": "Completed",
+          "startDate": "Sept 2022",
+          "endDate": "Dec 2022",
+          "certificate": "https://drive.google.com/file/d/1OS7PaMNY60JfVdPekjzfrgR3BLOvw8YX/view?usp=sharing",
+          "coursework": "Dart, state management, BLoC, Provider, authentication, Google’s Machine Learning Models"
+        }
+      ],
+      "short_education": [
+        {
+          "issuer": "Udemy",
+          "certificates": [
+            "Mastering RTOS and Embedded Linux",
+            "Mobile App Development with Flutter"
+          ]
+        }
+      ],
+      "experience": [
+        {
+          "role": "AI Training Contributor",
+          "company": "Outlier.ai – https://www.dataannotation.tech/",
+          "location": "Remote",
+          "startDate": "Jan 2025",
+          "endDate": "Present",
+          "responsibilities": [
+            "Collaborated on the development and evaluation of generative AI models.",
+            "Created and reviewed data to improve model accuracy and contextual understanding.",
+            "Applied domain expertise in computer science and programming to refine AI behavior."
+          ]
+        },
+        {
+          "role": "Computer Science Instructor",
+          "company": "Roboto Academy",
+          "location": "Egypt",
+          "startDate": "Oct 2024",
+          "endDate": "Apr 2025",
+          "responsibilities": [
+            "Designed and delivered robotics and computer science curricula.",
+            "Taught advanced programming and AI concepts to students.",
+            "Fostered a hands-on learning environment with robotics kits and software tools."
+          ]
+        },
+        {
+          "role": "Mechatronics Engineer Trainee",
+          "company": "North Delta Electricity Distribution Co.",
+          "location": "Egypt",
+          "startDate": "July 2024",
+          "endDate": "Sept 2024",
+          "responsibilities": [
+            "Acquired knowledge of power distribution systems and substation components.",
+            "Assisted in the maintenance and troubleshooting of transformers and circuit breakers.",
+            "Developed basic understanding of SCADA systems used in electricity distribution.",
+            "Observed load balancing and fault analysis in medium and low voltage networks.",
+            "Collaborated with engineers on preventive maintenance and system upgrades."
+          ]
+        },
+        {
+          "role": "Embedded Software Engineer Intern",
+          "company": "Siemens - Eitesal",
+          "location": "Egypt",
+          "startDate": "June 2023",
+          "endDate": "Jan 2024",
+          "responsibilities": [
+            "Gained practical experience in microcontroller interfacing and automotive communication protocols.",
+            "Learned AUTOSAR software architecture and MISRA-C standards.",
+            "Developed real-time firmware for ARM and AVR microcontrollers.",
+            "Worked with a team of developers to develop an embedded system project.",
+            "Gained hands-on experience with microcontroller-based systems and Real-Time Operating Systems."
+          ]
+        },
+        {
+          "role": "Mechatronics Engineer Trainee",
+          "company": "DCHC (Damietta Container and Cargo Handling Co.)",
+          "location": "Egypt",
+          "startDate": "July 2023",
+          "endDate": "Oct 2023",
+          "responsibilities": [
+            "Learned troubleshooting techniques for air, fuel, lubrication, and cooling systems.",
+            "Applied knowledge of PLC systems and industrial automation controls.",
+            "Worked with inverters, switchgear, and spreader control systems.",
+            "Understood the control circuit design of port tractor systems."
+          ]
+        },
+        {
+          "role": "Vice Leader and Head of Technical Committees",
+          "company": "Mansoura Robotics Club",
+          "location": "Egypt",
+          "startDate": "May 2022",
+          "endDate": "Jan 2024",
+          "responsibilities": [
+            "Led technical teams in designing and building robotics projects using embedded systems.",
+            "Managed the integration of hardware and software solutions for robotics competitions",
+            "Provided technical mentorship on programming languages, including C, C++, and Python",
+            "Facilitated hands-on learning and problem-solving sessions for members.",
+            "Organized and led workshops on robotics, AI, and embedded systems."
+          ]
+        }
+      ],
+      "projects": [
+        {
+          "title": "Student Performance Prediction Using Multiple Variables",
+          "github_link": "https://github.com/elgazar24/Student-Performance-Prediction-Using-Multiple-Variables.git",
+          "responsibilities": []
+        },
+        {
+          "title": "House Price Prediction Using One Variable",
+          "github_link": "https://github.com/elgazar24/House-Price-Prediction-Using-One-Variable.git",
+          "responsibilities": [
+            "Built a machine learning model to predict house prices based on a single variable.",
+            "Preprocess the dataset for training and testing the prediction model.",
+            "Using Python and libraries such as Pandas and NumPy for data analysis and model development.",
+            "Regression techniques are used to optimize the model for an accurate price prediction.",
+            "Tools used: Python, Pandas, NumPy, Matplotlib."
+          ]
+        },
+        {
+          "title": "Advanced Exploration Robot",
+          "github_link": "https://github.com/melgazar24/",
+          "responsibilities": [
+            "Developed a pipe exploration robot using the Raspberry Pi.",
+            "Using Python to program the Raspberry Pi to collect data from sensors ( Camera, Ultrasonic, etc.).",
+            "Tools used: C++ , Python, Raspberry Pi , NodeJs , STM32 MCU , Linux and OpenCV."
+          ]
+        },
+        {
+          "title": "AVR and ARM Drivers",
+          "github_link": "https://github.com/melgazar24/",
+          "responsibilities": [
+            "Write drivers code for peripherals such as GPIO, GPT , SPI, I2C, and ADC.",
+            "Developed projects using ARM Cortex-M3 based STM32 microcontrollers.",
+            "Tools Used: C, .C++, STM32CubeMX , XC8 , Segger debugger"
+          ]
+        }
+      ],
+      "languages": [
+        "C++",
+        "C",
+        "Python",
+        "SQL",
+        "Dart",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "technologies": [
+        "OpenCV",
+        "TensorFlow",
+        "Pandas",
+        "NumPy",
+        "scikit-learn",
+        "Jupyter Notebook",
+        "Data Visualization",
+        "AI/ML Frameworks",
+        "Linux",
+        "RTOS",
+        "VS Code",
+        "XCode",
+        "ARM",
+        "AVR",
+        "Flutter",
+        "Git",
+        "GitHub"
+      ]
+    }
+  }

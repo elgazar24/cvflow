@@ -47,6 +47,7 @@ def create_app():
         LATEX_OUTPUT_FOLDER=os.path.join('instance', 'latex_outputs'),
         PDF_OUTPUT_FOLDER=os.path.join('instance', 'pdf_outputs'),
         IMAGE_UPLOAD_FOLDER=os.path.join('instance', 'image_uploads'),
+        MOCK_FOLDER = os.path.join('mock'),
         ALLOWED_EXTENSIONS={'json', 'txt','docx','doc'},
         MAX_CONTENT_LENGTH= eval(os.getenv('MAX_CONTENT_LENGTH')),
 
@@ -130,7 +131,7 @@ def create_app():
 
 
     # Create required directories
-    for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER','IMAGE_UPLOAD_FOLDER']:
+    for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER','IMAGE_UPLOAD_FOLDER' , 'MOCK_FOLDER']:
         os.makedirs(app.config[folder], exist_ok=True)
         os.chmod(app.config[folder], 0o775)  # rwxrwxr-x
 
@@ -558,62 +559,35 @@ def create_app():
     # Text file download endpoint
     @app.route('/samples/txt-sample-file')
     def txt_file():
-        
-        # Sample text data
-        text_data = "This is a sample text file."
-        
-        # Create a response with the text content
-        response = make_response(text_data)
-        
-        # Set headers to force download
-        response.headers["Content-Disposition"] = "attachment; filename=sample.txt"
-        response.headers["Content-Type"] = "text/plain"
-        
-        return response
+        filename = 'mock.txt'
+        return send_from_directory(
+            app.config['MOCK_FOLDER'],
+            filename,
+            as_attachment=True,
+            mimetype='text/plain'
+        )
 
     # JSON file download endpoint
     @app.route('/samples/json-sample-file')
     def json_file():
-        # Sample JSON data
-        json_data = {
-            "name": "Sample Data",
-            "type": "JSON",
-            "items": ["item1", "item2", "item3"]
-        }
-        
-        # Create a response with the JSON content
-        response = make_response(json.dumps(json_data, indent=2))
-        
-        # Set headers to force download
-        response.headers["Content-Disposition"] = "attachment; filename=sample.json"
-        response.headers["Content-Type"] = "application/json"
-        
-        return response
+        filename = 'mock.json'
+        return send_from_directory(
+            app.config['MOCK_FOLDER'],
+            filename,
+            as_attachment=True,
+            mimetype='application/json'
+        )
 
     # DOCX file download endpoint
     @app.route('/samples/docx-sample-file')
     def docx_file():
-        pass
-
-
-        # # Create a new Word document
-        # doc = Document()
-        
-        # # Add content to the document
-        # doc.add_paragraph('This is a sample Word document.')
-        
-        # # Save document to a BytesIO object
-        # file_stream = io.BytesIO()
-        # doc.save(file_stream)
-        # file_stream.seek(0)
-        
-        # Return the document as a downloadable file
-        # return send_file(
-        #     file_stream,
-        #     as_attachment=True,
-        #     download_name='sample.docx',
-        #     mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        # )
+        filename = 'mock.docx'
+        return send_from_directory(
+            app.config['MOCK_FOLDER'],
+            filename,
+            as_attachment=True,
+            mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
     
 
     @app.route('/contact', methods=['POST'])

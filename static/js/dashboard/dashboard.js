@@ -7,11 +7,6 @@ let profileImageFilename = '';
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Console log
-    console.log('Dashboard loaded');
-    console.log('templates:', templates);
-    console.log('skills:', skills);
-
 
     // Initialize Select2 for skills
     $('.skills-select').select2({

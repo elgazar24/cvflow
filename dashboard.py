@@ -98,8 +98,6 @@ def dashboard_index():
             "category": "technology",
         }
     ]
-    print(templates)
-    print(skills)
 
     form = CVForm()
 
