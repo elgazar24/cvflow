@@ -58,7 +58,7 @@
                     <label for="template-select">Template:</label>
                     <select id="template-select">
                         {% for template in templates %}
-                        <option value="{{ template.id }}">{{ template.name }}</option>
+                        <option value="{{ template['id'] }}">{{ template['name'] }}</option>
                         {% endfor %}
                     </select>
                 </div>
