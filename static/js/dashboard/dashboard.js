@@ -1131,7 +1131,7 @@ function saveAndGeneratePdfPromise() {
     return new Promise((resolve, reject) => {
         const formData = collectFormData();
         
-        fetch('/save_cv', {
+        fetch('/save_cv/${currentCvId}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

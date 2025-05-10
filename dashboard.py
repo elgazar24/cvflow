@@ -174,7 +174,7 @@ def get_template_fields(template_id):
         jsonify(
             {
                 "id": 1,
-                "name": "Default",
+                "name": "Professional",
                 "requires_image": True,
                 "fields": [
                     "objective",
