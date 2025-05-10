@@ -232,7 +232,7 @@ function initializeProfileImageUpload() {
                 formData.append('profile_image', file);
                 
                 // Upload image
-                fetch('/upload_profile_image', {
+                fetch('/dashboard/upload_profile_image', {
                     method: 'POST',
                     body: formData
                 })

@@ -46,3 +46,5 @@ class ForgotPasswordForm(FlaskForm):
         DataRequired("Please enter your email address"),
         Email("Please enter a valid email address")
     ])
+
+

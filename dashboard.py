@@ -43,6 +43,7 @@ def dashboard_index():
 @dashboard.route('/get_templates', methods=['POST'])
 @login_required
 def get_templates():
+    
     templates = Template.query.all()
 
     templates.sort(key=lambda x: x.name)
@@ -305,9 +306,10 @@ def delete_cv(cv_id):
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@dashboard.route('/upload_profile_image', methods=['POST'])
+@dashboard.route('/dashboard/upload_profile_image', methods=['POST'])
 @login_required
 def upload_profile_image():
+
     if 'profile_image' not in request.files:
         return jsonify({'success': False, 'error': 'No file part'}), 400
     
@@ -319,7 +321,7 @@ def upload_profile_image():
     if file:
         # Create unique filename
         filename = f"{current_user.id}_{uuid.uuid4()}.{file.filename.rsplit('.', 1)[1].lower()}"
-        file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        file_path = os.path.join(current_app.config['IMAGE_UPLOAD_FOLDER'], filename)
         
         # Save file
         file.save(file_path)
@@ -335,4 +337,4 @@ def upload_profile_image():
 @dashboard.route('/uploads/<filename>')
 @login_required
 def get_uploaded_file(filename):
-    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory(current_app.config['IMAGE_UPLOAD_FOLDER'], filename)

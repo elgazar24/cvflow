@@ -4,6 +4,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.dashboard_style) }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 {% endblock %}
 
@@ -82,7 +83,6 @@
                     <h3><i class="fas fa-file-signature"></i> CV Name</h3>
                     <div class="form-group">
                         <input type="text" id="cv-name" name="cv_name" placeholder="Untitled CV">
-                        <div class="form-line"></div>
                     </div>
                 </div>
 
@@ -91,7 +91,7 @@
                     <div class="personal-info-container">
                         <div class="profile-image-container" id="profile-image-section">
                             <div class="profile-image-preview">
-                                <img id="profile-image" src="{{ url_for('static', filename='img/profile-placeholder.png') }}" alt="Profile Image">
+                                <img id="profile-image" src="{{ url_for('static', filename='images/profile-placeholder-white.png') }}" alt="Profile Image">
                             </div>
                             <div class="profile-image-upload">
                                 <label for="profile-image-input" class="upload-btn">
@@ -106,32 +106,26 @@
                             <div class="form-group">
                                 <label for="name">Full Name</label>
                                 <input type="text" id="name" name="personal_info.name">
-                                <div class="form-line"></div>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" name="personal_info.email">
-                                <div class="form-line"></div>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Phone</label>
                                 <input type="text" id="phone" name="personal_info.phone">
-                                <div class="form-line"></div>
                             </div>
                             <div class="form-group">
                                 <label for="linkedin">LinkedIn</label>
                                 <input type="url" id="linkedin" name="personal_info.linkedin">
-                                <div class="form-line"></div>
                             </div>
                             <div class="form-group">
                                 <label for="github">GitHub</label>
                                 <input type="url" id="github" name="personal_info.github">
-                                <div class="form-line"></div>
                             </div>
                             <div class="form-group">
                                 <label for="location">Location</label>
                                 <input type="text" id="location" name="personal_info.location">
-                                <div class="form-line"></div>
                             </div>
                         </div>
                     </div>
@@ -211,8 +205,8 @@
                             {% endif %}
                             {% endfor %}
                         </select>
-                        <div class="form-line"></div>
                     </div>
+
                     <div class="form-group">
                         <label>Technologies</label>
                         <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple">
@@ -222,7 +216,6 @@
                             {% endif %}
                             {% endfor %}
                         </select>
-                        <div class="form-line"></div>
                     </div>
                 </div>
 
@@ -239,13 +232,15 @@
 
         <div class="cv-preview">
             <div class="preview-header">
-                <h3><i class="fas fa-eye"></i> Live Preview</h3>
+                <h3><i class="fas fa-eye"></i>Preview</h3>
                 <div class="preview-actions">
                     <button id="refresh-preview" class="refresh-button">
-                        <i class="fas fa-sync-alt"></i> Refresh
+                        <i class="fas fa-sync-alt"></i> 
+                        <span class="button-text">Refresh</span>
                     </button>
                     <a id="download-pdf-link" href="#" class="download-button">
-                        <i class="fas fa-download"></i> Download PDF
+                        <i class="fas fa-download"></i>
+                        <span class="button-text">Download</span>
                     </a>
                 </div>
             </div>
