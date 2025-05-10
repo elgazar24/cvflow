@@ -33,6 +33,7 @@ def dashboard_index():
     cv_data = CVData.query.filter_by(user_id=current_user.id).all()
 
     # Get available templates
+    # TODO : Get templates from database
     templates = [
                     {
                         "id": 1,
@@ -49,7 +50,54 @@ def dashboard_index():
                 ]
 
     # Get available skills
-    skills = Skill.query.all()
+    # TODO : Get skills from database
+    skills = [
+        {
+            "id": 1,
+            "name": "Python",
+            "category": "language",
+        },
+        {
+            "id": 2,
+            "name": "Flask",
+            "category": "technology",
+        },
+        {
+            "id": 3,
+            "name": "React",
+            "category": "technology",
+        },
+        {
+            "id": 4,
+            "name": "HTML",
+            "category": "language",
+        },
+        {
+            "id": 5,
+            "name": "CSS",
+            "category": "language",
+        },
+        {
+            "id": 6,
+            "name": "JavaScript",
+            "category": "language",
+        },
+        {
+            "id": 7,
+            "name": "SQL",
+            "category": "language",
+        },
+        {
+            "id": 8,
+            "name": "Git",
+            "category": "technology",
+        },
+        {
+            "id": 9,
+            "name": "Docker",
+            "category": "technology",
+        },
+    ]
 
     form = CVForm()
 
