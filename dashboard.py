@@ -35,19 +35,19 @@ def dashboard_index():
     # Get available templates
     # TODO : Get templates from database AS JSON
     templates = [
-                    {
-                        "id": 1,
-                        "name": "Default",
-                        "requires_image": True,
-                        "fields": [],
-                    },
-                    {
-                        "id": 2,
-                        "name": "Professional",
-                        "requires_image": True,
-                        "fields": [],
-                    },
-                ]
+        {
+            "id": 1,
+            "name": "Default",
+            "requires_image": True,
+            "fields": ["objective", "education", "experience", "projects", "skills"],
+        },
+        {
+            "id": 2,
+            "name": "Professional",
+            "requires_image": True,
+            "fields": ["objective", "education", "experience", "skills"],
+        },
+    ]
 
     # Get available skills
     # TODO : Get skills from database AS JSON
@@ -96,7 +96,7 @@ def dashboard_index():
             "id": 9,
             "name": "Docker",
             "category": "technology",
-        }
+        },
     ]
 
     form = CVForm()
@@ -123,13 +123,25 @@ def get_templates():
                         "id": 1,
                         "name": "Default",
                         "requires_image": True,
-                        "fields": [],
+                        "fields": [
+                            "objective",
+                            "education",
+                            "experience",
+                            "projects",
+                            "skills",
+                        ],
                     },
                     {
                         "id": 2,
                         "name": "Professional",
                         "requires_image": True,
-                        "fields": [],
+                        "fields": [
+                            "objective",
+                            "education",
+                            "experience",
+                            "projects",
+                            "skills",
+                        ],
                     },
                 ],
             }
@@ -151,18 +163,26 @@ def get_cv(cv_id):
 @dashboard.route("/get_template_fields/<int:template_id>")
 @login_required
 def get_template_fields(template_id):
-    template = Template.query.get(template_id)
-    if not template:
-        return jsonify({"success": False, "error": "Template not found"}), 404
+
+    # TODO : Get template fields from database
+    # template = Template.query.get(template_id)
+    # if not template:
+    #     return jsonify({"success": False, "error": "Template not found"}), 404
 
     # Return template fields and requirements
     return (
         jsonify(
             {
-                "success": True,
-                "template_name": template.name,
-                "fields": template.fields,
-                "requires_image": template.requires_image,
+                "id": 1,
+                "name": "Default",
+                "requires_image": True,
+                "fields": [
+                    "objective",
+                    "education",
+                    "experience",
+                    "projects",
+                    "skills",
+                ],
             }
         ),
         200,

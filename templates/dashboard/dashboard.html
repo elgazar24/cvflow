@@ -120,7 +120,7 @@
                                 <input type="url" id="linkedin" name="personal_info.linkedin">
                             </div>
                             <div class="form-group">
-                                <label for="github">GitHub</label>
+                                <label for="github">Link (e.g. GitHub)</label>
                                 <input type="url" id="github" name="personal_info.github">
                             </div>
                             <div class="form-group">
@@ -198,7 +198,7 @@
                     </div>
                     <div class="form-group">
                         <label>Languages</label>
-                        <select id="languages" name="content.languages" class="skills-select" multiple="multiple">
+                        <select id="languages" name="content.languages" class="skills-select" multiple="multiple" title="Select languages">
                             {% for skill in skills %}
                             {% if skill['category'] == 'language' %}
                             <option value="{{ skill['name']}}">{{ skill['name'] }}</option>
@@ -209,7 +209,7 @@
 
                     <div class="form-group">
                         <label>Technologies</label>
-                        <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple">
+                        <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple" title="Select technologies">
                             {% for skill in skills %}
                             {% if skill['category'] == 'technology' %}
                             <option value="{{ skill['name'] }}">{{ skill['name'] }}</option>
@@ -386,7 +386,7 @@
             <input type="text" name="project-title[]" required>
         </div>
         <div class="form-group">
-            <label>GitHub Link</label>
+            <label>Link</label>
             <input type="url" name="project-github_link[]">
         </div>
         <div class="form-group">
