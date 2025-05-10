@@ -110,7 +110,7 @@ def dashboard_index():
     )
 
 
-@dashboard.route("/get_templates", methods=["POST"])
+@dashboard.route("/get_templates", methods=["GET"])
 @login_required
 def get_templates():
 
