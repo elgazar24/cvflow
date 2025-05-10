@@ -200,8 +200,8 @@
                         <label>Languages</label>
                         <select id="languages" name="content.languages" class="skills-select" multiple="multiple">
                             {% for skill in skills %}
-                            {% if skill.category == 'language' %}
-                            <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% if skill['category'] == 'language' %}
+                            <option value="{{ skill['name']}}">{{ skill['name'] }}</option>
                             {% endif %}
                             {% endfor %}
                         </select>
@@ -211,8 +211,8 @@
                         <label>Technologies</label>
                         <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple">
                             {% for skill in skills %}
-                            {% if skill.category == 'technology' %}
-                            <option value="{{ skill.name }}">{{ skill.name }}</option>
+                            {% if skill['category'] == 'technology' %}
+                            <option value="{{ skill['name'] }}">{{ skill['name'] }}</option>
                             {% endif %}
                             {% endfor %}
                         </select>
