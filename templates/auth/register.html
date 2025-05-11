@@ -1,35 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends RoutePath.base_index %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up - CVFlow</title>
-  <!-- <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.register_style ) }}"> -->
-  <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.home_style) }}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% block title %}CVFlow{% endblock %}
 
-</head>
+{% block styles %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In - CVFlow</title>
+<link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.home_style) }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.register_style ) }}">
 
-<body>
-  <header class="main-header">
-    <div class="header-container">
-      <div class="logo-container">
-        <!-- <div class="logo">
-          <img src="{{ url_for('static', filename= RoutePath.logo) }}" alt="Logo" class="logo-img">
-        </div> -->
-        <h1>CVFlow</h1>
-      </div>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
-          <li><a href="{{ url_for('auth.signin') }}" class="nav-link">Sign In</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+
+{% block content %}
 
   <main class="auth-main">
     <section class="auth-section">
@@ -89,66 +79,6 @@
       </div>
     </section>
   </main>
+{% endblock %}
 
-  <style>
-    .auth-main {
-      min-height: calc(130vh - 80px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background-color: var(--bg-light);
-    }
 
-    .auth-container {
-      background-color: var(--bg-color);
-      padding: 2.5rem;
-      border-radius: var(--border-radius-md);
-      box-shadow: var(--shadow-md);
-      width: 100%;
-      max-width: 500px;
-    }
-
-    .auth-title {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-family: var(--font-heading);
-    }
-
-    .auth-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100%;
-      padding: 0.8rem;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: var(--border-radius-md);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-top: 1.5rem;
-    }
-
-    .auth-button:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .auth-footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      color: var(--text-light);
-    }
-
-    .auth-footer a {
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-  </style>
-</body>
-
-</html>

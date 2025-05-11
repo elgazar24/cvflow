@@ -283,35 +283,7 @@ def create_app():
             return render_template( RoutePath.home_index )
 
 
-    def generate_pdf(input_path, unique_id):
-        """Helper function to generate PDF from input file"""
-        latex_output_path = os.path.join(app.config['LATEX_OUTPUT_FOLDER'], f"{unique_id}.tex")
-        pdf_filename = f"{unique_id}.pdf"
-        pdf_output_path = os.path.join(app.config['PDF_OUTPUT_FOLDER'], pdf_filename)
-
-        cv_generator = generator.Generator(input_path)
-        cv_str = cv_generator.make_cv()
-
-        with open(latex_output_path, "w") as tex_file:
-            tex_file.write(cv_str)
-
-        subprocess.run(
-            ["/usr/bin/pdflatex", "-interaction=nonstopmode", "-output-directory", 
-            app.config['PDF_OUTPUT_FOLDER'] , latex_output_path],
-            capture_output=True,
-            text=True
-        )
-
-        # Clean up auxiliary files
-        base_filename = os.path.splitext(os.path.basename(latex_output_path))[0]
-        for ext in ['aux', 'log', 'out']:
-            aux_file = os.path.join(app.config['PDF_OUTPUT_FOLDER'], f"{base_filename}.{ext}")
-            if os.path.exists(aux_file):
-                os.remove(aux_file)
-
-        return pdf_filename
-
-
+   
     @app.route('/download/<filename>')
     def download_file(filename):
         try:

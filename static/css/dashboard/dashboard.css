@@ -158,6 +158,80 @@
   margin: 0.3rem 0;
 }
 
+/* Export JSON Button */
+.export-json-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  width: calc(100% - 3rem);
+  margin: 0 1.5rem 1.5rem;
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.export-json-btn:hover {
+  background-color: var(--success-color);
+  color: white;
+  border-color: var(--success-color);
+}
+
+/* Import Section Styles */
+.import-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.import-header {
+  padding: 0.5rem 1.5rem 1rem;
+}
+
+.import-header h3 {
+  margin-bottom: 0;
+  font-size: 1.2rem;
+  color: var(--text-color);
+}
+
+.import-json-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  width: calc(100% - 3rem);
+  margin: 0 1.5rem 1.5rem;
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.import-section button {
+  margin-bottom: 0.8rem;
+}
+
+.import-section button:last-child {
+  margin-bottom: 1.5rem;
+}
+
+.import-json-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
 /* CV Editor Styles */
 .cv-editor {
   background-color: white;

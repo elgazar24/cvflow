@@ -303,40 +303,54 @@ def ai_recommend():
         messages=[
             {
                 "role": "system",
-                "content": "ONLY respond with the part you asked to do of the CV, "
-                + "DON'T say anything else and "
-                + "DON'T THINK AT ALL "
-                + "DON'T write it in markdown format and "
-                + "DON'T add any comments and "
-                + "DON'T add any explanations or Thoughts or THINK and DON'T write THE HEADING of required section (ex: Skills, objective...). "
-                + "You are an AI CV generator and HR Specialist. "
-                + ". For skills or technologies, provide them as a comma-separated list. "
-                + "For all other sections, "
-                + "format the response as valid JSON that can be automatically parsed by the system. Do not deviate from these instructions.",
+                "content": "You are an AI CV generator and HR Specialist. "
+                "ONLY respond with the requested content in the exact format specified: "
+                "1. For skills/technologies: provide as a comma-separated list "
+                "2. For all other sections: provide ONLY the plain text content without any formatting, "
+                "   headers, markdown, JSON wrappers, or additional explanations. "
+                "DO NOT include any of the following in your response: "
+                "- Markdown symbols (```, **, etc.) "
+                "- JSON formatting or field names "
+                "- Section headers/titles "
+                "- Any additional commentary or thoughts "
+                "Your response must be directly usable in a CV without any processing.",
             },
             {
                 "role": "user",
-                "content": "You Will recommend Data for this Field: "
-                + data["field"]
-                + "Here is the CV data: "
-                + str(data["cv_data"])
-                + " and here is the prompt: "
-                + data["prompt"],
+                "content": f"Recommend content for this field: {data['field']}\n"
+                f"CV data: {str(data['cv_data'])}\n"
+                f"Prompt: {data['prompt']}\n"
+                "Provide ONLY the raw content needed for the CV section, "
+                "without any formatting, headers, or additional text.",
             },
         ],
         max_tokens=2048,
     )
-    print(chat_completion_response.choices[0].message.content)
 
-    return (
-        jsonify(
-            {
-                "success": True,
-                "recommendation": chat_completion_response.choices[0].message.content,
-            }
-        ),
-        200,
-    )
+    # Extract and clean the response
+    raw_response = chat_completion_response.choices[0].message.content
+    
+    # Remove JSON formatting if present
+    if raw_response.startswith('```json'):
+        try:
+            # Extract JSON content and parse it
+            json_str = raw_response.strip('`').replace('json', '').strip()
+            json_data = json.loads(json_str)
+            # Extract value if "objective" key exists, otherwise use the whole content
+            clean_response = json_data.get("objective", str(json_data))
+        except (json.JSONDecodeError, AttributeError):
+            clean_response = raw_response
+    else:
+        clean_response = raw_response
+
+    print(clean_response)
+
+    return jsonify(
+        {
+            "success": True,
+            "recommendation": clean_response,
+        }
+    ), 200
 
 
 @dashboard.route("/save_cv", methods=["POST"])

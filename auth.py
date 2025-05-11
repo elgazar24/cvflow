@@ -14,12 +14,9 @@ import db_access
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/signup')
-def signup():
-    return register()
 
 @auth.route('/signup', methods=['GET', 'POST'])
-def register():
+def signup():
 
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -61,10 +58,6 @@ def register():
         return render_template( RoutePath.register_index, form=form)
 
 
-@auth.route('/login', methods=['GET', 'POST'])
-def login():
-    return redirect(url_for('auth.signin'))
-
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
     if current_user.is_authenticated:
@@ -79,6 +72,7 @@ def signin():
         flash('Invalid email or password', 'error')
     
     return render_template( RoutePath.login_index, form=form)
+
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -123,6 +117,7 @@ def forgot_password():
         return redirect(url_for('auth.forgot_password'))
     
     return render_template( RoutePath.forgot_password_index , form=form)
+
 
 @auth.route('/logout')
 @login_required
