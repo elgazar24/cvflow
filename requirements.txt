@@ -21,3 +21,4 @@ flask_limiter==3.11.0
 gunicorn==23.0.0
 streamlit==1.44.1
 celery==5.5.2
+openai==1.78.0

@@ -5,52 +5,122 @@ let profileImageUploaded = false;
 let profileImageFilename = '';
 
 // Initialize when document is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
 
-    // Initialize Select2 for skills
-    $('.skills-select').select2({
-        tags: true,
-        tokenSeparators: [','],
-        placeholder: "Select or type to add new",
-        theme: "classic",
-        width: '100%'  // Make sure the select spans the full width
+    // Initialize Select2 for Languages
+    $('#languages').select2({
+        tags: true,  // Enable free-text entries
+        createTag: function (params) {
+            return {
+                id: params.term,
+                text: params.term,
+                newTag: true  // Mark as unsaved
+            };
+        },
+        placeholder: {
+            id: '-1',
+            text: 'Type to search for languages'
+        },
+        minimumInputLength: 1,
+        width: '100%',
+        language: {
+            noResults: function () {
+                return "No languages found";
+            },
+            searching: function () {
+                return "Searching languages...";
+            }
+        },
+        ajax: {
+            url: '/get_languages',  // Different endpoint for languages
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    input: params.term,
+                };
+            },
+            processResults: function (data) {
+                return { results: data };
+            }
+        }
     });
-    
+
+    // Initialize Select2 for Technologies
+    $('#technologies').select2({
+        tags: true,  // Enable free-text entries
+        createTag: function (params) {
+            return {
+                id: params.term,
+                text: params.term,
+                newTag: true  // Mark as unsaved
+            };
+        },
+        placeholder: {
+            id: '-1',
+            text: 'Type to search for technologies'
+        },
+        minimumInputLength: 1,
+        width: '100%',
+        language: {
+            noResults: function () {
+                return "No technologies found";
+            },
+            searching: function () {
+                return "Searching technologies...";
+            }
+        },
+        ajax: {
+            url: '/get_technologies',  // Different endpoint for technologies
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    input: params.term,
+                };
+            },
+
+            processResults: function (data) {
+                return { results: data };
+            }
+        }
+    });
+
     // Set up template selection change event
-    document.getElementById('template-select').addEventListener('change', function() {
+    document.getElementById('template-select').addEventListener('change', function () {
         currentTemplateId = parseInt(this.value);
         document.getElementById('template-id').value = currentTemplateId;
         loadTemplateFields(currentTemplateId);
     });
-    
+
     // Initialize first template
     loadTemplateFields(currentTemplateId);
-    
+
     // Initialize event listeners for dynamic content
     initializeEventListeners();
-    
+
     // Load CV list
     loadCvList();
-    
+
     // Set up preview refresh button
     document.getElementById('refresh-preview').addEventListener('click', refreshPreview);
-    
+
     // Create new CV button
     document.getElementById('create-new-cv').addEventListener('click', createNewCv);
-    
+
     // Initialize profile image upload
     initializeProfileImageUpload();
-    
+
     // Set up AI recommendation buttons
     setupAiRecommendations();
-    
+
     // Save draft button
     document.getElementById('save-draft-btn').addEventListener('click', saveDraft);
-    
+
     // Download PDF link
     document.getElementById('download-pdf-link').addEventListener('click', downloadPdf);
-    
+
     // Setup modal functionalities
     setupModals();
 });
@@ -58,58 +128,58 @@ document.addEventListener('DOMContentLoaded', function() {
 // Initialize event listeners for dynamic elements
 function initializeEventListeners() {
     // Add education item
-    document.getElementById('add-education').addEventListener('click', function() {
+    document.getElementById('add-education').addEventListener('click', function () {
         addItem('education');
     });
-    
+
     // Add experience item
-    document.getElementById('add-experience').addEventListener('click', function() {
+    document.getElementById('add-experience').addEventListener('click', function () {
         addItem('experience');
     });
-    
+
     // Add project item
-    document.getElementById('add-project').addEventListener('click', function() {
+    document.getElementById('add-project').addEventListener('click', function () {
         addItem('project');
     });
-    
+
     // Event delegation for dynamic elements
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         // Remove items (education, experience, project)
         if (e.target.closest('.remove-item')) {
             e.target.closest('.education-item, .experience-item, .project-item').remove();
         }
-        
+
         // Remove responsibility items
         if (e.target.closest('.remove-responsibility')) {
             e.target.closest('.responsibility-item').remove();
         }
-        
+
         // Add responsibility items
         if (e.target.closest('.add-responsibility')) {
             const container = e.target.closest('.form-group').querySelector('.responsibilities-list');
-            const itemType = e.target.closest('.experience-item, .project-item') ? 
+            const itemType = e.target.closest('.experience-item, .project-item') ?
                 (e.target.closest('.experience-item') ? 'experience' : 'project') : null;
-            
+
             if (itemType) {
                 addResponsibility(container, `${itemType}-responsibility[]`);
             }
         }
-        
+
         // Edit existing CV
         if (e.target.closest('.edit-cv')) {
             const cvId = e.target.closest('.cv-list-item').dataset.cvId;
             loadCv(cvId);
         }
-        
+
         // Delete CV
         if (e.target.closest('.delete-cv')) {
             const cvId = e.target.closest('.cv-list-item').dataset.cvId;
             openDeleteModal(cvId);
         }
     });
-    
+
     // Form submission
-    document.getElementById('cv-form').addEventListener('submit', function(e) {
+    document.getElementById('cv-form').addEventListener('submit', function (e) {
         e.preventDefault();
         saveAndGeneratePdf();
     });
@@ -119,11 +189,11 @@ function initializeEventListeners() {
 function addItem(type) {
     const template = document.getElementById(`${type}-template`);
     const container = document.getElementById(`${type}-fields`);
-    
+
     if (template && container) {
         // Create a deep clone of the template content
         const clone = template.content.cloneNode(true);
-        
+
         // Append the clone to the container
         container.appendChild(clone);
     } else {
@@ -134,17 +204,17 @@ function addItem(type) {
 // Add new responsibility item
 function addResponsibility(container, nameAttr) {
     const template = document.getElementById('responsibility-template');
-    
+
     if (template && container) {
         // Create a deep clone of the template content
         const clone = template.content.cloneNode(true);
-        
+
         // Set the name attribute of the input
         const input = clone.querySelector('input');
         if (input) {
             input.name = nameAttr;
         }
-        
+
         // Append the clone to the container
         container.appendChild(clone);
     } else {
@@ -161,13 +231,13 @@ function loadTemplateFields(templateId) {
                 // Update form based on template requirements
                 const profileImageSection = document.getElementById('profile-image-section');
                 profileImageSection.style.display = data.requires_image ? 'block' : 'none';
-                
+
                 // Clear existing fields
                 clearFormSections();
-                
+
                 // Add required sections based on template fields
                 addRequiredSections(data.fields);
-                
+
                 // Update preview if we have a current CV
                 if (currentCvId) {
                     refreshPreview();
@@ -198,10 +268,10 @@ function addRequiredSections(fields) {
         'projects': document.querySelector('.form-section:has(#project-fields)'),
         'skills': document.querySelector('.form-section:has(#languages)')
     };
-    
+
     // Check if the browser supports :has selector
     const hasSupport = CSS.supports('selector(:has(*))');
-    
+
     if (!hasSupport) {
         // Fallback for browsers that don't support :has
         sections.objective = document.querySelector('.form-section h3 i.fa-bullseye').closest('.form-section');
@@ -210,7 +280,7 @@ function addRequiredSections(fields) {
         sections.projects = document.querySelector('.form-section h3 i.fa-project-diagram').closest('.form-section');
         sections.skills = document.querySelector('.form-section h3 i.fa-code').closest('.form-section');
     }
-    
+
     // Process fields from template
     for (const key in sections) {
         if (sections[key]) {
@@ -224,35 +294,35 @@ function initializeProfileImageUpload() {
     const profileInput = document.getElementById('profile-image-input');
     const previewImg = document.getElementById('profile-image');
     const filenameInput = document.getElementById('profile-image-filename');
-    
+
     if (profileInput) {
-        profileInput.addEventListener('change', function() {
+        profileInput.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
                 // Create FormData
                 const formData = new FormData();
                 formData.append('profile_image', file);
-                
+
                 // Upload image
                 fetch('/dashboard/upload_profile_image', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update preview
-                        previewImg.src = data.file_url;
-                        filenameInput.value = data.filename;
-                        profileImageUploaded = true;
-                        profileImageFilename = data.filename;
-                        showAlert('Image uploaded successfully', 'success');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error uploading image:', error);
-                    showAlert('Error uploading image', 'error');
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update preview
+                            previewImg.src = data.file_url;
+                            filenameInput.value = data.filename;
+                            profileImageUploaded = true;
+                            profileImageFilename = data.filename;
+                            showAlert('Image uploaded successfully', 'success');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error uploading image:', error);
+                        showAlert('Error uploading image', 'error');
+                    });
             }
         });
     }
@@ -262,7 +332,7 @@ function initializeProfileImageUpload() {
 function loadCvList() {
     const cvList = document.querySelector('.cv-list');
     const createNewMessage = document.querySelector('.no-cv-message');
-    
+
     if (cvList) {
         // Check if we have CVs
         if (cvList.children.length > (createNewMessage ? 1 : 0)) {
@@ -285,13 +355,13 @@ function loadCv(cvId) {
             if (data.success) {
                 currentCvId = parseInt(cvId);
                 const cvData = data.data;
-                
+
                 // Set CV ID
                 document.getElementById('cv-id').value = cvId;
-                
+
                 // Set CV name
                 document.getElementById('cv-name').value = cvData.cv_name || 'Untitled CV';
-                
+
                 // Set template if available
                 if (cvData.template_id) {
                     const templateSelect = document.getElementById('template-select');
@@ -300,19 +370,19 @@ function loadCv(cvId) {
                     currentTemplateId = parseInt(cvData.template_id);
                     loadTemplateFields(currentTemplateId);
                 }
-                
+
                 // Fill personal info
                 fillPersonalInfo(cvData.personal_info);
-                
+
                 // Fill content sections
                 fillContentSections(cvData.content);
-                
+
                 // Update preview
                 refreshPreview();
-                
+
                 // Show success message
                 showAlert('CV loaded successfully', 'success');
-                
+
                 // Highlight selected CV in the list
                 highlightSelectedCv(cvId);
             }
@@ -326,7 +396,7 @@ function loadCv(cvId) {
 // Fill personal info fields
 function fillPersonalInfo(personalInfo) {
     if (!personalInfo) return;
-    
+
     // Set basic fields
     document.getElementById('name').value = personalInfo.name || '';
     document.getElementById('email').value = personalInfo.email || '';
@@ -334,10 +404,10 @@ function fillPersonalInfo(personalInfo) {
     document.getElementById('linkedin').value = personalInfo.linkedin || '';
     document.getElementById('github').value = personalInfo.github || '';
     document.getElementById('location').value = personalInfo.location || '';
-    
+
     // Set profile image if available
     if (personalInfo.image && personalInfo.image !== 'path/to/image') {
-        document.getElementById('profile-image').src = personalInfo.image.startsWith('http') ? 
+        document.getElementById('profile-image').src = personalInfo.image.startsWith('http') ?
             personalInfo.image : `/uploads/${personalInfo.image}`;
         document.getElementById('profile-image-filename').value = personalInfo.image;
         profileImageUploaded = true;
@@ -354,21 +424,21 @@ function fillPersonalInfo(personalInfo) {
 // Fill content section fields
 function fillContentSections(content) {
     if (!content) return;
-    
+
     // Fill objective
     if (content.objective) {
         document.getElementById('objective').value = content.objective;
     }
-    
+
     // Fill education
     if (content.education && content.education.length > 0) {
         const educationContainer = document.getElementById('education-fields');
         educationContainer.innerHTML = ''; // Clear existing
-        
+
         content.education.forEach(edu => {
             addItem('education');
             const lastItem = educationContainer.lastElementChild;
-            
+
             lastItem.querySelector('[name="education-degree[]"]').value = edu.degree || '';
             lastItem.querySelector('[name="education-university[]"]').value = edu.university || '';
             lastItem.querySelector('[name="education-startDate[]"]').value = edu.startDate || '';
@@ -377,26 +447,26 @@ function fillContentSections(content) {
             lastItem.querySelector('[name="education-coursework[]"]').value = edu.coursework || '';
         });
     }
-    
+
     // Fill experience
     if (content.experience && content.experience.length > 0) {
         const experienceContainer = document.getElementById('experience-fields');
         experienceContainer.innerHTML = ''; // Clear existing
-        
+
         content.experience.forEach(exp => {
             addItem('experience');
             const lastItem = experienceContainer.lastElementChild;
-            
+
             lastItem.querySelector('[name="experience-role[]"]').value = exp.role || '';
             lastItem.querySelector('[name="experience-company[]"]').value = exp.company || '';
             lastItem.querySelector('[name="experience-location[]"]').value = exp.location || '';
             lastItem.querySelector('[name="experience-startDate[]"]').value = exp.startDate || '';
             lastItem.querySelector('[name="experience-endDate[]"]').value = exp.endDate || '';
-            
+
             // Handle responsibilities
             const responsibilitiesList = lastItem.querySelector('.responsibilities-list');
             responsibilitiesList.innerHTML = ''; // Clear default responsibility
-            
+
             if (exp.responsibilities && exp.responsibilities.length > 0) {
                 exp.responsibilities.forEach(resp => {
                     addResponsibility(responsibilitiesList, 'experience-responsibility[]');
@@ -409,23 +479,23 @@ function fillContentSections(content) {
             }
         });
     }
-    
+
     // Fill projects
     if (content.projects && content.projects.length > 0) {
         const projectContainer = document.getElementById('project-fields');
         projectContainer.innerHTML = ''; // Clear existing
-        
+
         content.projects.forEach(proj => {
             addItem('project');
             const lastItem = projectContainer.lastElementChild;
-            
+
             lastItem.querySelector('[name="project-title[]"]').value = proj.title || '';
             lastItem.querySelector('[name="project-github_link[]"]').value = proj.github_link || '';
-            
+
             // Handle responsibilities
             const responsibilitiesList = lastItem.querySelector('.responsibilities-list');
             responsibilitiesList.innerHTML = ''; // Clear default responsibility
-            
+
             if (proj.responsibilities && proj.responsibilities.length > 0) {
                 proj.responsibilities.forEach(resp => {
                     addResponsibility(responsibilitiesList, 'project-responsibility[]');
@@ -438,15 +508,15 @@ function fillContentSections(content) {
             }
         });
     }
-    
+
     // Fill skills
     if (content.languages && content.languages.length > 0) {
         // Reset Select2
         $('#languages').val(null).trigger('change');
-        
+
         // Add selected options
         const languagesSelect = $('#languages');
-        
+
         // First ensure all options exist
         content.languages.forEach(lang => {
             // Check if option exists
@@ -456,18 +526,18 @@ function fillContentSections(content) {
                 languagesSelect.append(newOption);
             }
         });
-        
+
         // Set selected values
         languagesSelect.val(content.languages).trigger('change');
     }
-    
+
     if (content.technologies && content.technologies.length > 0) {
         // Reset Select2
         $('#technologies').val(null).trigger('change');
-        
+
         // Add selected options
         const techSelect = $('#technologies');
-        
+
         // First ensure all options exist
         content.technologies.forEach(tech => {
             // Check if option exists
@@ -477,7 +547,7 @@ function fillContentSections(content) {
                 techSelect.append(newOption);
             }
         });
-        
+
         // Set selected values
         techSelect.val(content.technologies).trigger('change');
     }
@@ -487,41 +557,41 @@ function fillContentSections(content) {
 function createNewCv() {
     // Reset form
     document.getElementById('cv-form').reset();
-    
+
     // Clear CV ID
     document.getElementById('cv-id').value = '';
     currentCvId = null;
-    
+
     // Set default template
     const templateSelect = document.getElementById('template-select');
     templateSelect.value = '1';
     document.getElementById('template-id').value = '1';
     currentTemplateId = 1;
-    
+
     // Load template fields
     loadTemplateFields(currentTemplateId);
-    
+
     // Reset profile image
-    document.getElementById('profile-image').src = '/static/img/profile-placeholder.png';
+    document.getElementById('profile-image').src = '/static/images/profile-placeholder-white.png';
     document.getElementById('profile-image-filename').value = '';
     profileImageUploaded = false;
     profileImageFilename = '';
-    
+
     // Reset Select2 fields
     $('#languages').val(null).trigger('change');
     $('#technologies').val(null).trigger('change');
-    
+
     // Clear containers
     clearFormSections();
-    
+
     // Reset preview
     document.querySelector('.preview-iframe').src = '';
     document.querySelector('.preview-placeholder').style.display = 'block';
-    
+
     // Remove highlight from CV list
     const selectedItems = document.querySelectorAll('.cv-list-item.selected');
     selectedItems.forEach(item => item.classList.remove('selected'));
-    
+
     showAlert('Created new CV', 'success');
 }
 
@@ -529,7 +599,7 @@ function createNewCv() {
 function saveDraft() {
     // Same as save but without generating PDF
     const formData = collectFormData();
-    
+
     fetch('/save_cv', {
         method: 'POST',
         headers: {
@@ -537,32 +607,32 @@ function saveDraft() {
         },
         body: JSON.stringify(formData)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Update current CV ID
-            currentCvId = data.cv_id;
-            document.getElementById('cv-id').value = data.cv_id;
-            
-            // Show success message
-            showAlert('CV draft saved successfully', 'success');
-            
-            // Update CV list or add new item
-            updateCvListItem(data.cv_id, formData.cv_name);
-        } else {
-            showAlert(data.error || 'Error saving CV draft', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('Error saving CV draft', 'error');
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update current CV ID
+                currentCvId = data.cv_id;
+                document.getElementById('cv-id').value = data.cv_id;
+
+                // Show success message
+                showAlert('CV draft saved successfully', 'success');
+
+                // Update CV list or add new item
+                updateCvListItem(data.cv_id, formData.cv_name);
+            } else {
+                showAlert(data.error || 'Error saving CV draft', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error saving CV draft', 'error');
+        });
 }
 
 // Save CV and generate PDF
 function saveAndGeneratePdf() {
     const formData = collectFormData();
-    
+
     fetch('/save_cv', {
         method: 'POST',
         headers: {
@@ -570,36 +640,36 @@ function saveAndGeneratePdf() {
         },
         body: JSON.stringify(formData)
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Update current CV ID
-            currentCvId = data.cv_id;
-            document.getElementById('cv-id').value = data.cv_id;
-            
-            // Update preview iframe
-            const previewIframe = document.querySelector('.preview-iframe');
-            previewIframe.src = data.pdf_url;
-            
-            // Hide placeholder
-            document.querySelector('.preview-placeholder').style.display = 'none';
-            
-            // Update download link
-            document.getElementById('download-pdf-link').href = `/download_pdf_dashboard?cv_id=${data.cv_id}&template_id=${currentTemplateId}`;
-            
-            // Show success message
-            showAlert('CV saved and PDF generated successfully', 'success');
-            
-            // Update CV list or add new item
-            updateCvListItem(data.cv_id, formData.cv_name);
-        } else {
-            showAlert(data.error || 'Error saving CV', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('Error saving CV', 'error');
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update current CV ID
+                currentCvId = data.cv_id;
+                document.getElementById('cv-id').value = data.cv_id;
+
+                // Update preview iframe
+                const previewIframe = document.querySelector('.preview-iframe');
+                previewIframe.src = data.pdf_url;
+
+                // Hide placeholder
+                document.querySelector('.preview-placeholder').style.display = 'none';
+
+                // Update download link
+                document.getElementById('download-pdf-link').href = `/download_pdf_dashboard?cv_id=${data.cv_id}&template_id=${currentTemplateId}`;
+
+                // Show success message
+                showAlert('CV saved and PDF generated successfully', 'success');
+
+                // Update CV list or add new item
+                updateCvListItem(data.cv_id, formData.cv_name);
+            } else {
+                showAlert(data.error || 'Error saving CV', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error saving CV', 'error');
+        });
 }
 
 // Refresh preview iframe
@@ -614,7 +684,7 @@ function refreshPreview() {
 // Download PDF
 function downloadPdf(e) {
     e.preventDefault();
-    
+
     if (currentCvId) {
         window.location.href = `/download_pdf_dashboard?cv_id=${currentCvId}&template_id=${currentTemplateId}`;
     } else {
@@ -631,12 +701,12 @@ function setupAiRecommendations() {
     const promptInput = document.getElementById('ai-prompt');
     const resultDiv = document.querySelector('.ai-result');
     const loadingDiv = document.querySelector('.ai-loading');
-    
+
     let currentField = null;
-    
+
     // Open modal when clicking AI recommend button
     aiButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             currentField = this.dataset.field;
             modal.style.display = 'block';
             promptInput.value = '';
@@ -646,23 +716,23 @@ function setupAiRecommendations() {
             document.querySelector('.modal-header h3').textContent = `AI Recommendations for ${currentField.charAt(0).toUpperCase() + currentField.slice(1)}`;
         });
     });
-    
+
     // Get AI recommendation
     if (getRecommendBtn) {
-        getRecommendBtn.addEventListener('click', function() {
+        getRecommendBtn.addEventListener('click', function () {
             const prompt = promptInput.value.trim();
             if (!prompt) {
                 showAlert('Please enter a prompt', 'error');
                 return;
             }
-            
+
             // Show loading
             resultDiv.style.display = 'none';
             loadingDiv.style.display = 'flex';
-            
+
             // Collect current form data
             const formData = collectFormData();
-            
+
             // Send request to AI service
             fetch('/ai_recommend', {
                 method: 'POST',
@@ -675,52 +745,119 @@ function setupAiRecommendations() {
                     cv_data: formData
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                // Hide loading
-                loadingDiv.style.display = 'none';
-                
-                if (data.success && data.recommendation) {
-                    // Show result
-                    resultDiv.textContent = data.recommendation;
+                .then(response => response.json())
+                .then(data => {
+                    // Hide loading
+                    loadingDiv.style.display = 'none';
+
+                    if (data.success && data.recommendation) {
+                        // Show result
+                        resultDiv.textContent = data.recommendation;
+                        resultDiv.style.display = 'block';
+
+                        // Enable apply button
+                        applyRecommendBtn.disabled = false;
+                    } else {
+                        // Show empty result for now
+                        resultDiv.textContent = "No recommendations available at this time. This feature will be enhanced in future updates.";
+                        resultDiv.style.display = 'block';
+
+                        // Disable apply button
+                        applyRecommendBtn.disabled = true;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting AI recommendation:', error);
+                    loadingDiv.style.display = 'none';
+                    resultDiv.textContent = "An error occurred. Please try again later.";
                     resultDiv.style.display = 'block';
-                    
-                    // Enable apply button
-                    applyRecommendBtn.disabled = false;
-                } else {
-                    // Show empty result for now
-                    resultDiv.textContent = "No recommendations available at this time. This feature will be enhanced in future updates.";
-                    resultDiv.style.display = 'block';
-                    
+
                     // Disable apply button
                     applyRecommendBtn.disabled = true;
-                }
-            })
-            .catch(error => {
-                console.error('Error getting AI recommendation:', error);
-                loadingDiv.style.display = 'none';
-                resultDiv.textContent = "An error occurred. Please try again later.";
-                resultDiv.style.display = 'block';
-                
-                // Disable apply button
-                applyRecommendBtn.disabled = true;
-            });
+                });
         });
     }
-    
+
     // Apply AI recommendation
     if (applyRecommendBtn) {
-        applyRecommendBtn.addEventListener('click', function() {
+        applyRecommendBtn.addEventListener('click', function () {
             if (resultDiv.textContent && currentField) {
                 // Apply text to appropriate field
                 if (currentField === 'objective') {
+                    
+                    // Clean the text content
+                    resultDiv.textContent = resultDiv.textContent.replace(/["{}`]+$/g, '');
+
+                    // Remove this : "objective": or "objective" : 
+                    resultDiv.textContent = resultDiv.textContent.replace(/objective:/g, '');
+                    resultDiv.textContent = resultDiv.textContent.replace(/objective :/g, '');
+
                     document.getElementById('objective').value = resultDiv.textContent;
                 }
                 // Other fields would need specific implementation based on structure
+                if (currentField === 'education') {
+                    // ...
+                }
+                if (currentField === 'experience') {
+                    // ...
+                }
+                if (currentField === 'projects') {
+                    // ...
+                }
+                if (currentField === 'languages') {
+                    // Remove Any Trailing " and ending " and {}
+                    resultDiv.textContent = resultDiv.textContent.replace(/["]+$/g, '');
+                    resultDiv.textContent = resultDiv.textContent.replace(/[{]+$/g, '');
+                    resultDiv.textContent = resultDiv.textContent.replace(/[}]+$/g, '');
+
+
+                    // Assume comma-separated list of language names
+                    const languages = resultDiv.textContent.split(',').map(lang => lang.trim());
+                    document.getElementById('languages').value = languages;
+                }
+                if (currentField === 'skills') {
+                    // Clean the text content
+                    resultDiv.textContent = resultDiv.textContent.replace(/["{}`]+$/g, '');
+
+                    // Remove this : "objective": or "objective" : 
+                    resultDiv.textContent = resultDiv.textContent.replace(/objective:/g, '');
+                    resultDiv.textContent = resultDiv.textContent.replace(/objective :/g, '');
+
+                    
+                    // Get comma-separated technologies and trim whitespace
+                    const technologies = resultDiv.textContent.split(',')
+                        .map(tech => tech.trim())
+                        .filter(tech => tech.length > 0);
                 
+                    // Get current Select2 instance
+                    const $select = $('#technologies');
+                    
+                    // Clear existing selections
+                    $select.val(null).trigger('change');
+                    
+                    // Add new technologies
+                    technologies.forEach(tech => {
+                        // Check if option exists
+                        if ($select.find('option[value="' + tech + '"]').length === 0) {
+                            // Create new option if it doesn't exist
+                            const newOption = new Option(tech, tech, true, true);
+                            $select.append(newOption);
+                        }
+                        
+                        // Select the option
+                        $select.val(function() {
+                            const current = $(this).val() || [];
+                            return [...current, tech];
+                        });
+                    });
+                    
+                    // Update Select2
+                    $select.trigger('change');
+                }
+
                 // Close modal
                 modal.style.display = 'none';
-                
+
                 // Show success message
                 showAlert('AI recommendation applied', 'success');
             }
@@ -732,50 +869,50 @@ function setupAiRecommendations() {
 function setupModals() {
     const modals = document.querySelectorAll('.modal');
     const closeButtons = document.querySelectorAll('.close-modal');
-    
+
     // Close when clicking X
     closeButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const modal = this.closest('.modal');
             modal.style.display = 'none';
         });
     });
-    
+
     // Close when clicking outside
-    window.addEventListener('click', function(e) {
+    window.addEventListener('click', function (e) {
         modals.forEach(modal => {
             if (e.target === modal) {
                 modal.style.display = 'none';
             }
         });
     });
-    
+
     // Delete modal specific setup
     const deleteModal = document.getElementById('delete-modal');
     const cancelDeleteBtn = document.getElementById('cancel-delete');
     const confirmDeleteBtn = document.getElementById('confirm-delete');
     let cvToDelete = null;
-    
+
     // Cancel delete
     if (cancelDeleteBtn) {
-        cancelDeleteBtn.addEventListener('click', function() {
+        cancelDeleteBtn.addEventListener('click', function () {
             deleteModal.style.display = 'none';
             cvToDelete = null;
         });
     }
-    
+
     // Confirm delete
     if (confirmDeleteBtn) {
-        confirmDeleteBtn.addEventListener('click', function() {
+        confirmDeleteBtn.addEventListener('click', function () {
             if (cvToDelete) {
                 deleteCv(cvToDelete);
                 deleteModal.style.display = 'none';
             }
         });
     }
-    
+
     // Open delete modal
-    window.openDeleteModal = function(cvId) {
+    window.openDeleteModal = function (cvId) {
         cvToDelete = cvId;
         if (deleteModal) {
             deleteModal.style.display = 'block';
@@ -788,43 +925,43 @@ function deleteCv(cvId) {
     fetch(`/delete_cv/${cvId}`, {
         method: 'DELETE'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Remove CV from list
-            const cvItem = document.querySelector(`.cv-list-item[data-cv-id="${cvId}"]`);
-            if (cvItem) {
-                cvItem.remove();
-            }
-            
-            // Reset form if current CV was deleted
-            if (currentCvId === parseInt(cvId)) {
-                createNewCv();
-            }
-            
-            // Show success message
-            showAlert('CV deleted successfully', 'success');
-            
-            // Update no CV message if needed
-            const cvList = document.querySelector('.cv-list');
-            if (cvList && cvList.children.length === 0) {
-                const noMessage = document.createElement('div');
-                noMessage.className = 'no-cv-message';
-                noMessage.innerHTML = `
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove CV from list
+                const cvItem = document.querySelector(`.cv-list-item[data-cv-id="${cvId}"]`);
+                if (cvItem) {
+                    cvItem.remove();
+                }
+
+                // Reset form if current CV was deleted
+                if (currentCvId === parseInt(cvId)) {
+                    createNewCv();
+                }
+
+                // Show success message
+                showAlert('CV deleted successfully', 'success');
+
+                // Update no CV message if needed
+                const cvList = document.querySelector('.cv-list');
+                if (cvList && cvList.children.length === 0) {
+                    const noMessage = document.createElement('div');
+                    noMessage.className = 'no-cv-message';
+                    noMessage.innerHTML = `
                     <i class="fas fa-file-alt"></i>
                     <p>No CVs created yet</p>
                     <p>Create your first CV to get started</p>
                 `;
-                cvList.appendChild(noMessage);
+                    cvList.appendChild(noMessage);
+                }
+            } else {
+                showAlert(data.error || 'Error deleting CV', 'error');
             }
-        } else {
-            showAlert(data.error || 'Error deleting CV', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting CV:', error);
-        showAlert('Error deleting CV', 'error');
-    });
+        })
+        .catch(error => {
+            console.error('Error deleting CV:', error);
+            showAlert('Error deleting CV', 'error');
+        });
 }
 
 // Helper: Show alert message
@@ -832,12 +969,12 @@ function showAlert(message, type = 'success') {
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert ${type}`;
     alertDiv.innerHTML = `<p>${message}</p>`;
-    
+
     // Find insertion point
     const insertPoint = document.querySelector('.editor-header');
     if (insertPoint) {
         insertPoint.parentNode.insertBefore(alertDiv, insertPoint.nextSibling);
-        
+
         // Remove after 3 seconds
         setTimeout(() => alertDiv.remove(), 3000);
     } else {
@@ -845,7 +982,7 @@ function showAlert(message, type = 'success') {
         const mainElement = document.querySelector('main');
         if (mainElement) {
             mainElement.prepend(alertDiv);
-            
+
             // Remove after 3 seconds
             setTimeout(() => alertDiv.remove(), 3000);
         }
@@ -857,7 +994,7 @@ function highlightSelectedCv(cvId) {
     // Remove existing selection
     const selectedItems = document.querySelectorAll('.cv-list-item.selected');
     selectedItems.forEach(item => item.classList.remove('selected'));
-    
+
     // Add selection to current CV
     const currentItem = document.querySelector(`.cv-list-item[data-cv-id="${cvId}"]`);
     if (currentItem) {
@@ -869,20 +1006,20 @@ function highlightSelectedCv(cvId) {
 function updateCvListItem(cvId, cvName) {
     const cvList = document.querySelector('.cv-list');
     const existingItem = document.querySelector(`.cv-list-item[data-cv-id="${cvId}"]`);
-    
+
     // Get current date formatted
     const now = new Date();
-    const dateStr = now.toLocaleDateString('en-GB', { 
-        day: '2-digit', 
-        month: 'short', 
-        year: 'numeric' 
+    const dateStr = now.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
     });
-    
+
     if (existingItem) {
         // Update existing item
         existingItem.querySelector('.cv-name').textContent = cvName || 'Untitled CV';
         existingItem.querySelector('.cv-date').textContent = dateStr;
-        
+
         // Make sure it's selected
         highlightSelectedCv(cvId);
     } else {
@@ -891,7 +1028,7 @@ function updateCvListItem(cvId, cvName) {
         if (noMessage) {
             noMessage.remove();
         }
-        
+
         const newItem = document.createElement('div');
         newItem.className = 'cv-list-item selected';
         newItem.dataset.cvId = cvId;
@@ -909,10 +1046,10 @@ function updateCvListItem(cvId, cvName) {
                 </button>
             </div>
         `;
-        
+
         // Add to list
         cvList.appendChild(newItem);
-        
+
         // Remove existing selection
         const selectedItems = document.querySelectorAll('.cv-list-item.selected');
         selectedItems.forEach(item => {
@@ -920,7 +1057,7 @@ function updateCvListItem(cvId, cvName) {
                 item.classList.remove('selected');
             }
         });
-        
+
         // Add event listeners
         newItem.querySelector('.edit-cv').addEventListener('click', () => loadCv(cvId));
         newItem.querySelector('.delete-cv').addEventListener('click', () => openDeleteModal(cvId));
@@ -953,7 +1090,7 @@ function collectFormData() {
             technologies: $('#technologies').val() || []
         }
     };
-    
+
     return formData;
 }
 
@@ -961,7 +1098,7 @@ function collectFormData() {
 function collectEducation() {
     const education = [];
     const educationItems = document.querySelectorAll('.education-item');
-    
+
     educationItems.forEach(item => {
         education.push({
             degree: item.querySelector('[name="education-degree[]"]').value || '',
@@ -969,29 +1106,29 @@ function collectEducation() {
             startDate: item.querySelector('[name="education-startDate[]"]').value || '',
             endDate: item.querySelector('[name="education-endDate[]"]').value || '',
             gpa: item.querySelector('[name="education-gpa[]"]').value || '',
-            certificate: item.querySelector('[name="education-certificate[]"]') ? 
+            certificate: item.querySelector('[name="education-certificate[]"]') ?
                 item.querySelector('[name="education-certificate[]"]').value || 'N\\A' : 'N\\A',
             coursework: item.querySelector('[name="education-coursework[]"]').value || ''
         });
     });
-    
+
     return education;
 }
 
 function collectExperience() {
     const experience = [];
     const experienceItems = document.querySelectorAll('.experience-item');
-    
+
     experienceItems.forEach(item => {
         const responsibilities = [];
         const responsibilityInputs = item.querySelectorAll('[name="experience-responsibility[]"]');
-        
+
         responsibilityInputs.forEach(input => {
             if (input.value.trim()) {
                 responsibilities.push(input.value.trim());
             }
         });
-        
+
         experience.push({
             role: item.querySelector('[name="experience-role[]"]').value || '',
             company: item.querySelector('[name="experience-company[]"]').value || '',
@@ -1001,38 +1138,38 @@ function collectExperience() {
             responsibilities: responsibilities
         });
     });
-    
+
     return experience;
 }
 
 function collectProjects() {
     const projects = [];
     const projectItems = document.querySelectorAll('.project-item');
-    
+
     projectItems.forEach(item => {
         const responsibilities = [];
         const responsibilityInputs = item.querySelectorAll('[name="project-responsibility[]"]');
-        
+
         responsibilityInputs.forEach(input => {
             if (input.value.trim()) {
                 responsibilities.push(input.value.trim());
             }
         });
-        
+
         projects.push({
             title: item.querySelector('[name="project-title[]"]').value || '',
             github_link: item.querySelector('[name="project-github_link[]"]').value || '',
             responsibilities: responsibilities
         });
     });
-    
+
     return projects;
 }
 
 // Download PDF handler
 function downloadPdf(e) {
     e.preventDefault();
-    
+
     // First ensure CV is saved
     if (!currentCvId) {
         saveAndGeneratePdf().then(() => {
@@ -1046,21 +1183,21 @@ function downloadPdf(e) {
 }
 
 // Initialize when document is ready (additional initializations)
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Add mobile menu toggle
     const mobileMenuToggle = document.querySelector('.hamburger');
     const mobileMenu = document.querySelector('.nav-links');
-    
+
     if (mobileMenuToggle && mobileMenu) {
-        mobileMenuToggle.addEventListener('click', function() {
+        mobileMenuToggle.addEventListener('click', function () {
             mobileMenuToggle.classList.toggle('active');
             mobileMenu.classList.toggle('show');
         });
     }
-    
+
     // Initialize template selector
     loadTemplates();
-    
+
     // Initialize theme switcher if present
     const themeSwitch = document.querySelector('.theme-switch input');
     if (themeSwitch) {
@@ -1068,8 +1205,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.setAttribute('data-theme', 'dark');
             themeSwitch.checked = true;
         }
-        
-        themeSwitch.addEventListener('change', function(e) {
+
+        themeSwitch.addEventListener('change', function (e) {
             if (e.target.checked) {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
@@ -1079,9 +1216,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Handle header shrink on scroll
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         const header = document.querySelector('.main-header');
         if (header) {
             if (window.scrollY > 50) {
@@ -1100,12 +1237,12 @@ function loadTemplates() {
         .then(data => {
             if (data.success && data.templates) {
                 const templateSelect = document.getElementById('template-select');
-                
+
                 // Clear existing options except the default/placeholder
                 while (templateSelect.options.length > 1) {
                     templateSelect.remove(1);
                 }
-                
+
                 // Add templates
                 data.templates.forEach(template => {
                     const option = document.createElement('option');
@@ -1113,7 +1250,7 @@ function loadTemplates() {
                     option.textContent = template.name;
                     templateSelect.appendChild(option);
                 });
-                
+
                 // Set current template
                 if (currentTemplateId) {
                     templateSelect.value = currentTemplateId;
@@ -1130,49 +1267,49 @@ function loadTemplates() {
 function saveAndGeneratePdfPromise() {
     return new Promise((resolve, reject) => {
         const formData = collectFormData();
-        
-        fetch('/save_cv/${currentCvId}', {
+
+        fetch('/save_cv', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update current CV ID
-                currentCvId = data.cv_id;
-                document.getElementById('cv-id').value = data.cv_id;
-                
-                // Update preview iframe
-                const previewIframe = document.querySelector('.preview-iframe');
-                previewIframe.src = data.pdf_url;
-                
-                // Hide placeholder
-                document.querySelector('.preview-placeholder').style.display = 'none';
-                
-                // Update download link
-                document.getElementById('download-pdf-link').href = 
-                    `/download_pdf_dashboard?cv_id=${data.cv_id}&template_id=${currentTemplateId}`;
-                
-                // Show success message
-                showAlert('CV saved and PDF generated successfully', 'success');
-                
-                // Update CV list or add new item
-                updateCvListItem(data.cv_id, formData.cv_name);
-                
-                resolve(data);
-            } else {
-                showAlert(data.error || 'Error saving CV', 'error');
-                reject(new Error(data.error || 'Error saving CV'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('Error saving CV', 'error');
-            reject(error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update current CV ID
+                    currentCvId = data.cv_id;
+                    document.getElementById('cv-id').value = data.cv_id;
+
+                    // Update preview iframe
+                    const previewIframe = document.querySelector('.preview-iframe');
+                    previewIframe.src = data.pdf_url;
+
+                    // Hide placeholder
+                    document.querySelector('.preview-placeholder').style.display = 'none';
+
+                    // Update download link
+                    document.getElementById('download-pdf-link').href =
+                        `/download_pdf_dashboard?cv_id=${data.cv_id}&template_id=${currentTemplateId}`;
+
+                    // Show success message
+                    showAlert('CV saved and PDF generated successfully', 'success');
+
+                    // Update CV list or add new item
+                    updateCvListItem(data.cv_id, formData.cv_name);
+
+                    resolve(data);
+                } else {
+                    showAlert(data.error || 'Error saving CV', 'error');
+                    reject(new Error(data.error || 'Error saving CV'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Error saving CV', 'error');
+                reject(error);
+            });
     });
 }
 
@@ -1181,18 +1318,18 @@ function refreshPreview() {
     if (currentCvId) {
         const previewIframe = document.querySelector('.preview-iframe');
         const placeholderDiv = document.querySelector('.preview-placeholder');
-        
+
         // Show loading state
         if (placeholderDiv) {
             placeholderDiv.innerHTML = '<div class="loading-spinner"></div><p>Generating preview...</p>';
             placeholderDiv.style.display = 'flex';
         }
-        
+
         // Load the preview
         previewIframe.src = `/preview_pdf_dashboard?cv_id=${currentCvId}&template_id=${currentTemplateId}`;
-        
+
         // Hide placeholder when iframe loads
-        previewIframe.onload = function() {
+        previewIframe.onload = function () {
             if (placeholderDiv) {
                 placeholderDiv.style.display = 'none';
             }
@@ -1215,7 +1352,7 @@ function saveAndGeneratePdf() {
 function saveDraft() {
     return new Promise((resolve, reject) => {
         const formData = collectFormData();
-        
+
         fetch('/save_cv', {
             method: 'POST',
             headers: {
@@ -1223,30 +1360,30 @@ function saveDraft() {
             },
             body: JSON.stringify(formData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update current CV ID
-                currentCvId = data.cv_id;
-                document.getElementById('cv-id').value = data.cv_id;
-                
-                // Show success message
-                showAlert('CV draft saved successfully', 'success');
-                
-                // Update CV list or add new item
-                updateCvListItem(data.cv_id, formData.cv_name);
-                
-                resolve(data);
-            } else {
-                showAlert(data.error || 'Error saving CV draft', 'error');
-                reject(new Error(data.error || 'Error saving CV draft'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('Error saving CV draft', 'error');
-            reject(error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update current CV ID
+                    currentCvId = data.cv_id;
+                    document.getElementById('cv-id').value = data.cv_id;
+
+                    // Show success message
+                    showAlert('CV draft saved successfully', 'success');
+
+                    // Update CV list or add new item
+                    updateCvListItem(data.cv_id, formData.cv_name);
+
+                    resolve(data);
+                } else {
+                    showAlert(data.error || 'Error saving CV draft', 'error');
+                    reject(new Error(data.error || 'Error saving CV draft'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Error saving CV draft', 'error');
+                reject(error);
+            });
     });
 }
 
@@ -1255,21 +1392,21 @@ function handleResponsiveBehavior() {
     const dashboardContainer = document.querySelector('.dashboard-container');
     const cvEditor = document.querySelector('.cv-editor');
     const cvPreview = document.querySelector('.cv-preview');
-    
+
     if (window.innerWidth <= 992) {
         // Mobile/tablet view
         const editorTab = document.getElementById('editor-tab');
         const previewTab = document.getElementById('preview-tab');
-        
+
         if (editorTab && previewTab) {
-            editorTab.addEventListener('click', function() {
+            editorTab.addEventListener('click', function () {
                 this.classList.add('active');
                 previewTab.classList.remove('active');
                 cvEditor.style.display = 'block';
                 cvPreview.style.display = 'none';
             });
-            
-            previewTab.addEventListener('click', function() {
+
+            previewTab.addEventListener('click', function () {
                 this.classList.add('active');
                 editorTab.classList.remove('active');
                 cvPreview.style.display = 'block';

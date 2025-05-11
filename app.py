@@ -8,17 +8,12 @@ from werkzeug.utils import secure_filename
 import cv_gen.generator as generator
 from models import User, CVData, ContactMessage
 from auth import auth as auth_blueprint
-from extensions import db, login_manager
+from extensions import db, login_manager,get_celery ,get_limiter , init_app
 from forms import CVForm
 from functools import wraps
 import os
 from flask import Flask
-from dotenv import load_dotenv
-from celery import Celery
 from routes.route_path import RoutePath , routes as routes_blueprint
-from extensions import db, init_app
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from dashboard import dashboard
 
 
@@ -26,115 +21,18 @@ from dashboard import dashboard
 
 
 def create_app():
-
-    # Load environment variables
-    load_dotenv()
     
     # Initialize Flask app
     app = Flask(__name__)
     
-    # Base configuration from .env with defaults
-    app.config.from_mapping(
-        # Flask Security
-        SECRET_KEY=os.getenv('SECRET_KEY'),
-        
-        # Database Configuration
-        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL'),
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        
-        # File Uploads
-        UPLOAD_FOLDER=os.path.join('instance', 'uploads'),
-        LATEX_OUTPUT_FOLDER=os.path.join('instance', 'latex_outputs'),
-        PDF_OUTPUT_FOLDER=os.path.join('instance', 'pdf_outputs'),
-        IMAGE_UPLOAD_FOLDER=os.path.join('instance', 'image_uploads'),
-        MOCK_FOLDER = os.path.join('mock'),
-        ALLOWED_EXTENSIONS={'json', 'txt','docx','doc'},
-        MAX_CONTENT_LENGTH= eval(os.getenv('MAX_CONTENT_LENGTH')),
-
-        
-        # Email Configuration
-        MAIL_SERVER=os.getenv('MAIL_SERVER', 'smtp.gmail.com'),
-        MAIL_PORT=os.getenv('MAIL_PORT', 587),
-        MAIL_USE_TLS=os.getenv('MAIL_USE_TLS', True),
-        MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
-        MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
-        
-        # Rate Limiting
-        RATE_LIMIT=os.getenv('RATE_LIMIT', "200 per day, 50 per hour")
-    )
 
     # Initialize extensions
     init_app(app) 
 
     # Configure Celery if available
-    celery = None
-    if os.getenv('CELERY_BROKER_URL'):
-        try:
-            celery = Celery(__name__, broker=os.getenv('CELERY_BROKER_URL'))
-            celery.conf.update(app.config)
-        except ImportError:
-            app.logger.warning("Celery not installed. Celery integration disabled.")
-            pass
-    
-    # Initialize Flask-Limiter if available
-    try:
-        limiter = Limiter(
-            key_func=get_remote_address,
-            storage_uri="memory://",
-            strategy="fixed-window" 
-            )
-        limiter.init_app(app)
-    except ImportError:
-        app.logger.warning("Flask-Limiter not installed. Rate limiting disabled.")
-        limiter = None
+    celery = get_celery(app)
 
-
-    from logging.handlers import RotatingFileHandler
-    import logging
-
-    def setup_logging():
-        try:
-            # Get absolute path to log file
-            log_file = '../logs/app.log'
-            print(log_file)
-
-            # Clear any existing handlers
-            app.logger.handlers.clear()
-
-            # Create rotating file handler
-            handler = RotatingFileHandler(
-                log_file,
-                maxBytes=1024*1024,  # 1MB
-                backupCount=3,
-                encoding='utf-8'
-            )
-            handler.setFormatter(logging.Formatter(
-                '%(asctime)s - %(levelname)s - %(message)s'
-            ))
-            handler.setLevel(logging.INFO)
-
-            # Add handler to Flask's logger
-            app.logger.addHandler(handler)
-            app.logger.setLevel(logging.INFO)
-
-            # Test logging
-            app.logger.info("Logging setup completed successfully")
-            app.logger.info(f"Log file location: {log_file}")
-
-        except Exception as e:
-            print(f"CRITICAL: Failed to initialize logging: {str(e)}")
-            # Fallback to stderr
-            logging.basicConfig(level=logging.INFO)
-
-    # Initialize logging when app starts
-    setup_logging()
-
-
-    # Create required directories
-    for folder in ['UPLOAD_FOLDER', 'LATEX_OUTPUT_FOLDER', 'PDF_OUTPUT_FOLDER','IMAGE_UPLOAD_FOLDER' , 'MOCK_FOLDER']:
-        os.makedirs(app.config[folder], exist_ok=True)
-        os.chmod(app.config[folder], 0o775)  # rwxrwxr-x
-
+    limiter = get_limiter(app)
 
     # Register blueprints
     app.register_blueprint(auth_blueprint)
@@ -145,6 +43,7 @@ def create_app():
     # Helper functions
     def allowed_file(filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
 
     def cleanup_old_files(directory, days=1):
         now = datetime.now()
@@ -177,15 +76,6 @@ def create_app():
     @app.route('/')
     def index():
         return render_template( RoutePath.home_index )
-
-    @app.route('/health')
-    @json_response
-    def health_check():
-        try:
-            db.session.execute('SELECT 1')
-            return {'status': 'healthy', 'database': 'connected'}, 200
-        except Exception as e:
-            return {'status': 'unhealthy', 'error': str(e)}, 500
 
 
     @app.route('/upload', methods=['POST'])
@@ -259,11 +149,6 @@ def create_app():
                             f"Profile Image: {image_path}"
                             )
                 
-                # Verify file content before saving
-                #if file.content_length == 0:
-                #   app.logger.error("Uploaded file is empty")
-                #    flash("Uploaded file is empty")
-                #    return render_template( RoutePath.home_index )
                 
                 file.save(input_path)
                 app.logger.info(f"Successfully saved uploaded file to {input_path}")
@@ -294,8 +179,6 @@ def create_app():
                 try : 
 
                     if image_path is not None:
-
-                        app.logger.info(f"Image path provided And Sent To Generator: {image_path}")
 
                         cv_generator = generator.Generator(input_path, template=template_style, image_path=image_path)
                     else:
@@ -399,6 +282,7 @@ def create_app():
             flash("Only .txt and .json files are allowed.")
             return render_template( RoutePath.home_index )
 
+
     def generate_pdf(input_path, unique_id):
         """Helper function to generate PDF from input file"""
         latex_output_path = os.path.join(app.config['LATEX_OUTPUT_FOLDER'], f"{unique_id}.tex")
@@ -426,6 +310,7 @@ def create_app():
                 os.remove(aux_file)
 
         return pdf_filename
+
 
     @app.route('/download/<filename>')
     def download_file(filename):
@@ -498,62 +383,15 @@ def create_app():
             return internal_server_error(e)
 
 
-
-
     @app.route('/sample-json')
     def sample_json():
         """Return a sample JSON structure for CV creation"""
-        sample = {
-            "personal_info": {
-                "name": "John Doe",
-                "location": "New York, NY",
-                "email": "john.doe@example.com",
-                "phone": "+1 (123) 456-7890",
-                "linkedin": "https://linkedin.com/in/johndoe",
-                "github": "https://github.com/johndoe"
-            },
-            "content": {
-                "objective": "Experienced software engineer seeking challenging opportunities in AI development.",
-                "education": [
-                    {
-                        "university": "Massachusetts Institute of Technology",
-                        "degree": "B.S. Computer Science",
-                        "startDate": "2016-09-01",
-                        "endDate": "2020-05-31",
-                        "gpa": "3.8/4.0",
-                        "coursework": "Data Structures, Algorithms, Machine Learning, Computer Vision"
-                    }
-                ],
-                "experience": [
-                    {
-                        "company": "Google",
-                        "role": "Software Engineer",
-                        "startDate": "2020-06-01",
-                        "endDate": "Present",
-                        "responsibilities": [
-                            "Developed and maintained backend services using Go and Python",
-                            "Collaborated with cross-functional teams to implement new features",
-                            "Optimized database queries improving performance by 30%"
-                        ]
-                    }
-                ],
-                "projects": [
-                    {
-                        "title": "AI Image Recognition",
-                        "github_link": "https://github.com/johndoe/ai-image",
-                        "responsibilities": [
-                            "Implemented CNN architecture achieving 95% accuracy",
-                            "Created data pipeline processing 1TB of images daily",
-                            "Deployed model to production environment using Docker and Kubernetes"
-                        ]
-                    }
-                ],
-                "languages": ["Python", "JavaScript", "Go", "C++"],
-                "technologies": ["React", "TensorFlow", "Docker", "AWS", "PostgreSQL"]
-            }
-        }
-        
-        return jsonify(sample)
+        return send_from_directory(
+            app.config['MOCK_FOLDER'],
+            'mock.json',
+            as_attachment=True,
+            mimetype='application/json'
+        )
 
 
     # Text file download endpoint

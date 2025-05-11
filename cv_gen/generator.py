@@ -228,6 +228,10 @@ class Generator:
         image_path = 'image.png'
         if self.image_path is not None:
             image_path = self.image_path
+        else:
+            if "personal_info" in self.cv_data :
+                if "image" in self.cv_data["personal_info"] and self.cv_data["personal_info"]["image"] is not None and self.cv_data["personal_info"]["image"] != "":
+                    image_path = self.cv_data["personal_info"]["image"]
         
         personal_info_str = (
             r"""

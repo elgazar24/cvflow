@@ -37,6 +37,8 @@ class RegistrationForm(FlaskForm):
 class CVForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    phone = StringField('Phone Number', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
     submit = SubmitField('Save Changes')
 
 

@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from forms import ForgotPasswordForm
-from models import User
 from extensions import db
 from werkzeug.security import generate_password_hash , check_password_hash
 import secrets
@@ -10,7 +9,7 @@ from extensions import mail
 from flask_login import login_user ,logout_user ,current_user ,login_required
 from forms import RegistrationForm, LoginForm
 from routes.route_path import RoutePath
-
+import db_access
 
 
 auth = Blueprint('auth', __name__)
@@ -28,26 +27,24 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
 
-        user = User.query.filter_by(email=form.email.data).first()
+        user = db_access.get_user_by_email(form.email.data)
         if user:
             flash('Email address already exists', 'error')
             return render_template( RoutePath.register_index, form=form)
         
-        user = User.query.filter_by(username=form.username.data).first()
+        user = db_access.get_user_by_username(form.username.data)
         if user:
             flash('Username already exists', 'error')
             return render_template( RoutePath.register_index, form=form)
         
 
-        hashed_password = generate_password_hash(form.password.data)
-        user = User(
-            username=form.username.data,
-            email=form.email.data,
-            password_hash=hashed_password
-        )
+        
+        user = db_access.create_user(form.username.data, form.email.data, form.password.data)
 
-        db.session.add(user)
-        db.session.commit()
+        if not user:
+            flash('Error creating user', 'error')
+            return render_template( RoutePath.register_index, form=form)
+        
         flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('auth.signin'))
     
@@ -75,7 +72,7 @@ def signin():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = db_access.get_user_by_email(form.email.data)
         if user and check_password_hash(user.password_hash, form.password.data):
             login_user(user, remember=form.remember.data)
             return redirect(url_for('index'))
@@ -88,7 +85,7 @@ def forgot_password():
     form = ForgotPasswordForm()
     
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = db_access.get_user_by_email(form.email.data)
         
         if user:
             # Generate reset token (expires in 1 hour)
@@ -102,9 +99,10 @@ def forgot_password():
             
             msg = Message(
                 "Password Reset Request - CVFlow",
-                sender="noreply@cvflow.com",
+                sender="noreply@cvflow.live",
                 recipients=[user.email]
             )
+            
             msg.body = f"""
             To reset your password, visit the following link:
             {reset_url}
