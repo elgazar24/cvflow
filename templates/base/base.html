@@ -11,26 +11,69 @@
   <link rel="manifest" href="{{url_for( 'static' , filename =  RoutePath.site_webmanifest ) }}">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.base_style)}}">
-  <script src="{{url_for('static', filename= RoutePath.base_script)}}" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="canonical" href="https://cvflow.live" />
+
+
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate professional, ATS-compatible resumes in seconds with CVFlow. Upload your JSON data and get beautifully formatted CVs instantly.">
+  <meta name="keywords" content="CV generator, resume builder, ATS resume, professional CV, JSON to CV, modern resume templates">
+  <meta name="author" content="Mohamed Elgazar">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
   <meta property="og:title" content="CVFlow - Create Professional CVs in Seconds">
   <meta property="og:description" content="Generate polished resumes fully compatible with ATS in seconds">
-  <meta property="og:image" content="https://cvflow.live/favicon.ico"> 
+  <meta property="og:image" content="https://cvflow.live/static/images/cvflow-social-preview.jpg">
   <meta property="og:url" content="https://cvflow.live">
+  <meta property="og:site_name" content="CVFlow">
+  
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CVFlow - Create Professional CVs in Seconds">
+  <meta name="twitter:description" content="Generate polished resumes fully compatible with ATS in seconds">
+  <meta name="twitter:image" content="https://cvflow.live/static/images/cvflow-social-preview.jpg">
+  <meta name="twitter:site" content="@cvflow">
+
+
+
+  <script src="{{url_for('static', filename= RoutePath.base_script)}}" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CVFlow",
+      "url": "https://cvflow.live",
+      "description": "Professional CV generator that creates ATS-compatible resumes from JSON data",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Mohamed Elgazar",
+        "jobTitle": "Mechatronics Engineer"
+      }
+    }
+    </script>
   {% block styles %}{% endblock %}
   {% block scripts %}{% endblock %}
 </head>
 
 <body>
   <div class="theme-switch-wrapper">
-    <label class="theme-switch" for="theme-toggle">
-      <input type="checkbox" id="theme-toggle" />
+    <label class="theme-switch" for="theme-toggle" label="Toggle Theme">
+      <input type="checkbox" id="theme-toggle" label="Toggle Theme" />
       <div class="slider round">
         <i class="fa-solid fa-sun"></i>
         <i class="fa-solid fa-moon"></i>

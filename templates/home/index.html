@@ -17,14 +17,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
-
-<meta property="og:title" content="CVFlow - Create Professional CVs in Seconds">
-<meta property="og:description" content="Generate polished resumes fully compatible with ATS in seconds">
-<meta property="og:image" content="https://cvflow.live/favicon.ico">
-<meta property="og:url" content="https://cvflow.live">
-<meta name="twitter:card" content="summary_large_image">
-
-
 {% endblock %}
 
 {% block scripts %}
@@ -60,7 +52,7 @@
       <div class="tutorial-section">
         <h3>How to Use CVFlow</h3>
         <div class="video-container">
-          <iframe src="/how-to-use/intro-vid" allowfullscreen></iframe>
+          <iframe src="/how-to-use/intro-vid" allowfullscreen title="CVFlow Tutorial Video"></iframe>
           <div class="video-overlay">
             <button id="play-tutorial" class="play-button">
               <i class="fa-solid fa-play"></i>
@@ -109,7 +101,7 @@
         <div class="image-option-controls">
           <div class="option-toggle">
             <label class="toggle">
-              <input type="checkbox" id="include-image-toggle">
+              <input type="checkbox" id="include-image-toggle" label = "Include Image">
               <span class="toggle-slider"></span>
             </label>
             <span class="toggle-label">Include image</span>
@@ -197,7 +189,7 @@
             <div class="spinner"></div>
             <p>Generating preview...</p>
           </div>
-          <iframe id="pdf-preview" width="100%" height="600px"></iframe>
+          <iframe id="pdf-preview" width="100%" height="600px" title="CV Preview"></iframe>
         </div>
       </div>
       
