@@ -21,14 +21,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Mobile Navigation
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
+    // // Mobile Navigation
+    // const hamburger = document.querySelector('.hamburger');
+    // const navLinks = document.querySelector('.nav-links');
 
-    hamburger?.addEventListener('click', () => {
-        navLinks.classList.toggle('show');
-        hamburger.classList.toggle('active');
-    });
+    // hamburger?.addEventListener('click', () => {
+    //     navLinks.classList.toggle('show');
+    //     hamburger.classList.toggle('active');
+    // });
 
     // Header Shrink on Scroll
     let lastScrollTop = 0;

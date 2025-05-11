@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     
     // ===== MOBILE NAVIGATION =====
+
+    // Hamburger menu functionality
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
@@ -29,6 +31,17 @@ document.addEventListener("DOMContentLoaded", function () {
         navLinks.classList.toggle('show');
         hamburger.classList.toggle('active');
     });
+    
+    // Close menu when clicking on nav links (for mobile)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                navLinks.classList.remove('show');
+                hamburger.classList.remove('active');
+            }
+        });
+    });
+    
     
     // ===== HEADER SHRINK ON SCROLL =====
     const header = document.querySelector('.main-header');
