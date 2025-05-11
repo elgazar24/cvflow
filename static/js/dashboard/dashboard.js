@@ -1623,7 +1623,8 @@ function importCvFromJson(jsonData) {
         showAlert('CV data imported successfully', 'success');
         
         // Save as draft
-        saveDraft();
+        
+        
     } catch (error) {
         console.error('Error importing CV data:', error);
         showAlert('Error importing CV data', 'error');
@@ -1646,7 +1647,7 @@ function importPreloadedCvData() {
         // Add event listener
         preloadedButton.addEventListener('click', function() {
             // Fetch the sample JSON data
-            fetch('/get_sample_cv_data')
+            fetch('/samples/json-sample-file')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
