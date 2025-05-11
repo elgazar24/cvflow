@@ -367,7 +367,7 @@ function loadCv(cvId) {
                 document.getElementById('cv-id').value = cvId;
 
                 // Set CV name
-                document.getElementById('cv-name').value = cvData.cv_name || 'Untitled CV';
+                document.getElementById('cv-name').value = cvData.name || 'Untitled CV';
 
                 // Set template if available
                 if (cvData.template_id) {
@@ -378,11 +378,7 @@ function loadCv(cvId) {
                     loadTemplateFields(currentTemplateId);
                 }
 
-                // Fill personal info
-                fillPersonalInfo(cvData.personal_info);
-
-                // Fill content sections
-                fillContentSections(cvData.content);
+                importCvFromJson(cvData.data);
 
                 // Update preview
                 refreshPreview();
@@ -1624,7 +1620,7 @@ function importCvFromJson(jsonData) {
         
         // Save as draft
         
-        
+
     } catch (error) {
         console.error('Error importing CV data:', error);
         showAlert('Error importing CV data', 'error');
