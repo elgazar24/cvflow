@@ -8,7 +8,7 @@ let profileImageFilename = '';
 document.addEventListener('DOMContentLoaded', function () {
 
     setupJsonImport();
-    
+
     // Setup preloaded CV data import
     importPreloadedCvData();
 
@@ -378,7 +378,8 @@ function loadCv(cvId) {
                     loadTemplateFields(currentTemplateId);
                 }
 
-                importCvFromJson(cvData.data);
+                // Import CV data from JSON
+                importCvFromJson(cvData.data , false);
 
                 // Update preview
                 refreshPreview();
@@ -787,7 +788,7 @@ function setupAiRecommendations() {
             if (resultDiv.textContent && currentField) {
                 // Apply text to appropriate field
                 if (currentField === 'objective') {
-                    
+
                     // Clean the text content
                     resultDiv.textContent = resultDiv.textContent.replace(/["{}`]+$/g, '');
 
@@ -826,18 +827,18 @@ function setupAiRecommendations() {
                     resultDiv.textContent = resultDiv.textContent.replace(/objective:/g, '');
                     resultDiv.textContent = resultDiv.textContent.replace(/objective :/g, '');
 
-                    
+
                     // Get comma-separated technologies and trim whitespace
                     const technologies = resultDiv.textContent.split(',')
                         .map(tech => tech.trim())
                         .filter(tech => tech.length > 0);
-                
+
                     // Get current Select2 instance
                     const $select = $('#technologies');
-                    
+
                     // Clear existing selections
                     $select.val(null).trigger('change');
-                    
+
                     // Add new technologies
                     technologies.forEach(tech => {
                         // Check if option exists
@@ -846,14 +847,14 @@ function setupAiRecommendations() {
                             const newOption = new Option(tech, tech, true, true);
                             $select.append(newOption);
                         }
-                        
+
                         // Select the option
-                        $select.val(function() {
+                        $select.val(function () {
                             const current = $(this).val() || [];
                             return [...current, tech];
                         });
                     });
-                    
+
                     // Update Select2
                     $select.trigger('change');
                 }
@@ -1434,19 +1435,19 @@ window.addEventListener('resize', handleResponsiveBehavior);
 // JSON Import functionality
 function setupJsonImport() {
     // Add event listener to the import button
-    document.getElementById('import-json').addEventListener('click', function() {
+    document.getElementById('import-json').addEventListener('click', function () {
         // Create a file input element
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = '.json';
         fileInput.style.display = 'none';
-        
+
         // Add event listener for file selection
-        fileInput.addEventListener('change', function(e) {
+        fileInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     try {
                         const jsonData = JSON.parse(event.target.result);
                         importCvFromJson(jsonData);
@@ -1458,7 +1459,7 @@ function setupJsonImport() {
                 reader.readAsText(file);
             }
         });
-        
+
         // Trigger file selection dialog
         document.body.appendChild(fileInput);
         fileInput.click();
@@ -1467,16 +1468,19 @@ function setupJsonImport() {
 }
 
 // Function to import CV data from JSON
-function importCvFromJson(jsonData) {
+function importCvFromJson(jsonData, isNew = true) {
     try {
-        // Clear any existing data
-        createNewCv();
-        
+
+        if (isNew) {
+            // Clear any existing data
+            createNewCv();
+        }
+
         // Set CV name (generate from name and current date)
         const name = jsonData.personal_info?.name || 'Imported CV';
         const currentDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         document.getElementById('cv-name').value = `${name}'s CV - ${currentDate}`;
-        
+
         // Fill personal info
         if (jsonData.personal_info) {
             document.getElementById('name').value = jsonData.personal_info.name || '';
@@ -1485,12 +1489,12 @@ function importCvFromJson(jsonData) {
             document.getElementById('linkedin').value = jsonData.personal_info.linkedin || '';
             document.getElementById('github').value = jsonData.personal_info.github || '';
             document.getElementById('location').value = jsonData.personal_info.location || '';
-            
+
             // Handle profile image if present
             if (jsonData.personal_info.image && jsonData.personal_info.image !== '') {
                 document.getElementById('profile-image-filename').value = jsonData.personal_info.image;
                 profileImageFilename = jsonData.personal_info.image;
-                
+
                 // If it's a URL, display it directly
                 if (jsonData.personal_info.image.startsWith('http')) {
                     document.getElementById('profile-image').src = jsonData.personal_info.image;
@@ -1498,21 +1502,21 @@ function importCvFromJson(jsonData) {
                 }
             }
         }
-        
+
         // Fill objective
         if (jsonData.content?.objective) {
             document.getElementById('objective').value = jsonData.content.objective;
         }
-        
+
         // Fill education
         if (jsonData.content?.education && jsonData.content.education.length > 0) {
             const educationContainer = document.getElementById('education-fields');
             educationContainer.innerHTML = ''; // Clear existing
-            
+
             jsonData.content.education.forEach(edu => {
                 addItem('education');
                 const lastItem = educationContainer.lastElementChild;
-                
+
                 lastItem.querySelector('[name="education-degree[]"]').value = edu.degree || '';
                 lastItem.querySelector('[name="education-university[]"]').value = edu.university || '';
                 lastItem.querySelector('[name="education-startDate[]"]').value = edu.startDate || '';
@@ -1521,26 +1525,26 @@ function importCvFromJson(jsonData) {
                 lastItem.querySelector('[name="education-coursework[]"]').value = edu.coursework || '';
             });
         }
-        
+
         // Fill experience
         if (jsonData.content?.experience && jsonData.content.experience.length > 0) {
             const experienceContainer = document.getElementById('experience-fields');
             experienceContainer.innerHTML = ''; // Clear existing
-            
+
             jsonData.content.experience.forEach(exp => {
                 addItem('experience');
                 const lastItem = experienceContainer.lastElementChild;
-                
+
                 lastItem.querySelector('[name="experience-role[]"]').value = exp.role || '';
                 lastItem.querySelector('[name="experience-company[]"]').value = exp.company || '';
                 lastItem.querySelector('[name="experience-location[]"]').value = exp.location || '';
                 lastItem.querySelector('[name="experience-startDate[]"]').value = exp.startDate || '';
                 lastItem.querySelector('[name="experience-endDate[]"]').value = exp.endDate || '';
-                
+
                 // Handle responsibilities
                 const responsibilitiesList = lastItem.querySelector('.responsibilities-list');
                 responsibilitiesList.innerHTML = ''; // Clear default responsibility
-                
+
                 if (exp.responsibilities && exp.responsibilities.length > 0) {
                     exp.responsibilities.forEach(resp => {
                         addResponsibility(responsibilitiesList, 'experience-responsibility[]');
@@ -1553,23 +1557,23 @@ function importCvFromJson(jsonData) {
                 }
             });
         }
-        
+
         // Fill projects
         if (jsonData.content?.projects && jsonData.content.projects.length > 0) {
             const projectContainer = document.getElementById('project-fields');
             projectContainer.innerHTML = ''; // Clear existing
-            
+
             jsonData.content.projects.forEach(proj => {
                 addItem('project');
                 const lastItem = projectContainer.lastElementChild;
-                
+
                 lastItem.querySelector('[name="project-title[]"]').value = proj.title || '';
                 lastItem.querySelector('[name="project-github_link[]"]').value = proj.github_link || '';
-                
+
                 // Handle responsibilities
                 const responsibilitiesList = lastItem.querySelector('.responsibilities-list');
                 responsibilitiesList.innerHTML = ''; // Clear default responsibility
-                
+
                 if (proj.responsibilities && proj.responsibilities.length > 0) {
                     proj.responsibilities.forEach(resp => {
                         addResponsibility(responsibilitiesList, 'project-responsibility[]');
@@ -1582,12 +1586,12 @@ function importCvFromJson(jsonData) {
                 }
             });
         }
-        
+
         // Fill languages
         if (jsonData.content?.languages && jsonData.content.languages.length > 0) {
             // Reset Select2
             $('#languages').val(null).trigger('change');
-            
+
             // Add options and select them
             const languagesSelect = $('#languages');
             jsonData.content.languages.forEach(lang => {
@@ -1598,12 +1602,12 @@ function importCvFromJson(jsonData) {
             });
             languagesSelect.val(jsonData.content.languages).trigger('change');
         }
-        
+
         // Fill technologies
         if (jsonData.content?.technologies && jsonData.content.technologies.length > 0) {
             // Reset Select2
             $('#technologies').val(null).trigger('change');
-            
+
             // Add options and select them
             const techSelect = $('#technologies');
             jsonData.content.technologies.forEach(tech => {
@@ -1614,12 +1618,9 @@ function importCvFromJson(jsonData) {
             });
             techSelect.val(jsonData.content.technologies).trigger('change');
         }
-        
+
         // Show success message
         showAlert('CV data imported successfully', 'success');
-        
-        // Save as draft
-        
 
     } catch (error) {
         console.error('Error importing CV data:', error);
@@ -1634,14 +1635,14 @@ function importPreloadedCvData() {
     preloadedButton.id = 'import-preloaded';
     preloadedButton.className = 'preloaded-import-btn';
     preloadedButton.innerHTML = '<i class="fas fa-file-download"></i> Load Sample CV';
-    
+
     // Add it to the sidebar
     const sidebarActions = document.querySelector('.sidebar-actions');
     if (sidebarActions) {
         sidebarActions.prepend(preloadedButton);
-        
+
         // Add event listener
-        preloadedButton.addEventListener('click', function() {
+        preloadedButton.addEventListener('click', function () {
             // Fetch the sample JSON data
             fetch('/samples/json-sample-file')
                 .then(response => response.json())
@@ -1663,33 +1664,33 @@ function importPreloadedCvData() {
 function exportCvAsJson() {
     // First collect all the form data
     const formData = collectFormData();
-    
+
     // Convert to pretty-printed JSON string
     const jsonString = JSON.stringify(formData, null, 2);
-    
+
     // Create a Blob with the JSON data
     const blob = new Blob([jsonString], { type: 'application/json' });
-    
+
     // Create a download link
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    
+
     // Generate filename based on CV name or default
     const cvName = formData.cv_name || 'my_cv';
     const filename = `${cvName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().split('T')[0]}.txt`;
     a.download = filename;
-    
+
     // Trigger the download
     document.body.appendChild(a);
     a.click();
-    
+
     // Clean up
     setTimeout(() => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }, 100);
-    
+
     // Show success message
     showAlert('CV data exported successfully', 'success');
 }
