@@ -378,6 +378,9 @@ function loadCv(cvId) {
                     loadTemplateFields(currentTemplateId);
                 }
 
+                console.log(cvData.data.image);
+            
+
                 // Import CV data from JSON
                 importCvFromJson(cvData.data , false);
 
