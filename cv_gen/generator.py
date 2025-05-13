@@ -225,74 +225,49 @@ class Generator:
 
     def generate_personl_info(self):
         # Get image path from JSON data
-        image_path = None
-        personal_info_str = ""
-        if self.image_path is not None:
-            image_path = self.image_path
-        else:
-            if "personal_info" in self.cv_data:
 
-                # Get image path from JSON data
+        personal_info_str = ""
+
+        image_path = None
+
+        # if There is and image in the function parmater then use it
+        if self.image_path is not None:
+
+            print("Image path Found in Function : ", self.image_path)
+
+            image_path = self.image_path
+
+        # else :
+        else:
+            if "personal_info" in self.cv_data :
+
+        #       if there is an image in the JSON data then use it
                 if (
-                    "image" in self.cv_data["personal_info"]
-                    and self.cv_data["personal_info"]["image"] is not None
-                    and self.cv_data["personal_info"]["image"] != ""
-                ):
-                    image_path = self.cv_data["personal_info"]["image"]
-                    personal_info_str = (
-            r"""
-\noindent
-\begin{minipage}[c]{0.22\textwidth}
-    \centering
-    \includegraphics[width=3.3cm,clip,trim=0 0 0 0]{"""
-            + image_path
-            + r"""}
-\end{minipage}
-\hfill
-\begin{minipage}[c]{0.75\textwidth}
-    \vspace*{0.3cm}
-    \begin{flushleft}
-        {\bfseries\LARGE """
-            + self.cv_data["personal_info"]["name"]
-            + r"""} \\[6pt]
-        \href{mailto:"""
-            + self.cv_data["personal_info"]["email"]
-            + r"""}{"""
-            + self.cv_data["personal_info"]["email"]
-            + r"""} \\
-        \vspace*{\mysspace}
-        \href{tel:"""
-            + self.cv_data["personal_info"]["phone"]
-            + r"""}{"""
-            + self.cv_data["personal_info"]["phone"]
-            + r"""} \\
-        \vspace*{\mysspace}
-        """
-            + self.cv_data["personal_info"]["location"]
-            + r""" \\
-        \vspace*{\mysspace}
-        \href{"""
-            + self.cv_data["personal_info"]["linkedin"]
-            + r"""}{LinkedIn} /
-        \vspace*{\mysspace}
-        \href{"""
-            + self.cv_data["personal_info"]["github"]
-            + r"""}{Github} 
-        \vspace*{\mysspace}
-    \end{flushleft}
-\end{minipage}
-\vspace{\mainsectionsspace}
-"""
-        )
-                
-                # No Personal Image
+                        "image" in self.cv_data["personal_info"]
+                        and self.cv_data["personal_info"]["image"] is not None
+                        and self.cv_data["personal_info"]["image"] != ""
+                    ):
+                        print(
+                            "Image path Found in Generator :",
+                            self.cv_data["personal_info"]["image"],
+                        )
+                        image_path = self.cv_data["personal_info"]["image"]
                 else:
-                    personal_info_str = (
+
+                    print("No Image Found in Generator")
+
+                    image_path = None
+        
+        # if there is an image Gernerate the string with the image
+        if image_path is not None:
+            personal_info_str = (
                         r"""
 \noindent
 \begin{minipage}[c]{0.22\textwidth}
     \centering
-    \includegraphics[width=3.3cm,clip,trim=0 0 0 0]{image.png}
+    \includegraphics[width=3.3cm,clip,trim=0 0 0 0]{"""
+                        + image_path
+                        + r"""}
 \end{minipage}
 \hfill
 \begin{minipage}[c]{0.75\textwidth}
@@ -330,7 +305,80 @@ class Generator:
 \vspace{\mainsectionsspace}
 """
                     )
+            
+        # if there is no image Gernerate the string without the image
+        else : 
+                personal_info_str = (
+                        r"""
+\begin{header}
+    \fontsize{25 pt}{25 pt}\selectfont """
+                        + self.cv_data["personal_info"]["name"]
+                        + r"""
+    
+    \vspace{5 pt}
+    \normalsize
+    \mbox{"""
+                        + self.cv_data["personal_info"]["location"]
+                        + r"""}%
+    \kern 5.0 pt%
+    \AND%
+    \kern 5.0 pt%
+    \mbox{\hrefWithoutArrow{mailto:"""
+                        + self.cv_data["personal_info"]["email"]
+                        + r"""}{"""
+                        + self.cv_data["personal_info"]["email"]
+                        + r"""}}%
+    \kern 5.0 pt%
+    \AND%
+    \kern 5.0 pt%
+    \mbox{\hrefWithoutArrow{tel:"""
+                        + self.cv_data["personal_info"]["phone"]
+                        + r"""}{"""
+                        + self.cv_data["personal_info"]["phone"]
+                        + r"""}}%
+    \kern 5.0 pt%
+    \AND%
+    \kern 5.0 pt%
+    \mbox{\hrefWithoutArrow{"""
+                        + self.cv_data["personal_info"]["linkedin"]
+                        + r"""}{Linked In}}%
+    \kern 5.0 pt%
+    \AND%
+    \kern 5.0 pt%
+    \mbox{\hrefWithoutArrow{"""
+                        + self.cv_data["personal_info"]["github"]
+                        + r"""}{Github}}%
+\end{header}
+\vspace{\mainsectionsspace}
+"""
+                    )
                 
+            
+
+        
+        #       else use without image 
+
+
+                # Get image path from JSON data
+                if (
+                    "image" in self.cv_data["personal_info"]
+                    and self.cv_data["personal_info"]["image"] is not None
+                    and self.cv_data["personal_info"]["image"] != ""
+                ):
+                    print(
+                        "Image path Found in Generator :",
+                        self.cv_data["personal_info"]["image"],
+                    )
+
+                    image_path = self.cv_data["personal_info"]["image"]
+
+                    
+
+                # No Personal Image
+                else:
+                    print("No image path found in Generator")
+                    
+
         # Return the generated string
         return personal_info_str
 

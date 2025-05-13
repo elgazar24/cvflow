@@ -187,9 +187,9 @@ def create_app():
                 cv_generator = None
 
                 try : 
+                    app.logger.info(f"Generating CV : {profile_image} and {image_path}")
 
                     if image_path is not None:
-
                         cv_generator = generator.Generator(input_path, template=template_style, image_path=image_path)
                     else:
                         cv_generator = generator.Generator(input_path, template=template_style)
