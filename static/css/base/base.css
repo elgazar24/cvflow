@@ -68,7 +68,8 @@
   
   /* Spacings */
   --header-height: 70px;
-  --max-width: 1280px;
+  /* Set max width to view screen width */
+  --max-width: 1200px;
   --section-spacing: 5rem;
 }
 
@@ -290,16 +291,16 @@ ol {
 
 .header-wrapper {
   height: var(--header-height);
+  margin:  0 4rem ;
+
 }
 
 .header-container {
   max-width: var(--max-width);
-  margin: 0 auto;
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.5rem;
 }
 
 /* Announcement banner */
@@ -682,8 +683,8 @@ input:checked + .theme-slider:before {
 
 .breadcrumbs {
   max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  margin:  0 4rem ;
+
 }
 
 .breadcrumbs ol {
