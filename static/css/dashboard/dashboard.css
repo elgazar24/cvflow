@@ -768,7 +768,7 @@
   flex: 1;
   border: none;
   border-radius: var(--border-radius-sm);
-  background-color: white;
+  background-color: var(--bg-light);
   box-shadow: var(--shadow-sm);
 }
 
