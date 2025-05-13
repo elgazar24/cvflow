@@ -1,0 +1,161 @@
+Mohamed Elgazar
+melgazar725@gmail.com
++971 507557673
+Dubai, United Arab Emirates
+LinkedIn / Github
+
+
+Objective
+Data Scientist with practical experience in Python, C++, SQL, and machine learning, with a strong knowledge of 
+Artificial Intelligence and data science. Using statistical modeling, predictive algorithms, and data visualization to
+turn complicated data into insightful knowledge, helping the management team to make useful business decisions.
+Focused on using AI-driven solutions to solve real-world problems, working effectively in team environments, and
+interested in learning and staying up to date on the new technologies. I have experience in several fields like
+embedded systems and mobile development, which allow me to collaborate with different teams effectively and
+become an asset for the team.
+
+
+Education
+Mansoura University , Bachelor of Mechatronics Engineering Sept 2020 - Sept 2024
+•GPA: 3.4/4.0(Certificate)
+•Coursework: Mechanics, Machine Learning, Embedded systems, Robotics, Linear algebra, Statistics, Artificial
+intelligence
+DataCamp , Associate Data Scientist in Python - Career track Dec 2024 - Apr 2025
+•GPA: Completed
+•Coursework: Python , SQL , Data Manipulation , Machine Learning , Statistics , Data Visualization
+DataCamp , Associate Data Analyst in SQL - Career track Dec 2024 - Apr 2025
+•GPA: Completed
+•Coursework: Python , SQL , Data Manipulation , Data Analysis , Data Visualization , Data Communication
+DeepLearning.AI and Stanford University , Advanced Learning Algorithms Jan 2025 - Mar 2025
+•GPA: Completed(Certificate)
+•Coursework: Neural Networks, TensorFlow, Machine learning , Decision trees , Linear algebra , Statistics ,
+Artificial intelligence
+DeepLearning.AI and Stanford University , Supervised Machine Learning:
+Regression and ClassificationJan 2025 - Mar 2025
+•GPA: Completed(Certificate)
+•Coursework: Python ,Supervised Learning, NumPy , scikit-learn, Machine learning , Gradient Descent
+Udacity - Egypt FWD , Embedded Systems Professional Nanodegree Sept 2022 - Dec 2022
+•GPA: Completed(Certificate)
+•Coursework: Embedded Systems, AUTOSAR , Automotive , Automotive Communication protocols , Agaile ,
+AVR and ARM microcontrollers
+Udemy , Mobile App Development with Flutter and Dart (iOS and Android) Sept 2022 - Dec 2022
+•GPA: Completed(Certificate)
+•Coursework: Dart, state management, BLoC, Provider, authentication, Google’s Machine Learning Models
+
+
+
+Skills
+
+
+Languages:
+ Arabic (Native), English (Professional)
+
+
+Skills:
+
+•Python ( Expert )
+•C++ ( Expert )
+•SQL ( Advanced )
+•Dart ( Advanced )
+•C ( Advanced )
+•HTML ( Intermediate )
+•CSS ( Intermediate )•JavaScript ( Intermediate
+)
+•OpenCV
+•TensorFlow
+•Pandas
+•NumPy
+•scikit-learn•Jupyter Notebook
+•Data Visualization
+•Linux
+•RTOS
+•VS Code
+•XCode
+•ARM•Communication Protocols
+•AVR
+•Flutter
+•Git
+•GitHub
+
+
+Experience
+Software Developer in Artificial Intelligence Training , Outlier.ai –
+dataannotation.techJan 2025 - Present
+•Collaborated on the development and evaluation of generative AI models.
+•Created and reviewed data to improve model accuracy and contextual understanding.
+•Applied domain expertise in computer science and programming to refine AI behavior.
+Computer Science Instructor , Roboto Academy Oct 2024 - Apr 2025
+•Designed and delivered robotics and computer science curricula.
+•Taught advanced programming and AI concepts to students like python, C++ and Linear Regression.
+•Fostered a hands-on learning environment with robotics kits and software tools.
+•Incressed Course bookings by 20
+Mechatronics Engineer Trainee , North Delta Electricity Distribution Co. July 2024 - Sept 2024
+•Acquired knowledge of power distribution systems and substation components.
+•Assisted in the maintenance and troubleshooting of transformers and circuit breakers.
+•Worked with SCADA systems used in electricity distribution.
+•Observed load balancing and fault analysis in medium and low voltage networks.
+•Collaborated with engineers on preventive maintenance and system upgrades.
+Embedded Software Engineer Intern , Siemens - Eitesal June 2023 - Jan 2024
+•Worked on projects with microcontroller interfacing and automotive communication protocols.
+•Learned AUTOSAR software architecture and MISRA-C standards.
+•Developed real-time firmware for ARM and AVR microcontrollers.
+•Worked with a team of developers to develop an embedded system project.
+•Gained hands on experience on testing and debugging embedded systems.
+•Developed Smart home system using Real-Time Operating Systems .
+Mechatronics Engineer Trainee , DCHC (Damietta Container and Cargo Handling
+Co.)July 2023 - Oct 2023
+•Learned troubleshooting techniques for air, fuel, lubrication, and cooling systems.
+•Applied knowledge of PLC systems and industrial automation controls.
+
+•Worked with inverters and switchgear control systems.
+•Understood the control circuit design of port tractor systems.
+Vice Leader and Head of Technical Committees , Mansoura Robotics Club May 2022 - Jan 2024
+•Led technical teams in designing and building robotics projects using embedded systems.
+•Managed the integration of hardware and software solutions for robotics competitions
+•Provided technical mentorship on programming languages, including C, C++, and Python
+•Facilitated hands-on learning and problem-solving sessions for members.
+•Organized and led workshops on robotics, AI, and embedded systems.
+
+
+Projects
+Stock Price Prediction with Machine Learning Github
+•Built a machine learning model to predict future stock prices based on historical data.
+•Used regression and LSTM models to capture time-dependent market trends.
+•Engineered features such as rolling mean, volatility, and technical indicators.
+•Evaluated model accuracy using RMSE and cross-validation techniques.
+•Tools used: Python, Scikit-learn, Keras, Pandas, yFinance, Matplotlib.
+Stock Market Trend Dashboard Github
+•Built a dashboard to visualize historical stock trends, comparisons, and moving averages.
+•Used yFinance API to collect live and historical stock data from major indices.
+•Performed exploratory data analysis (EDA) using Python to detect long-term and short-term trends.
+•Visualized performance using interactive graphs and plotted technical indicators.
+•Tools used: Python, Pandas, yFinance, Matplotlib, Streamlit.
+Company Revenue and Financial Report Analysis Github
+•Analyzed quarterly and annual financial reports of publicly traded companies.
+•Extracted insights from revenue, net income, debt ratio, and expense trends over time.
+•Used statistical analysis to detect patterns in profitability and cash flow movements.
+•Tools used: Python, Pandas, Matplotlib, Power BI, Excel.
+Student Performance Prediction Using Multiple Variables Github
+House Price Prediction Using One Variable Github
+•Built a machine learning model to predict house prices based on a single variable.
+•Preprocess the dataset for training and testing the prediction model.
+•Using Python and libraries such as Pandas and NumPy for data analysis and model development.
+•Regression techniques are used to optimize the model for an accurate price prediction.
+•Tools used: Python, Pandas, NumPy, Matplotlib.
+Advanced Exploration Robot Github
+•Developed a pipe exploration robot using the Raspberry Pi with Linux OS and OpenCV.
+•Using Python to program the Raspberry Pi to collect data from sensors ( Camera, Ultrasonic, etc.).
+•Tools used: C++ , Python, Raspberry Pi , NodeJs , STM32 MCU , Linux and OpenCV.
+Smart Home System using RTOS Github
+•Designed and implemented a real-time smart home system using FreeRTOS on ARM Cortex-M microcontroller.
+•Managed multiple concurrent tasks including lighting control, temperature monitoring, motion detection, and
+fan automation.
+•Used semaphores, queues, and task prioritization to ensure real-time performance and task synchronization.
+
+•Integrated sensors (PIR, DHT11, LDR) and actuators (relays, LEDs) with STM32 and handled I/O using
+FreeRTOS drivers.
+•Tools used: C, STM32CubeIDE, FreeRTOS, STM32F103, Segger J-Link.
+AVR and ARM Drivers Github
+•Write drivers code for peripherals such as GPIO, GPT , SPI, I2C, and ADC.
+•Developed projects using ARM Cortex-M3 based STM32 microcontrollers.
+•Tools Used: C, .C++, STM32CubeMX , XC8 , Segger debugger

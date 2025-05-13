@@ -1,24 +1,25 @@
 """
 
-    cv_generator_overleaf.py
+cv_generator_overleaf.py
 
-    Author: Mohamed Elgazar 
+Author: Mohamed Elgazar
 
-    Description:
-    This script generates a CV in LaTeX format using the provided data and styles.
+Description:
+This script generates a CV in LaTeX format using the provided data and styles.
 
-    Usage:
-    1. Change the data in the variables below and run the script.
-    2. Run the script using python cv_generator_overleaf.py
+Usage:
+1. Change the data in the variables below and run the script.
+2. Run the script using python cv_generator_overleaf.py
 
-    Output:
-    A CV in LaTeX format.
+Output:
+A CV in LaTeX format.
 
 """
 
 import os
 import json
 from datetime import datetime
+
 
 class Generator:
 
@@ -28,17 +29,16 @@ class Generator:
     image_path = None
     template = None
 
-    def __init__(self, source_path, template = None , image_path=None):
+    def __init__(self, source_path, template=None, image_path=None):
         self.source_path = source_path
         self.image_path = image_path
         self.template = template
         self.extract_cv_info()
-        
 
     def extract_cv_info(self):
         with open(self.source_path, "r") as file:
             self.cv_data = json.load(file)
-    
+
     def add_header(self):
         return r"""\documentclass[10pt, letterpaper]{article}
 % Packages:
@@ -222,18 +222,24 @@ class Generator:
         except ValueError as e:
             print(f"Error parsing date: {date} - {e}")
             return date  # Return the original value if parsing fails
-         
+
     def generate_personl_info(self):
         # Get image path from JSON data
-        image_path = 'image.png'
+        image_path = None
+        personal_info_str = ""
         if self.image_path is not None:
             image_path = self.image_path
         else:
-            if "personal_info" in self.cv_data :
-                if "image" in self.cv_data["personal_info"] and self.cv_data["personal_info"]["image"] is not None and self.cv_data["personal_info"]["image"] != "":
+            if "personal_info" in self.cv_data:
+
+                # Get image path from JSON data
+                if (
+                    "image" in self.cv_data["personal_info"]
+                    and self.cv_data["personal_info"]["image"] is not None
+                    and self.cv_data["personal_info"]["image"] != ""
+                ):
                     image_path = self.cv_data["personal_info"]["image"]
-        
-        personal_info_str = (
+                    personal_info_str = (
             r"""
 \noindent
 \begin{minipage}[c]{0.22\textwidth}
@@ -278,6 +284,54 @@ class Generator:
 \vspace{\mainsectionsspace}
 """
         )
+                
+                # No Personal Image
+                else:
+                    personal_info_str = (
+                        r"""
+\noindent
+\begin{minipage}[c]{0.22\textwidth}
+    \centering
+    \includegraphics[width=3.3cm,clip,trim=0 0 0 0]{image.png}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.75\textwidth}
+    \vspace*{0.3cm}
+    \begin{flushleft}
+        {\bfseries\LARGE """
+                        + self.cv_data["personal_info"]["name"]
+                        + r"""} \\[6pt]
+        \href{mailto:"""
+                        + self.cv_data["personal_info"]["email"]
+                        + r"""}{"""
+                        + self.cv_data["personal_info"]["email"]
+                        + r"""} \\
+        \vspace*{\mysspace}
+        \href{tel:"""
+                        + self.cv_data["personal_info"]["phone"]
+                        + r"""}{"""
+                        + self.cv_data["personal_info"]["phone"]
+                        + r"""} \\
+        \vspace*{\mysspace}
+        """
+                        + self.cv_data["personal_info"]["location"]
+                        + r""" \\
+        \vspace*{\mysspace}
+        \href{"""
+                        + self.cv_data["personal_info"]["linkedin"]
+                        + r"""}{LinkedIn} /
+        \vspace*{\mysspace}
+        \href{"""
+                        + self.cv_data["personal_info"]["github"]
+                        + r"""}{Github} 
+        \vspace*{\mysspace}
+    \end{flushleft}
+\end{minipage}
+\vspace{\mainsectionsspace}
+"""
+                    )
+                
+        # Return the generated string
         return personal_info_str
 
     def generate_objective(self):
@@ -332,11 +386,14 @@ class Generator:
                 """
             education_str += s_education["gpa"]
 
-            if s_education["certificate"] != "N/A" and s_education["certificate"] != "N\\A":
+            if (
+                s_education["certificate"] != "N/A"
+                and s_education["certificate"] != "N\\A"
+            ):
                 education_str += r"""(\href{"""
                 education_str += s_education["certificate"]
                 education_str += r"""}{Certificate})"""
-                
+
             education_str += r"""
             \item \textbf{Coursework:} """
             education_str += s_education["coursework"]
@@ -488,7 +545,7 @@ class Generator:
     #     technologies_str = ""
 
     #     technologies_str += r"""
-    #                     \begin{onecolentry}     
+    #                     \begin{onecolentry}
     #                                 \textbf{Skills: }
     #                                 """
 
@@ -507,7 +564,7 @@ class Generator:
 
     def generate_technologies(self):
         technologies_str = ""
-    
+
         technologies_str += r"""
             \begin{onecolentry}     
                 \textbf{Skills: }
@@ -516,18 +573,17 @@ class Generator:
             \begin{multicols}{4}
                 \begin{itemize}[leftmargin=* , labelsep=0.1cm ,topsep=0pt]
         """
-    
+
         for technology in self.cv_data["content"]["technologies"]:
             item = technology.replace("#", "\\#")
             technologies_str += f"\\item {item}\n"
-    
+
         technologies_str += r"""
                 \end{itemize}
             \end{multicols}
             }
         """
         return technologies_str
-
 
     def add_footer(self):
         return r"""
@@ -538,7 +594,7 @@ class Generator:
         self.cv_str = ""
         self.cv_str += self.add_header()
         self.cv_str += self.generate_personl_info()
-        
+
         # Check if sections exist before including them
         if "sections" in self.cv_data:
             if self.cv_data["sections"].get("objective", True):
