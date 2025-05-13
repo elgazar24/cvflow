@@ -5,6 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CVFlow</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="{{url_for('static', filename= RoutePath.apple_touch_icon)}}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{url_for( 'static' , filename =  RoutePath.favicon_32x32 )}}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{url_for( 'static' , filename =  RoutePath.favicon_16x16 )}}">
@@ -12,19 +24,23 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.base_style)}}">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </noscript>
+
+
+
   <link rel="canonical" href="https://cvflow.live" />
-
-
-  
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Generate professional, ATS-compatible resumes in seconds with CVFlow. Upload your JSON data and get beautifully formatted CVs instantly.">
-  <meta name="keywords" content="CV generator, resume builder, ATS resume, professional CV, JSON to CV, modern resume templates">
+  <meta name="description"
+    content="Generate professional, ATS-compatible resumes in seconds with CVFlow. Upload your JSON data and get beautifully formatted CVs instantly.">
+  <meta name="keywords"
+    content="CV generator, resume builder, ATS resume, professional CV, JSON to CV, modern resume templates">
   <meta name="author" content="Mohamed Elgazar">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="CVFlow - Create Professional CVs in Seconds">
@@ -32,7 +48,7 @@
   <meta property="og:image" content="https://cvflow.live/static/images/cvflow-social-preview.jpg">
   <meta property="og:url" content="https://cvflow.live">
   <meta property="og:site_name" content="CVFlow">
-  
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="CVFlow - Create Professional CVs in Seconds">
@@ -41,10 +57,9 @@
   <meta name="twitter:site" content="@cvflow">
 
 
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
   <script src="{{url_for('static', filename= RoutePath.base_script)}}" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -71,42 +86,118 @@
 </head>
 
 <body>
-  <div class="theme-switch-wrapper">
-    <label class="theme-switch" for="theme-toggle" label="Toggle Theme">
-      <input type="checkbox" id="theme-toggle" label="Toggle Theme" />
-      <div class="slider round">
-        <i class="fa-solid fa-sun"></i>
-        <i class="fa-solid fa-moon"></i>
+  <header class="main-header" id="site-header">
+    <!-- Announcement Banner - Can be conditionally rendered -->
+    <div class="announcement-banner">
+      <div class="announcement-container">
+        <p class="announcement-text"> 🚀 Welcome to CVFlow - Create stunning resumes in minutes! NOTE : We still under development</p>
+        <button class="announcement-close" aria-label="Close announcement">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </label>
-  </div>
+    </div>
+  
+    <div class="header-wrapper">
+      <div class="header-container">
+        <!-- Logo Section -->
+        <a href="/" class="logo-link" aria-label="CVFlow - Home">
+          <div class="logo-container">
+            <!-- SVG Logo for better scaling -->
+            <svg class="logo-svg" viewBox="0 0 50 50" aria-hidden="true">
+              <path d="M10,25 Q10,10 25,10 Q40,10 40,25 Q40,40 25,40 Q10,40 10,25" fill="none" stroke="currentColor" stroke-width="3" />
+              <path d="M20,20 L30,30 M20,30 L30,20" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+            </svg>
+            <span class="logo-text">CVFlow</span>
+          </div>
+        </a>
+  
+        <!-- Navigation -->
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Toggle navigation menu">
+            <span class="hamburger-icon">
+              <span class="hamburger-line"></span>
+              <span class="hamburger-line"></span>
+              <span class="hamburger-line"></span>
+            </span>
+          </button>
+  
+          <div class="nav-container" id="main-menu">
+            <ul class="nav-links">
+              <!-- Navigation Links -->
 
-  <header class="main-header">
-    <div class="header-container">
-      <a href="{{ url_for('index') }}" class="logo-link">
-      <div class="logo-container">
-        <h1>CVFlow</h1>
+              <li><a href="/" class="nav-link" aria-current="page">Home</a></li>
+              <li><a href="#templates" class="nav-link">Templates</a></li>
+              <li><a href="#about" class="nav-link">About</a></li>
+              <li><a href="#contact" class="nav-link">Contact</a></li>
+              
+              <!-- Authentication Links with Conditional Rendering -->
+              {% if current_user.is_authenticated %}
+              <li class="nav-dropdown">
+                <button class="nav-dropdown-toggle" aria-expanded="false">
+                  <span class="user-avatar">{{ current_user.username[:1] }}</span>
+                  <span class="user-name">{{ current_user.username }}</span>
+                  <svg class="dropdown-arrow" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+                  </svg>
+                </button>
+                <ul class="nav-dropdown-menu">
+                  <li><a href="/dashboard" class="dropdown-link">Dashboard</a></li>
+                  <li><a href="/profile" class="dropdown-link">Profile</a></li>
+                  <li><a href="/settings" class="dropdown-link">Settings</a></li>
+                  <li><a href="/logout" class="dropdown-link">Logout</a></li>
+                </ul>
+              </li>
+              {% else %}
+              <li class="auth-buttons">
+                <a href="/signin" class="btn btn-outline">Sign In</a>
+                <a href="/signup" class="btn btn-primary">Sign Up</a>
+              </li>
+              {% endif %}
+            </ul>
+  
+            <!-- Action Buttons & Theme Switch -->
+            <div class="nav-actions">
+              <!-- Theme Toggle -->
+              <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                  <span class="visually-hidden">Toggle dark/light mode</span>
+                  <input type="checkbox" id="theme-toggle" aria-label="Toggle dark/light mode" />
+                  <span class="theme-slider">
+                    <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="12" r="5" />
+                      <line x1="12" y1="1" x2="12" y2="3" />
+                      <line x1="12" y1="21" x2="12" y2="23" />
+                      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                      <line x1="1" y1="12" x2="3" y2="12" />
+                      <line x1="21" y1="12" x2="23" y2="12" />
+                      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
-    </a>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="/" class="nav-link">Home</a></li>
-          <li><a href="#templates" class="nav-link">Templates</a></li>
-          <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
-          {% if current_user.is_authenticated %}
-          <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
-          <li><a href="/logout" class="nav-link">Logout</a></li>
-          {% else %}
-          <li><a href="/signin" class="nav-link">Sign In</a></li>
-          <li><a href="/signup" class="nav-link">Sign Up</a></li>
+    </div>
+  
+    <!-- SEO-friendly breadcrumbs (could be conditionally rendered) -->
+    <div class="breadcrumbs-container">
+      <nav aria-label="Breadcrumb" class="breadcrumbs">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <!-- Dynamic breadcrumbs can be added with Jinja -->
+          {% if breadcrumbs %}
+            {% for item in breadcrumbs %}
+              <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+            {% endfor %}
           {% endif %}
-        </ul>
-        <div class="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        </ol>
       </nav>
     </div>
   </header>

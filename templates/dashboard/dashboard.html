@@ -60,6 +60,8 @@
                 <button id="export-json" class="export-json-btn">
                     <i class="fas fa-file-export"></i> Save as TXT
                 </button>
+                <div class="import-example-data">
+                </div>
             </div>
         </div>
 
@@ -103,17 +105,20 @@
                     <div class="personal-info-container">
                         <div class="profile-image-container" id="profile-image-section">
                             <div class="profile-image-preview">
-                                <img id="profile-image" src="{{ url_for('static', filename='images/profile-placeholder-white.png') }}" alt="Profile Image">
+                                <img id="profile-image"
+                                    src="{{ url_for('static', filename='images/profile-placeholder-white.png') }}"
+                                    alt="Profile Image">
                             </div>
                             <div class="profile-image-upload">
                                 <label for="profile-image-input" class="upload-btn">
                                     <i class="fas fa-upload"></i> Upload Photo
                                 </label>
-                                <input type="file" id="profile-image-input" name="profile_image" accept="image/*" style="display: none;">
+                                <input type="file" id="profile-image-input" name="profile_image" accept="image/*"
+                                    style="display: none;">
                                 <input type="hidden" id="profile-image-filename" name="profile_image_filename">
                             </div>
                         </div>
-                        
+
                         <div class="personal-info-fields">
                             <div class="form-group">
                                 <label for="name">Full Name</label>
@@ -210,7 +215,8 @@
                     </div>
                     <div class="form-group">
                         <label>Languages</label>
-                        <select id="languages" name="content.languages" class="skills-select" multiple="multiple" title="Select languages">
+                        <select id="languages" name="content.languages" class="skills-select" multiple="multiple"
+                            title="Select languages">
                             {% for skill in skills %}
                             {% if skill['category'] == 'language' %}
                             <option value="{{ skill['name']}}">{{ skill['name'] }}</option>
@@ -221,7 +227,8 @@
 
                     <div class="form-group">
                         <label>Technologies</label>
-                        <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple" title="Select technologies">
+                        <select id="technologies" name="content.technologies" class="skills-select" multiple="multiple"
+                            title="Select technologies">
                             {% for skill in skills %}
                             {% if skill['category'] == 'technology' %}
                             <option value="{{ skill['name'] }}">{{ skill['name'] }}</option>
@@ -247,7 +254,7 @@
                 <h3><i class="fas fa-eye"></i>Preview</h3>
                 <div class="preview-actions">
                     <button id="refresh-preview" class="refresh-button">
-                        <i class="fas fa-sync-alt"></i> 
+                        <i class="fas fa-sync-alt"></i>
                         <span class="button-text">Refresh</span>
                     </button>
                     <button id="download-pdf-link" href="#" class="download-button">

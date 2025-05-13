@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('export-json').addEventListener('click', exportCvAsJson);
 
-
     // Initialize Select2 for Languages
     $('#languages').select2({
         tags: true,  // Enable free-text entries
@@ -379,10 +378,10 @@ function loadCv(cvId) {
                 }
 
                 console.log(cvData.data.image);
-            
+
 
                 // Import CV data from JSON
-                importCvFromJson(cvData.data , false);
+                importCvFromJson(cvData.data, false);
 
                 // Update preview
                 refreshPreview();
@@ -1633,14 +1632,53 @@ function importCvFromJson(jsonData, isNew = true) {
 
 // Add a direct import function for the provided JSON data (pre-loaded)
 function importPreloadedCvData() {
+
     // Create a button for preloaded data
     const preloadedButton = document.createElement('button');
     preloadedButton.id = 'import-preloaded';
     preloadedButton.className = 'preloaded-import-btn';
     preloadedButton.innerHTML = '<i class="fas fa-file-download"></i> Load Sample CV';
 
+    // Add Styles 
+    const style = document.createElement('style');
+    style.innerHTML = `
+        
+        .preloaded-import-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.7rem 1rem;
+          width: calc(100% - 3rem);
+          margin: 0 1.5rem 1.5rem;
+          background-color: var(--bg-light);
+          color: var(--text-color);
+          border: 1px solid var(--border-color);
+          border-radius: var(--border-radius-sm);
+          font-size: 0.9rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: var(--transition);
+          text-align: left;
+        }
+
+        .import-example-data button {
+          margin-bottom: 0.8rem;
+        }
+
+        .import-example-data button:last-child {
+          margin-bottom: 1.5rem;
+        }
+
+        .preloaded-import-btn:hover {
+          background-color: var(--primary-color);
+          color: white;
+          border-color: var(--primary-color);
+        }
+    `;
+    document.head.appendChild(style);
+
     // Add it to the sidebar
-    const sidebarActions = document.querySelector('.sidebar-actions');
+    const sidebarActions = document.querySelector('.import-example-data');
     if (sidebarActions) {
         sidebarActions.prepend(preloadedButton);
 
@@ -1650,8 +1688,8 @@ function importPreloadedCvData() {
             fetch('/samples/json-sample-file')
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        importCvFromJson(data.data);
+                    if (data) {
+                        importCvFromJson(data);
                     } else {
                         showAlert('Error loading sample CV data', 'error');
                     }

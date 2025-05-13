@@ -142,6 +142,9 @@ def save_cv_from_json_data(data, user_id):
 @dashboard.route("/dashboard")
 @login_required
 def dashboard_index():
+    breadcrumbs = [
+        {"title": "Dashboard", "url": "/dashboard"},
+    ]
     if not current_user.is_authenticated:
         return redirect(url_for("auth.signin", next=request.url))
 
@@ -169,6 +172,7 @@ def dashboard_index():
         cv_data=cv_data,
         templates=templates,
         languages=languages,
+        breadcrumbs = breadcrumbs,
         technologies=technologies,
         form=form,
     )

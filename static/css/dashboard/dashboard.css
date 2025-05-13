@@ -7,7 +7,6 @@
 
 /* Dashboard Layout */
 .dashboard-main {
-  margin-top: 80px;
   min-height: calc(100vh - 80px);
 }
 
@@ -102,7 +101,7 @@
 
 .cv-date {
   font-size: 0.8rem;
-  color: var(--text-lighter);
+  color: var(--text-color);
   margin-top: 0.2rem;
 }
 
@@ -234,7 +233,7 @@
 
 /* CV Editor Styles */
 .cv-editor {
-  background-color: white;
+  background-color: var(--bg-light);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-sm);
   padding: 2rem;

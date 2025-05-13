@@ -24,3 +24,5 @@ celery==5.5.2
 openai==1.78.0
 flask_migrate==4.1.0
 PyPDF2==3.0.1
+flask_compress==1.17
+flask_minify==0.50

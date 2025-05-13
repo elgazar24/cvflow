@@ -3,48 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        body.setAttribute('data-theme', 'dark');
-        themeToggle.checked = true;
-    }
 
-    // Theme toggle handler
-    themeToggle.addEventListener('change', function () {
-        if (this.checked) {
-            body.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-        }
-    });
-
-    // // Mobile Navigation
-    // const hamburger = document.querySelector('.hamburger');
-    // const navLinks = document.querySelector('.nav-links');
-
-    // hamburger?.addEventListener('click', () => {
-    //     navLinks.classList.toggle('show');
-    //     hamburger.classList.toggle('active');
-    // });
-
-    // Header Shrink on Scroll
-    let lastScrollTop = 0;
-    const header = document.querySelector('.main-header');
-
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (scrollTop > 100) {
-            header.classList.add('header-shrink');
-        } else {
-            header.classList.remove('header-shrink');
-        }
-
-        lastScrollTop = scrollTop;
-    });
 
     // Smooth Scrolling for Anchor Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

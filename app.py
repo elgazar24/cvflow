@@ -15,6 +15,9 @@ import os
 from flask import Flask
 from routes.route_path import RoutePath , routes as routes_blueprint
 from dashboard import dashboard
+from flask_compress import Compress
+from flask_minify import Minify
+
 
 
 
@@ -24,7 +27,14 @@ def create_app():
     
     # Initialize Flask app
     app = Flask(__name__)
-    
+
+
+    # Enable compression
+    Compress(app)
+
+    # Enable minification
+    Minify(app=app, html=True, js=True, cssless=True)
+
 
     # Initialize extensions
     init_app(app) 
@@ -386,7 +396,7 @@ def create_app():
             filename,
             as_attachment=True,
             mimetype='application/json'
-        )
+        ) , 200
 
     # DOCX file download endpoint
     @app.route('/samples/docx-sample-file')
