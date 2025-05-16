@@ -180,7 +180,7 @@ def init_app(app):
 
     # Initialize Flask-Login
     login_manager.init_app(app)
-    login_manager.login_view = 'auth.login' 
+    login_manager.login_view = 'auth.signin' 
 
     # Initialize Flask-Mail
     mail.init_app(app)

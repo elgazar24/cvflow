@@ -1,0 +1,145 @@
+{% extends RoutePath.base_index %}
+{% block title %}Articles - CVFlow{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.articles_style) }}">
+{% endblock %}
+
+{% block content %}
+<section class="articles-hero">
+  <div class="container">
+    <h1 class="articles-title">Articles & Resources</h1>
+    <p class="articles-subtitle">Discover expert insights, tips, and trends to supercharge your CV and boost your career journey</p>
+    
+    <div class="articles-search-container">
+      <div class="search-box">
+        <i class="search-icon" aria-hidden="true">🔍</i>
+        <input type="text" id="articleSearch" placeholder="Search articles...">
+      </div>
+      
+      <div class="categories-filter">
+        <span class="filter-label">Filter by:</span>
+        <div class="categories-wrapper" id="categoriesContainer">
+          <button class="category-pill active" data-category="all">All</button>
+          <!-- Categories will be populated from API -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="articles-new-badge">
+  <div class="container">
+    <div class="new-badge-content">
+      <div class="badge-icon-wrapper">
+        <i class="badge-icon" aria-hidden="true">✨</i>
+      </div>
+      <div class="badge-text">
+        <h4>New Feature Alert!</h4>
+        <p>We've just launched AI-powered CV recommendations. Let our AI suggest the perfect skills and objectives for your industry.</p>
+      </div>
+      <a href="/dashboard/ai-assistant" class="badge-cta">Try Now</a>
+    </div>
+  </div>
+</div>
+
+<section class="featured-articles">
+  <div class="container">
+    <div class="section-header">
+      <h2>Featured Articles</h2>
+      <a href="#all-articles" class="view-all">View All <i class="arrow-icon" aria-hidden="true">→</i></a>
+    </div>
+    
+    <div class="featured-slider" id="featuredArticlesContainer">
+      <!-- Featured articles will be populated from API -->
+      <div class="articles-loading">Loading featured articles...</div>
+    </div>
+  </div>
+</section>
+
+<section class="recommended-articles">
+  <div class="container">
+    <div class="section-header">
+      <h2>Recommended For You</h2>
+      <div class="recommendation-info">
+        <i class="info-icon" aria-hidden="true">ℹ️</i>
+        <span>Based on your CV and interests</span>
+      </div>
+    </div>
+    
+    <div class="articles-grid" id="recommendedArticlesContainer">
+      <!-- Recommended articles will be populated from API -->
+      <div class="articles-loading">Loading recommended articles...</div>
+    </div>
+  </div>
+</section>
+
+<section class="all-articles" id="all-articles">
+  <div class="container">
+    <div class="section-header">
+      <h2>Browse All Articles</h2>
+      <div class="articles-sort">
+        <label for="articlesSort">Sort by:</label>
+        <select id="articlesSort">
+          <option value="newest">Newest First</option>
+          <option value="popular">Most Popular</option>
+          <option value="trending">Trending</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="articles-grid" id="allArticlesContainer">
+      <!-- All articles will be populated from API -->
+      <div class="articles-loading">Loading articles...</div>
+    </div>
+    
+    <div class="articles-pagination" id="articlesPagination">
+      <!-- Pagination will be populated from API -->
+    </div>
+  </div>
+</section>
+
+<div class="articles-newsletter">
+  <div class="container">
+    <div class="newsletter-content">
+      <div class="newsletter-text">
+        <h3>Stay ahead with our newsletter</h3>
+        <p>Get weekly career tips, industry insights, and CV trends delivered to your inbox</p>
+      </div>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" placeholder="Your email address" required>
+        <button type="submit" class="newsletter-button">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="articleModal" class="article-modal">
+  <div class="article-modal-content">
+    <span class="close-modal">&times;</span>
+    <div id="modalContent">
+      <!-- Article modal content will be populated -->
+    </div>
+  </div>
+</div>
+
+<!-- Article template for JS -->
+<template id="articleCardTemplate">
+  <div class="article-card">
+    <div class="article-image-container">
+      <div class="article-category"></div>
+      <img class="article-image" src="" alt="">
+    </div>
+    <div class="article-content">
+      <h3 class="article-title"></h3>
+      <p class="article-excerpt"></p>
+      <div class="article-meta">
+        <span class="article-date"></span>
+        <span class="article-read-time"></span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="{{ url_for('static', filename= RoutePath.articles_script) }}"></script>
+{% endblock %}

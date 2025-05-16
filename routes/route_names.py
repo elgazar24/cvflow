@@ -7,6 +7,9 @@ templates_base_dir_name =  'base'
 templates_dashboard_dir_name = 'dashboard'
 templates_errors_dir_name = 'errors'
 templates_home_dir_name = 'home'
+templates_about_dir_name = 'about'
+templates_templates_dir_name = 'templates'
+templates_articles_dir_name = 'articles'
 
 
 # Static Dirctories and Files
@@ -17,6 +20,10 @@ static_css_home_dir_name = 'home'
 static_css_errors_dir_name = 'errors'
 static_css_auth_dir_name = 'auth'
 static_css_dashboard_dir_name = 'dashboard'
+static_css_about_dir_name = 'about'
+static_css_templates_dir_name = 'templates'
+static_css_articles_dir_name = 'articles'
+
 
 
 static_js_dir_name = 'js'
@@ -24,6 +31,11 @@ static_js_home_dir_name = 'home'
 static_js_errors_dir_name = 'errors'
 static_js_auth_dir_name = 'auth'
 static_js_dashboard_dir_name = 'dashboard'
+static_js_about_dir_name = 'about'
+static_js_templates_dir_name = 'templates'
+static_js_articles_dir_name = 'articles'
+
+
 
 static_images_dir_name = 'images'
 
@@ -39,6 +51,13 @@ site_webmanifest_file_name = 'site.webmanifest'
 favicon_16x16_file_name = 'favicon-16x16.png'
 favicon_32x32_file_name = 'favicon-32x32.png'
 apple_touch_icon_file_name = 'apple-touch-icon.png'
+
+
+static_images_icons_dir_name = 'icons'
+ai_icon_stars_file_name = 'ai_icon_stars.png'
+ai_icon_generate_file_name = 'ai_icon_generate.png'
+
+
 
 
 
@@ -74,4 +93,18 @@ errors_500_script_file_name = '500.js'
 base_index_file_name = 'base.html'
 base_style_file_name = 'base.css'
 base_script_file_name = 'base.js'
+
+about_index_file_name = 'about.html'
+about_style_file_name = 'about.css'
+about_script_file_name = 'about.js'
+
+templates_index_file_name = 'templates.html'
+templates_style_file_name = 'templates.css'
+templates_script_file_name = 'templates.js'
+
+articles_index_file_name = 'articles.html'
+articles_style_file_name = 'articles.css'
+articles_script_file_name = 'articles.js'
+
+
 

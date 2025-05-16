@@ -126,9 +126,18 @@
               <!-- Navigation Links -->
 
               <li><a href="/" class="nav-link" aria-current="page">Home</a></li>
-              <li><a href="#templates" class="nav-link">Templates</a></li>
-              <li><a href="#about" class="nav-link">About</a></li>
-              <li><a href="#contact" class="nav-link">Contact</a></li>
+              <li><a href="{{ url_for('templates.templates_index')}}" class="nav-link">Templates</a></li>
+              <li><a href="{{ url_for('about.about_index')}}" class="nav-link">About</a></li>
+              <li><a href="{{ url_for('articles.articles_index')}}" class="nav-link">Articles</a></li>
+              <li><a href="{{ url_for('dashboard.dashboard_index')}}" class="nav-link">Dashboard</a></li>
+              <li>
+                <a href="{{ url_for('dashboard.dashboard_index') }}" class="nav-link" style="display: inline-flex; align-items: center; gap: 2px;">
+                  <!-- Custom PNG icon (repeat 3 times for 3 stars) -->
+                  <img src="{{ url_for('static', filename= RoutePath.ai_icon_stars) }}" alt="Star" class="star-icon">
+                  AI Assistant
+                </a>
+              </li>
+              
               
               <!-- Authentication Links with Conditional Rendering -->
               {% if current_user.is_authenticated %}
@@ -141,7 +150,6 @@
                   </svg>
                 </button>
                 <ul class="nav-dropdown-menu">
-                  <li><a href="/dashboard" class="dropdown-link">Dashboard</a></li>
                   <li><a href="/profile" class="dropdown-link">Profile</a></li>
                   <li><a href="/settings" class="dropdown-link">Settings</a></li>
                   <li><a href="/logout" class="dropdown-link">Logout</a></li>
@@ -210,6 +218,7 @@
         <div class="logo">
         </div>
         <p>CVFlow</p>
+        <!-- <p> CVFlow is an intelligent CV generation platform that helps you create professional,tailored resumes in minutes.</p> -->
         <p>&copy; 2025 CVFlow. All rights reserved.</p>
       </div>
       <div class="footer-links">
@@ -217,8 +226,8 @@
           <h3>Navigation</h3>
           <ul>
             <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="#templates">Templates</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="{{ url_for('templates.templates_index') }}">Templates</a></li>
+            <li><a href="{{ url_for('about.about_index') }}">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>

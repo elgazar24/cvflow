@@ -1,0 +1,248 @@
+
+{% extends RoutePath.base_index  %}
+
+{% block title %}Page Not Found - CVFlow{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.about_style) }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- About CVFlow Page Content -->
+<div class="about-section container">
+    <!-- About Header -->
+    <div class="about-header fade-up">
+      <h1 class="about-title">About CVFlow</h1>
+      <p class="about-description">
+        CVFlow is an intelligent CV generation platform that helps you create professional, 
+        tailored resumes in minutes. Our AI-powered system provides personalized recommendations
+        and ensures your CV stands out in today's competitive job market.
+      </p>
+    </div>
+    
+    <!-- Mission & Vision -->
+    <div class="mission-vision">
+      <div class="mission-card fade-up delay-1">
+        <div class="card-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <h3 class="card-title">Our Mission</h3>
+        <p>
+          To empower job seekers with innovative tools that streamline the resume creation process
+          and increase their chances of landing their dream jobs through personalized, 
+          data-driven recommendations.
+        </p>
+      </div>
+      
+      <div class="vision-card fade-up delay-2">
+        <div class="card-icon">
+          <i class="fas fa-eye"></i>
+        </div>
+        <h3 class="card-title">Our Vision</h3>
+        <p>
+          To revolutionize how people create and optimize their professional documents, making
+          career advancement accessible to everyone through intuitive design and artificial intelligence.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Key Features -->
+    <div class="features-section">
+      <div class="features-header fade-up">
+        <h2>Key Features</h2>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card fade-up delay-1">
+          <div class="feature-icon">
+            <i class="fas fa-magic"></i>
+          </div>
+          <h3 class="feature-title">AI Resume Builder</h3>
+          <p class="feature-description">
+            Generate professional resumes instantly from your JSON data with smart formatting 
+            and structure recommendations.
+          </p>
+        </div>
+        
+        <div class="feature-card fade-up delay-2">
+          <div class="feature-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="feature-title">Smart Content Suggestions</h3>
+          <p class="feature-description">
+            Get personalized recommendations for skills, objectives, and achievements that 
+            match your career goals.
+          </p>
+        </div>
+        
+        <div class="feature-card fade-up delay-3">
+          <div class="feature-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3 class="feature-title">Customizable Templates</h3>
+          <p class="feature-description">
+            Choose from a variety of professional templates and customize colors, fonts, 
+            and layouts to match your personal style.
+          </p>
+        </div>
+        
+        <div class="feature-card fade-up delay-4">
+          <div class="feature-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <h3 class="feature-title">User Dashboard</h3>
+          <p class="feature-description">
+            Manage all your CV data, track changes, and update your professional information 
+            from one convenient location.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- What's New Section -->
+    <div class="whats-new-section fade-up">
+      <div class="whats-new-header">
+        <h2>What's New at CVFlow</h2>
+        <span class="new-badge">NEW</span>
+      </div>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content fade-left">
+            <span class="timeline-date">May 2025</span>
+            <h3 class="timeline-title">AI Skills Recommender</h3>
+            <p class="timeline-description">
+              Our newest feature uses machine learning to suggest relevant skills based on your job 
+              title and industry, helping you highlight your most valuable qualifications.
+            </p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content fade-right">
+            <span class="timeline-date">March 2025</span>
+            <h3 class="timeline-title">JSON Import/Export</h3>
+            <p class="timeline-description">
+              Easily import your existing resume data or export your CVFlow content in JSON format
+              for seamless integration with other tools and platforms.
+            </p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content fade-left">
+            <span class="timeline-date">January 2025</span>
+            <h3 class="timeline-title">Enhanced Dashboard</h3>
+            <p class="timeline-description">
+              We've redesigned our user dashboard with improved navigation, faster performance, 
+              and new analytics to track your CV's effectiveness.
+            </p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content fade-right">
+            <span class="timeline-date">November 2024</span>
+            <h3 class="timeline-title">Mobile Optimization</h3>
+            <p class="timeline-description">
+              CVFlow is now fully responsive, allowing you to create and edit your resume 
+              on any device, anytime, anywhere.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Team Section -->
+    <div class="team-section">
+      <div class="team-header fade-up">
+        <h2>Meet Our Team</h2>
+      </div>
+      
+      <div class="team-grid">
+        <div class="team-card fade-up delay-1">
+          <div class="team-avatar">
+            <img src="{{ url_for('static', filename='images/mohamed_photo/mohamed_photo.png') }}" alt="Team Member">
+          </div>
+          <h3 class="team-name">Mohamed Elgazar</h3>
+          <p class="team-role">Software Engineer</p>
+          <p class="team-bio">
+            Mohamed leads our development team, focusing on creating intuitive and powerful
+            features for CVFlow users.
+          </p>
+          <div class="team-social">
+            <a href="https://www.linkedin.com/in/melgazar24/" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/elgazar24" class="social-link"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        
+        <!-- <div class="team-card fade-up delay-2">
+          <div class="team-avatar">
+            <img src="/api/placeholder/120/120" alt="Team Member">
+          </div>
+          <h3 class="team-name"></h3>
+          <p class="team-role">Lead Developer</p>
+          <p class="team-bio">
+            Jamie leads our development team, focusing on creating intuitive and powerful
+            features for CVFlow users.
+          </p>
+          <div class="team-social">
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+          </div>
+        </div> -->
+        
+        <!-- <div class="team-card fade-up delay-3">
+          <div class="team-avatar">
+            <img src="/api/placeholder/120/120" alt="Team Member">
+          </div>
+          <h3 class="team-name">Sam Wilson</h3>
+          <p class="team-role">AI Specialist</p>
+          <p class="team-bio">
+            Sam specializes in machine learning algorithms that power our content 
+            recommendation system.
+          </p>
+          <div class="team-social">
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-medium"></i></a>
+          </div>
+        </div>
+        
+        <div class="team-card fade-up delay-4">
+          <div class="team-avatar">
+            <img src="/api/placeholder/120/120" alt="Team Member">
+          </div>
+          <h3 class="team-name">Taylor Reed</h3>
+          <p class="team-role">UX Designer</p>
+          <p class="team-bio">
+            Taylor creates the seamless user experiences that make CVFlow intuitive 
+            and enjoyable to use.
+          </p>
+          <div class="team-social">
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="cta-box fade-up">
+      <h2 class="cta-title">Ready to Create Your Professional CV?</h2>
+      <p class="cta-description">
+        Join thousands of job seekers who have used CVFlow to land their dream jobs. 
+        Our AI-powered platform will help you craft the perfect resume in minutes.
+      </p>
+      <a href="{{ url_for('dashboard.dashboard_index') }}" class="cta-button">
+        Get Started Now
+        <i class="fas fa-arrow-right cta-icon"></i>
+      </a>
+    </div>
+  </div>
+  
+  {% endblock %}

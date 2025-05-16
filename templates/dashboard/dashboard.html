@@ -152,7 +152,9 @@
                     <div class="section-header">
                         <h3><i class="fas fa-bullseye"></i> Objective</h3>
                         <button type="button" class="ai-recommend-btn" data-field="objective">
-                            <i class="fas fa-robot"></i> AI Recommend
+                            <img src="{{ url_for('static', filename= RoutePath.ai_icon_generate) }}" alt="Star"
+                                class="generate-icon">
+                            AI Assistant
                         </button>
                     </div>
                     <div class="form-group">
@@ -165,7 +167,9 @@
                     <div class="section-header">
                         <h3><i class="fas fa-graduation-cap"></i> Education</h3>
                         <button type="button" class="ai-recommend-btn" data-field="education">
-                            <i class="fas fa-robot"></i> AI Recommend
+                            <img src="{{ url_for('static', filename= RoutePath.ai_icon_generate) }}" alt="Star"
+                                class="generate-icon">
+                            AI Assistant 
                         </button>
                     </div>
                     <div id="education-fields">
@@ -180,7 +184,9 @@
                     <div class="section-header">
                         <h3><i class="fas fa-briefcase"></i> Experience</h3>
                         <button type="button" class="ai-recommend-btn" data-field="experience">
-                            <i class="fas fa-robot"></i> AI Recommend
+                            <img src="{{ url_for('static', filename= RoutePath.ai_icon_generate) }}" alt="Star"
+                                class="generate-icon">
+                            AI Assistant
                         </button>
                     </div>
                     <div id="experience-fields">
@@ -195,7 +201,9 @@
                     <div class="section-header">
                         <h3><i class="fas fa-project-diagram"></i> Projects</h3>
                         <button type="button" class="ai-recommend-btn" data-field="projects">
-                            <i class="fas fa-robot"></i> AI Recommend
+                            <img src="{{ url_for('static', filename= RoutePath.ai_icon_generate) }}" alt="Star"
+                                class="generate-icon">
+                            AI Assistant
                         </button>
                     </div>
                     <div id="project-fields">
@@ -210,7 +218,9 @@
                     <div class="section-header">
                         <h3><i class="fas fa-code"></i> Skills</h3>
                         <button type="button" class="ai-recommend-btn" data-field="skills">
-                            <i class="fas fa-robot"></i> AI Recommend
+                            <img src="{{ url_for('static', filename= RoutePath.ai_icon_generate) }}" alt="Star"
+                                class="generate-icon">
+                            AI Assistant
                         </button>
                     </div>
                     <div class="form-group">
@@ -292,28 +302,29 @@
 </div>
 
 <!-- AI Recommend Modal -->
-<div id="ai-recommend-modal" class="modal">
-    <div class="modal-content">
+<div id="ai-recommend-modal" class="modal" aria-labelledby="modal-title" aria-modal="true" role="dialog">
+    <div class="modal-content" tabindex="-1">
         <div class="modal-header">
-            <h3>AI Recommendations</h3>
-            <span class="close-modal">&times;</span>
+            <h3 id="modal-title">AI Recommendations</h3>
+            <button type="button" class="close-modal" aria-label="Close modal"></button>
         </div>
         <div class="modal-body">
             <div class="ai-prompt-section">
                 <label for="ai-prompt">What would you like to improve?</label>
                 <input type="text" id="ai-prompt" placeholder="E.g., Make my experience more impactful">
                 <button id="get-ai-recommendation" class="primary-button">
-                    <i class="fas fa-robot"></i> Get Recommendations
+                    <img src="{{ url_for('static', filename= RoutePath.ai_icon_generate) }}" alt="" class="generate-icon" aria-hidden="true">
+                    Generate
                 </button>
             </div>
             <div class="ai-recommendation-result">
                 <h4>Recommendation</h4>
                 <div id="ai-recommendation-content">
                     <div class="ai-loading">
-                        <div class="spinner"></div>
+                        <div class="spinner" aria-hidden="true"></div>
                         <p>Generating recommendations...</p>
                     </div>
-                    <div class="ai-result"></div>
+                    <div class="ai-result" role="region" aria-live="polite"></div>
                 </div>
                 <div class="ai-actions">
                     <button id="apply-ai-recommendation" class="success-button">Apply</button>

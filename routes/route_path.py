@@ -55,6 +55,22 @@ class RoutePath:
     dashboard_script = f'{static_js_dir_name}{_dashboard_dir}/{dashboard_script_file_name}'
 
 
+    _about_dir = f'/{templates_about_dir_name}'
+    about_index = f'{_about_dir}/{about_index_file_name}'
+    about_style = f'{static_css_dir_name}{_about_dir}/{about_style_file_name}'
+    about_script = f'{static_js_dir_name}{_about_dir}/{about_script_file_name}'
+
+    _templates_dir = f'/{templates_templates_dir_name}'
+    templates_index = f'{_templates_dir}/{templates_index_file_name}'
+    templates_style = f'{static_css_dir_name}{_templates_dir}/{templates_style_file_name}'
+    templates_script = f'{static_js_dir_name}{_templates_dir}/{templates_script_file_name}'
+
+    _articles_dir = f'/{templates_articles_dir_name}'
+    articles_index = f'{_articles_dir}/{articles_index_file_name}'
+    articles_style = f'{static_css_dir_name}{_articles_dir}/{articles_style_file_name}'
+    articles_script = f'{static_js_dir_name}{_articles_dir}/{articles_script_file_name}'
+
+
     _images_dir = f'/{static_images_dir_name}'
     author_photos_dir = f'{_images_dir}/{static_images_author_photos_dir_name}'
     author_photo = f'{author_photos_dir}/{author_photo_file_name}'
@@ -71,6 +87,9 @@ class RoutePath:
     favicon_32x32 = f'{_images_dir}{_favicon_dir}/{favicon_32x32_file_name}'
     apple_touch_icon = f'{_images_dir}{_favicon_dir}/{apple_touch_icon_file_name}'
 
+    _icons_dir = f'/{static_images_icons_dir_name}'
+    ai_icon_stars = f'{_images_dir}{_icons_dir}/{ai_icon_stars_file_name}'
+    ai_icon_generate = f'{_images_dir}{_icons_dir}/{ai_icon_generate_file_name}'
 
     
 

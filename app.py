@@ -19,6 +19,10 @@ from flask_compress import Compress
 from flask_minify import Minify
 
 
+from about import about as about_blueprint
+from templates import templates as templates_blueprint
+from articles import articles as articles_blueprint
+
 
 
 
@@ -48,6 +52,9 @@ def create_app():
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(routes_blueprint)  
     app.register_blueprint(dashboard)      
+    app.register_blueprint(about_blueprint)
+    app.register_blueprint(templates_blueprint)
+    app.register_blueprint(articles_blueprint)
 
     
     # Helper functions

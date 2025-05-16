@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash , request
 from forms import ForgotPasswordForm
 from extensions import db
 from werkzeug.security import generate_password_hash , check_password_hash
@@ -10,6 +10,7 @@ from flask_login import login_user ,logout_user ,current_user ,login_required
 from forms import RegistrationForm, LoginForm
 from routes.route_path import RoutePath
 import db_access
+
 
 
 auth = Blueprint('auth', __name__)
@@ -58,8 +59,27 @@ def signup():
         return render_template( RoutePath.register_index, form=form)
 
 
+from urllib.parse import urlparse, urljoin
+def is_safe_url(target):
+    """Check if the target URL is safe (internal)."""
+    if not target or target == None:
+        return False
+    
+    # Handle relative URLs (like /dashboard)
+    if target.startswith(('/', './', '../')):
+        return True
+    
+    # Handle full URLs
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
+
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
+
+    signin_request = request
+
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
@@ -68,10 +88,16 @@ def signin():
         user = db_access.get_user_by_email(form.email.data)
         if user and check_password_hash(user.password_hash, form.password.data):
             login_user(user, remember=form.remember.data)
+
+            next_page = signin_request.args.get('next')
+            
+            if next_page and is_safe_url(next_page):
+                return redirect(next_page)
             return redirect(url_for('index'))
+            
         flash('Invalid email or password', 'error')
     
-    return render_template( RoutePath.login_index, form=form)
+    return render_template(RoutePath.login_index, form=form)
 
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])

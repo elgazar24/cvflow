@@ -1,0 +1,136 @@
+{% extends RoutePath.base_index %}
+{% block title %}CV Templates - CVFlow{% endblock %}
+{% block styles %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename= RoutePath.templates_style) }}">
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{{url_for('static', filename= RoutePath.templates_script)}}" defer></script>
+
+{% endblock %}
+
+
+{% block content %}
+<section class="container">
+  <!-- Templates Header -->
+  <div class="templates-header">
+    <h1>Find Your Perfect CV Template</h1>
+    <p class="text-light">Choose from our professionally designed templates to create your standout CV</p>
+  </div>
+  
+  <!-- What's New Section -->
+  <div class="whats-new fade-in">
+    <div class="whats-new-header">
+      <h3 class="section-title" style="padding-left: 0; margin-bottom: 0;">What's New</h3>
+      <span class="whats-new-badge">NEW</span>
+    </div>
+    <ul class="updates-list">
+      <li class="update-item">
+        <div class="update-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        </div>
+        <div class="update-content">
+          <h4 class="update-title">AI-Powered CV Recommendations</h4>
+          <p class="update-description">Our AI can now analyze your industry and experience to suggest the perfect skills and objectives for your CV.</p>
+          <span class="update-date">May 10, 2025</span>
+        </div>
+      </li>
+      <li class="update-item">
+        <div class="update-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+          </svg>
+        </div>
+        <div class="update-content">
+          <h4 class="update-title">10 New Industry-Specific Templates</h4>
+          <p class="update-description">We've added specialized templates for Engineering, Healthcare, Finance, and more sectors.</p>
+          <span class="update-date">May 3, 2025</span>
+        </div>
+      </li>
+      <li class="update-item">
+        <div class="update-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div class="update-content">
+          <h4 class="update-title">Enhanced Privacy Features</h4>
+          <p class="update-description">Your CV data is now automatically encrypted for better security and privacy protection.</p>
+          <span class="update-date">April 25, 2025</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Search and Filter -->
+  <div class="search-container fade-in fade-in-delay-1">
+    <input type="text" id="templateSearch" class="search-input" placeholder="Search templates...">
+    <select class="filter-select" id="templateFilter">
+      <option value="all">All Categories</option>
+      <option value="professional">Professional</option>
+      <option value="modern">Modern</option>
+      <option value="creative">Creative</option>
+      <option value="simple">Simple</option>
+      <option value="academic">Academic</option>
+    </select>
+  </div>
+
+  <!-- Recommended Templates Section -->
+  <div class="recommended-section fade-in fade-in-delay-2">
+    <div class="recommended-header">
+      <h2 class="section-title">Recommended for You</h2>
+    </div>
+    
+    <!-- Industry Tabs -->
+    <div class="sector-tabs">
+      <button class="sector-tab active" data-sector="all">All</button>
+      <button class="sector-tab" data-sector="it">IT & Software</button>
+      <button class="sector-tab" data-sector="engineering">Engineering</button>
+      <button class="sector-tab" data-sector="business">Business</button>
+      <button class="sector-tab" data-sector="creative">Creative Arts</button>
+      <button class="sector-tab" data-sector="healthcare">Healthcare</button>
+      <button class="sector-tab" data-sector="education">Education</button>
+      <button class="sector-tab" data-sector="science">Science & Research</button>
+    </div>
+    
+    <!-- Recommended Templates Grid -->
+    <div class="templates-grid" id="recommendedTemplates">
+      <!-- Templates will be loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- All Templates Section -->
+  <div class="all-templates-section fade-in fade-in-delay-3">
+    <h2 class="section-title">All Templates</h2>
+    <div class="templates-grid" id="allTemplates">
+      <!-- Templates will be loaded dynamically -->
+    </div>
+  </div>
+
+  <!-- Template Preview Modal -->
+  <div class="preview-modal" id="previewModal">
+    <div class="preview-content">
+      <div class="preview-header">
+        <h3 class="preview-title" id="previewTemplateTitle">Template Name</h3>
+        <button class="close-preview" id="closePreview">&times;</button>
+      </div>
+      <div class="preview-body" id="previewBody">
+        <!-- Template preview will be loaded here -->
+      </div>
+      <div class="preview-actions">
+        <button class="template-btn preview-btn" id="closePreviewBtn">Close</button>
+        <button class="template-btn use-btn" id="useTemplateBtn">Use This Template</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

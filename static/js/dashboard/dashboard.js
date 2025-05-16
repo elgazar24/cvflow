@@ -702,6 +702,8 @@ function downloadPdf(e) {
 function setupAiRecommendations() {
     const aiButtons = document.querySelectorAll('.ai-recommend-btn');
     const modal = document.getElementById('ai-recommend-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    const closeModalBtn = modal.querySelector('.close-modal');
     const getRecommendBtn = document.getElementById('get-ai-recommendation');
     const applyRecommendBtn = document.getElementById('apply-ai-recommendation');
     const promptInput = document.getElementById('ai-prompt');
@@ -709,32 +711,145 @@ function setupAiRecommendations() {
     const loadingDiv = document.querySelector('.ai-loading');
 
     let currentField = null;
+    let typingTimer = null;
+    let typingSpeed = 15; // Speed in milliseconds per character
 
     // Open modal when clicking AI recommend button
     aiButtons.forEach(btn => {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function() {
             currentField = this.dataset.field;
-            modal.style.display = 'block';
+            openModal();
             promptInput.value = '';
             resultDiv.innerHTML = '';
             resultDiv.style.display = 'none';
             loadingDiv.style.display = 'none';
-            document.querySelector('.modal-header h3').textContent = `AI Recommendations for ${currentField.charAt(0).toUpperCase() + currentField.slice(1)}`;
+            applyRecommendBtn.disabled = true;
+            
+            // Set dynamic title
+            const fieldName = currentField.charAt(0).toUpperCase() + currentField.slice(1);
+            document.querySelector('.modal-header h3').textContent = `AI Recommendations for ${fieldName}`;
+            
+            // Focus on input field
+            setTimeout(() => {
+                promptInput.focus();
+            }, 300);
         });
     });
 
+    // Open modal function
+    function openModal() {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+        
+        // Animate modal opening
+        setTimeout(() => {
+            modal.classList.add('active');
+        }, 10); // Small delay to ensure transition works
+    }
+
+    // Close modal function
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Wait for animation to finish before hiding
+        setTimeout(() => {
+            modal.style.display = 'none';
+            
+            // Clear typing timer if active
+            if (typingTimer) {
+                clearInterval(typingTimer);
+                typingTimer = null;
+            }
+        }, 300);
+    }
+
+    // Close modal when clicking close button
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    // Close modal when clicking outside the content
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.style.display === 'flex') {
+            closeModal();
+        }
+    });
+
+    // Submit on Enter key in prompt input
+    promptInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            getRecommendBtn.click();
+        }
+    });
+
+    // Typing effect function
+    function typeText(element, text) {
+        element.textContent = '';
+        element.style.display = 'block';
+        
+        // Create a cursor element
+        const cursor = document.createElement('span');
+        cursor.className = 'typing-cursor';
+        cursor.textContent = '|';
+        element.appendChild(cursor);
+        
+        let i = 0;
+        
+        // Clear any existing typing timer
+        if (typingTimer) {
+            clearInterval(typingTimer);
+        }
+        
+        // Set apply button to disabled until typing is complete
+        applyRecommendBtn.disabled = true;
+        
+        // Start typing effect
+        typingTimer = setInterval(() => {
+            if (i < text.length) {
+                // Insert character before the cursor
+                cursor.insertAdjacentText('beforebegin', text.charAt(i));
+                i++;
+                
+                // Scroll to bottom as text appears
+                element.scrollTop = element.scrollHeight;
+            } else {
+                // Remove cursor and clear interval when done
+                cursor.remove();
+                clearInterval(typingTimer);
+                typingTimer = null;
+                
+                // Enable apply button
+                applyRecommendBtn.disabled = false;
+            }
+        }, typingSpeed);
+    }
+
     // Get AI recommendation
     if (getRecommendBtn) {
-        getRecommendBtn.addEventListener('click', function () {
+        getRecommendBtn.addEventListener('click', function() {
             const prompt = promptInput.value.trim();
             if (!prompt) {
-                showAlert('Please enter a prompt', 'error');
+                showToast('Please enter a prompt', 'error');
+                promptInput.focus();
                 return;
             }
 
             // Show loading
             resultDiv.style.display = 'none';
             loadingDiv.style.display = 'flex';
+            applyRecommendBtn.disabled = true;
+
+            // Add loading animation to button
+            getRecommendBtn.classList.add('loading');
+            getRecommendBtn.disabled = true;
 
             // Collect current form data
             const formData = collectFormData();
@@ -751,124 +866,330 @@ function setupAiRecommendations() {
                     cv_data: formData
                 })
             })
-                .then(response => response.json())
-                .then(data => {
-                    // Hide loading
-                    loadingDiv.style.display = 'none';
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hide loading
+                loadingDiv.style.display = 'none';
+                getRecommendBtn.classList.remove('loading');
+                getRecommendBtn.disabled = false;
 
-                    if (data.success && data.recommendation) {
-                        // Show result
-                        resultDiv.textContent = data.recommendation;
-                        resultDiv.style.display = 'block';
-
-                        // Enable apply button
-                        applyRecommendBtn.disabled = false;
-                    } else {
-                        // Show empty result for now
-                        resultDiv.textContent = "No recommendations available at this time. This feature will be enhanced in future updates.";
-                        resultDiv.style.display = 'block';
-
-                        // Disable apply button
-                        applyRecommendBtn.disabled = true;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error getting AI recommendation:', error);
-                    loadingDiv.style.display = 'none';
-                    resultDiv.textContent = "An error occurred. Please try again later.";
-                    resultDiv.style.display = 'block';
-
-                    // Disable apply button
-                    applyRecommendBtn.disabled = true;
-                });
+                if (data.success && data.recommendation) {
+                    // Clean the recommendation text
+                    let cleanedText = cleanRecommendationText(data.recommendation, currentField);
+                    
+                    // Show result with typing effect
+                    typeText(resultDiv, cleanedText);
+                } else {
+                    // Show empty result message
+                    typeText(resultDiv, "No recommendations available at this time. This feature will be enhanced in future updates.");
+                }
+            })
+            .catch(error => {
+                console.error('Error getting AI recommendation:', error);
+                loadingDiv.style.display = 'none';
+                getRecommendBtn.classList.remove('loading');
+                getRecommendBtn.disabled = false;
+                
+                typeText(resultDiv, "An error occurred. Please try again later.");
+            });
         });
+    }
+
+    // Clean recommendation text based on field type
+    function cleanRecommendationText(text, field) {
+        let cleaned = text;
+        
+        // Remove quotes, brackets, and field-specific patterns
+        cleaned = cleaned.replace(/["{}`]+/g, '');
+        
+        // Field-specific cleaning
+        if (field === 'objective') {
+            cleaned = cleaned.replace(/(objective:)|(objective\s:)/gi, '');
+        } else if (field === 'skills') {
+            cleaned = cleaned.replace(/(skills:)|(skills\s:)/gi, '');
+        } else if (field === 'languages') {
+            cleaned = cleaned.replace(/(languages:)|(languages\s:)/gi, '');
+        }
+        
+        return cleaned.trim();
     }
 
     // Apply AI recommendation
     if (applyRecommendBtn) {
-        applyRecommendBtn.addEventListener('click', function () {
+        applyRecommendBtn.addEventListener('click', function() {
             if (resultDiv.textContent && currentField) {
-                // Apply text to appropriate field
-                if (currentField === 'objective') {
-
-                    // Clean the text content
-                    resultDiv.textContent = resultDiv.textContent.replace(/["{}`]+$/g, '');
-
-                    // Remove this : "objective": or "objective" : 
-                    resultDiv.textContent = resultDiv.textContent.replace(/objective:/g, '');
-                    resultDiv.textContent = resultDiv.textContent.replace(/objective :/g, '');
-
-                    document.getElementById('objective').value = resultDiv.textContent;
-                }
-                // Other fields would need specific implementation based on structure
-                if (currentField === 'education') {
-                    // ...
-                }
-                if (currentField === 'experience') {
-                    // ...
-                }
-                if (currentField === 'projects') {
-                    // ...
-                }
-                if (currentField === 'languages') {
-                    // Remove Any Trailing " and ending " and {}
-                    resultDiv.textContent = resultDiv.textContent.replace(/["]+$/g, '');
-                    resultDiv.textContent = resultDiv.textContent.replace(/[{]+$/g, '');
-                    resultDiv.textContent = resultDiv.textContent.replace(/[}]+$/g, '');
-
-
-                    // Assume comma-separated list of language names
-                    const languages = resultDiv.textContent.split(',').map(lang => lang.trim());
-                    document.getElementById('languages').value = languages;
-                }
-                if (currentField === 'skills') {
-                    // Clean the text content
-                    resultDiv.textContent = resultDiv.textContent.replace(/["{}`]+$/g, '');
-
-                    // Remove this : "objective": or "objective" : 
-                    resultDiv.textContent = resultDiv.textContent.replace(/objective:/g, '');
-                    resultDiv.textContent = resultDiv.textContent.replace(/objective :/g, '');
-
-
-                    // Get comma-separated technologies and trim whitespace
-                    const technologies = resultDiv.textContent.split(',')
-                        .map(tech => tech.trim())
-                        .filter(tech => tech.length > 0);
-
-                    // Get current Select2 instance
-                    const $select = $('#technologies');
-
-                    // Clear existing selections
-                    $select.val(null).trigger('change');
-
-                    // Add new technologies
-                    technologies.forEach(tech => {
-                        // Check if option exists
-                        if ($select.find('option[value="' + tech + '"]').length === 0) {
-                            // Create new option if it doesn't exist
-                            const newOption = new Option(tech, tech, true, true);
-                            $select.append(newOption);
-                        }
-
-                        // Select the option
-                        $select.val(function () {
-                            const current = $(this).val() || [];
-                            return [...current, tech];
-                        });
-                    });
-
-                    // Update Select2
-                    $select.trigger('change');
+                const recommendationText = resultDiv.textContent;
+                
+                // Apply recommendation based on field type
+                switch (currentField) {
+                    case 'objective':
+                        document.getElementById('objective').value = recommendationText;
+                        break;
+                        
+                    case 'languages':
+                        // Handle languages as comma-separated list
+                        const languages = recommendationText.split(',').map(lang => lang.trim()).filter(lang => lang);
+                        document.getElementById('languages').value = languages.join(', ');
+                        break;
+                        
+                    case 'skills':
+                        // Handle skills with Select2
+                        applySkillsToSelect2(recommendationText);
+                        break;
+                        
+                    case 'education':
+                        // Add education field handling
+                        break;
+                        
+                    case 'experience':
+                        // Add experience field handling
+                        break;
+                        
+                    case 'projects':
+                        // Add projects field handling
+                        break;
                 }
 
                 // Close modal
-                modal.style.display = 'none';
+                closeModal();
 
                 // Show success message
-                showAlert('AI recommendation applied', 'success');
+                showToast('AI recommendation applied', 'success');
             }
         });
     }
+    
+    // Apply skills to Select2 dropdown
+    function applySkillsToSelect2(text) {
+        // Get comma-separated technologies and clean them
+        const technologies = text.split(',')
+            .map(tech => tech.trim())
+            .filter(tech => tech.length > 0);
+
+        // Get current Select2 instance
+        const $select = $('#technologies');
+
+        // Clear existing selections
+        $select.val(null).trigger('change');
+
+        // Add new technologies
+        technologies.forEach(tech => {
+            // Check if option exists
+            if ($select.find(`option[value="${tech}"]`).length === 0) {
+                // Create new option if it doesn't exist
+                const newOption = new Option(tech, tech, true, true);
+                $select.append(newOption);
+            }
+
+            // Select the option
+            const currentValues = $select.val() || [];
+            currentValues.push(tech);
+            $select.val(currentValues);
+        });
+
+        // Update Select2
+        $select.trigger('change');
+    }
+    
+    // Helper function for collecting form data
+    function collectFormData() {
+        // Implement your form data collection logic here
+        // This should collect all relevant data from the form
+        
+        const formData = {
+            objective: document.getElementById('objective')?.value || '',
+            // Add other fields as needed
+        };
+        
+        return formData;
+    }
+    
+    // Modern toast notification
+    function showToast(message, type = 'info') {
+        // Check if toast container exists, create if not
+        let toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.className = 'toast-container';
+            document.body.appendChild(toastContainer);
+        }
+        
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        // Create icon based on type
+        let iconSvg = '';
+        switch (type) {
+            case 'success':
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                break;
+            case 'error':
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+                break;
+            case 'warning':
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+                break;
+            default:
+                iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+        }
+        
+        // Set toast content
+        toast.innerHTML = `
+            <div class="toast-icon">${iconSvg}</div>
+            <div class="toast-message">${message}</div>
+        `;
+        
+        // Add toast to container
+        toastContainer.appendChild(toast);
+        
+        // Trigger animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Remove toast after delay
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+    
+    // Initialize
+    function init() {
+        // Add CSS for toast and typing cursor if not already present
+        if (!document.getElementById('dynamic-ai-styles')) {
+            const styleSheet = document.createElement('style');
+            styleSheet.id = 'dynamic-ai-styles';
+            styleSheet.textContent = `
+                /* Toast Styles */
+                .toast-container {
+                    position: fixed;
+                    top: 1rem;
+                    right: 1rem;
+                    z-index: 9999;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    pointer-events: none;
+                }
+                
+                .toast {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    padding: 0.75rem 1rem;
+                    background-color: var(--bg-color);
+                    color: var(--text-color);
+                    border-radius: var(--border-radius-md);
+                    box-shadow: var(--shadow-lg);
+                    max-width: 300px;
+                    pointer-events: auto;
+                    transform: translateX(100%);
+                    opacity: 0;
+                    transition: transform 0.3s ease, opacity 0.3s ease;
+                }
+                
+                .toast.show {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                
+                .toast-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 20px;
+                    flex-shrink: 0;
+                }
+                
+                .toast-icon svg {
+                    width: 100%;
+                    height: 100%;
+                }
+                
+                .toast-success {
+                    border-left: 4px solid var(--success-color);
+                }
+                
+                .toast-success .toast-icon {
+                    color: var(--success-color);
+                }
+                
+                .toast-error {
+                    border-left: 4px solid var(--danger-color);
+                }
+                
+                .toast-error .toast-icon {
+                    color: var(--danger-color);
+                }
+                
+                .toast-warning {
+                    border-left: 4px solid var(--warning-color);
+                }
+                
+                .toast-warning .toast-icon {
+                    color: var(--warning-color);
+                }
+                
+                .toast-info {
+                    border-left: 4px solid var(--info-color);
+                }
+                
+                .toast-info .toast-icon {
+                    color: var(--info-color);
+                }
+                
+                /* Loading Button */
+                .primary-button.loading {
+                    position: relative;
+                    color: transparent !important;
+                    pointer-events: none;
+                }
+                
+                .primary-button.loading::after {
+                    content: '';
+                    position: absolute;
+                    width: 16px;
+                    height: 16px;
+                    top: calc(50% - 8px);
+                    left: calc(50% - 8px);
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    border-top-color: white;
+                    animation: spin 0.8s linear infinite;
+                }
+                
+                /* Typing cursor animation */
+                .typing-cursor {
+                    display: inline-block;
+                    width: 2px;
+                    height: 1.2em;
+                    background-color: var(--primary-color);
+                    margin-left: 2px;
+                    vertical-align: middle;
+                    animation: blink 1s step-end infinite;
+                }
+                
+                @keyframes blink {
+                    from, to { opacity: 1; }
+                    50% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        }
+    }
+    
+    // Run initialization
+    init();
 }
 
 // Setup modals
